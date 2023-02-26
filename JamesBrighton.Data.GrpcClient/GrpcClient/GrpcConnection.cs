@@ -10,7 +10,7 @@ namespace JamesBrighton.Data.GrpcClient;
 /// <summary>
 /// Represents a gRPC implementation of an <see cref="IDbConnection" />.
 /// </summary>
-public class GrpcConnection : IAsyncConnection
+public class GrpcConnection : IAsyncGrpcConnection
 {
     /// <summary>
     /// Gets the gRPC channel associated with the connection.

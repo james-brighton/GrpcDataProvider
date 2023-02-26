@@ -12,20 +12,9 @@ namespace JamesBrighton.Data.GrpcClient;
 public class GrpcCommand : IAsyncDbCommand
 {
     /// <summary>
-    /// The gRPC channel.
-    /// </summary>
-    readonly GrpcChannel? channel;
-
-    /// <summary>
-    /// The server side identifier of the connection.
-    /// </summary>
-    readonly string connectionIdentifier;
-
-    /// <summary>
     /// The items.
     /// </summary>
     readonly List<GrpcDataReader> items = new();
-
     /// <summary>
     /// The server side identifier of the command.
     /// </summary>
@@ -34,12 +23,17 @@ public class GrpcCommand : IAsyncDbCommand
     /// <summary>
     /// Initializes a new instance of the <see cref="GrpcCommand" /> class.
     /// </summary>
+    public GrpcCommand() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GrpcCommand" /> class.
+    /// </summary>
     /// <param name="channel">gRPC channel to use.</param>
     /// <param name="connectionIdentifier">The connection identifier.</param>
-    GrpcCommand(GrpcChannel? channel, string connectionIdentifier)
+    public GrpcCommand(GrpcChannel? channel, string connectionIdentifier)
     {
-        this.channel = channel;
-        this.connectionIdentifier = connectionIdentifier;
+        Channel = channel;
+        ConnectionIdentifier = connectionIdentifier;
     }
 
     /// <inheritdoc />
@@ -64,6 +58,15 @@ public class GrpcCommand : IAsyncDbCommand
     /// <inheritdoc />
     public UpdateRowSource UpdatedRowSource { get; set; }
 
+    /// <summary>
+    /// The gRPC channel.
+    /// </summary>
+    public GrpcChannel? Channel { get; set; }
+    /// <summary>
+    /// The connection identifier.
+    /// </summary>
+    public string? ConnectionIdentifier { get; set; }
+
     /// <inheritdoc />
     public void Cancel()
     {
@@ -82,13 +85,13 @@ public class GrpcCommand : IAsyncDbCommand
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         await client.DestroyCommandAsync(new DestroyCommandRequest
-        { ConnectionIdentifier = connectionIdentifier, CommandIdentifier = commandIdentifier });
+        { ConnectionIdentifier = ConnectionIdentifier, CommandIdentifier = commandIdentifier });
         for (var i = items.Count - 1; i >= 0; i--) await items[i].DisposeAsync();
         GC.SuppressFinalize(this);
     }
@@ -96,10 +99,10 @@ public class GrpcCommand : IAsyncDbCommand
     /// <inheritdoc />
     public int ExecuteNonQuery()
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         if (Parameters is not GrpcParameterCollection parameters)
             throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
@@ -108,7 +111,7 @@ public class GrpcCommand : IAsyncDbCommand
         var query = new ExecuteQueryRequest
         {
             Query = CommandText,
-            ConnectionIdentifier = connectionIdentifier,
+            ConnectionIdentifier = ConnectionIdentifier,
             TransactionIdentifier = transaction.TransactionIdentifier,
             CommandIdentifier = commandIdentifier
         };
@@ -128,10 +131,10 @@ public class GrpcCommand : IAsyncDbCommand
     /// <inheritdoc />
     public IDataReader ExecuteReader(CommandBehavior behavior)
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         if (Parameters is not GrpcParameterCollection parameters)
             throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
@@ -140,7 +143,7 @@ public class GrpcCommand : IAsyncDbCommand
         var query = new ExecuteQueryRequest
         {
             Query = CommandText,
-            ConnectionIdentifier = connectionIdentifier,
+            ConnectionIdentifier = ConnectionIdentifier,
             TransactionIdentifier = transaction.TransactionIdentifier,
             CommandIdentifier = commandIdentifier
         };
@@ -247,10 +250,10 @@ public class GrpcCommand : IAsyncDbCommand
     /// <inheritdoc />
     public async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         if (Parameters is not GrpcParameterCollection parameters)
             throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
@@ -259,7 +262,7 @@ public class GrpcCommand : IAsyncDbCommand
         var query = new ExecuteQueryRequest
         {
             Query = CommandText,
-            ConnectionIdentifier = connectionIdentifier,
+            ConnectionIdentifier = ConnectionIdentifier,
             TransactionIdentifier = transaction.TransactionIdentifier,
             CommandIdentifier = commandIdentifier
         };

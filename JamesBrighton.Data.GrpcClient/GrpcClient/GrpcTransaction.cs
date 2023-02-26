@@ -11,14 +11,9 @@ namespace JamesBrighton.Data.GrpcClient;
 public class GrpcTransaction : IAsyncDbTransaction
 {
     /// <summary>
-    /// The gRPC channel.
+    /// Initializes a new instance of the <see cref="GrpcTransaction" /> class.
     /// </summary>
-    readonly GrpcChannel? channel;
-
-    /// <summary>
-    /// The server side identifier of the connection.
-    /// </summary>
-    readonly string connectionIdentifier = "";
+    public GrpcTransaction() { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GrpcTransaction" /> class with the specified connection and isolation
@@ -28,11 +23,10 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// <param name="connectionIdentifier">The connection identifier.</param>
     /// <param name="connection">The connection associated with the transaction.</param>
     /// <param name="isolationLevel">The isolation level for the transaction.</param>
-    GrpcTransaction(GrpcChannel? channel, string connectionIdentifier, IDbConnection connection,
-        IsolationLevel isolationLevel)
+    public GrpcTransaction(GrpcChannel? channel, string connectionIdentifier, IDbConnection connection, IsolationLevel isolationLevel)
     {
-        this.channel = channel;
-        this.connectionIdentifier = connectionIdentifier;
+        Channel = channel;
+        ConnectionIdentifier = connectionIdentifier;
         Connection = connection;
         IsolationLevel = isolationLevel;
     }
@@ -43,21 +37,29 @@ public class GrpcTransaction : IAsyncDbTransaction
     public string TransactionIdentifier { get; private set; } = "";
 
     /// <inheritdoc />
-    public IDbConnection Connection { get; }
+    public IDbConnection? Connection { get; }
 
     /// <inheritdoc />
     public IsolationLevel IsolationLevel { get; }
+    /// <summary>
+    /// The gRPC channel.
+    /// </summary>
+    public GrpcChannel? Channel { get; set; }
+    /// <summary>
+    /// The connection identifier.
+    /// </summary>
+    public string? ConnectionIdentifier { get; set; }
 
     /// <inheritdoc />
     public void Commit()
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         var reply = client.CommitTransaction(new CommitTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, TransactionIdentifier = TransactionIdentifier });
+        { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier });
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
     }
@@ -77,13 +79,13 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public void Rollback()
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         var reply = client.RollbackTransaction(new RollbackTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, TransactionIdentifier = TransactionIdentifier });
+        { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier });
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
     }
@@ -97,14 +99,14 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         var reply = await client.CommitTransactionAsync(
             new CommitTransactionRequest
-            { ConnectionIdentifier = connectionIdentifier, TransactionIdentifier = TransactionIdentifier },
+            { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier },
             cancellationToken: cancellationToken);
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
@@ -119,14 +121,14 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public async Task RollbackAsync(CancellationToken cancellationToken)
     {
-        if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
             throw new InvalidOperationException("There's no gRPC channel.");
 
-        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         var reply = await client.RollbackTransactionAsync(
             new RollbackTransactionRequest
-            { ConnectionIdentifier = connectionIdentifier, TransactionIdentifier = TransactionIdentifier },
+            { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier },
             cancellationToken: cancellationToken);
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);

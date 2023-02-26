@@ -1,11 +1,11 @@
-﻿using JamesBrighton.Data.GrpcClient;
+﻿using JamesBrighton.Data;
+using JamesBrighton.Data.GrpcClient;
 
-await using var connection = new GrpcConnection
-{
-    ConnectionString = args[0],
-    ServerProviderInvariantName = args[1],
-    ServerConnectionString = args[2]
-};
+await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
+if (connection == null) return;
+connection.ConnectionString = args[0];
+connection.ServerProviderInvariantName = args[1];
+connection.ServerConnectionString = args[2];
 
 await connection.OpenAsync();
 await using var transaction = await connection.BeginTransactionAsync();
