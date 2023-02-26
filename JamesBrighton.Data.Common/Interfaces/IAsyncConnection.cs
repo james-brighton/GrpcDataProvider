@@ -48,8 +48,8 @@ public interface IAsyncConnection : IDbConnection, IAsyncDisposable
     Task<IAsyncDbCommand> CreateCommandAsync();
 
     /// <summary>
-    /// An asynchronous version of System.Data.Common.DbConnection.Open, which opens
-    /// a database connection with the settings specified by the System.Data.Common.DbConnection.ConnectionString.
+    /// An asynchronous version of Open, which opens
+    /// a database connection with the settings specified by the ConnectionString.
     /// This method invokes the virtual method
     /// JamesBrighton.Data.GrpcClient.GrpcDataProvider.GrpcConnection.OpenAsync(System.Threading.CancellationToken)
     /// with CancellationToken.None.
@@ -58,13 +58,13 @@ public interface IAsyncConnection : IDbConnection, IAsyncDisposable
     Task OpenAsync();
 
     /// <summary>
-    /// This is the asynchronous version of System.Data.Common.DbConnection.Open. Providers
+    /// This is the asynchronous version of Open. Providers
     /// should override with an appropriate implementation. The cancellation token can
-    /// optionally be honored. The default implementation invokes the synchronous System.Data.Common.DbConnection.Open
+    /// optionally be honored. The default implementation invokes the synchronous Open
     /// call and returns a completed task. The default implementation will return a cancelled
     /// task if passed an already cancelled cancellationToken. Exceptions thrown by Open
     /// will be communicated via the returned Task Exception property. Do not invoke
-    /// other methods and properties of the DbConnection object until the returned Task
+    /// other methods and properties of the connection object until the returned Task
     /// is complete.
     /// </summary>
     /// <param name="cancellationToken">The cancellation instruction.</param>

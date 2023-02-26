@@ -39,4 +39,6 @@ catch (GrpcDataException e)
 {
     await transaction.RollbackAsync();
     // Handle the exception
-}````
+}
+````
+The implementation is not yet complete: custom interfaces are used to mask the fact that DbConnection, DbCommand, DbTransaction and so on, are not fully realized.
