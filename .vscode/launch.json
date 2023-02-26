@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch JamesBrighton.Data.GrpcTestClient",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildTest",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTestClient/bin/Debug/net7.0/JamesBrighton.Data.GrpcTestClient.dll",
+            "args": [
+                "http://localhost:5056",
+                "FirebirdSql.Data.FirebirdClient",
+                "UserId=SYSDBA;Password=m4573rk3y;Database=localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb;WireCrypt=Required",
+                "SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO",
+                "@EMP_NO",
+                "0"
+            ],
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTestClient",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch JamesBrighton.Data.GrpcServer",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildServer",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcServer/bin/Debug/net7.0/JamesBrighton.Data.GrpcServer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcServer",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        }
+    ]
+}

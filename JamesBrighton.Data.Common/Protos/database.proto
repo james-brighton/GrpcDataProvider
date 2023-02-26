@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+
+package database;
+
+service DatabaseService {
+  rpc OpenConnection (OpenConnectionRequest) returns (OpenConnectionResponse);
+  rpc CloseConnection (CloseConnectionRequest) returns (google.protobuf.Empty);
+  rpc CreateCommand (CreateCommandRequest) returns (CreateCommandResponse);
+  rpc DestroyCommand (DestroyCommandRequest) returns (google.protobuf.Empty);
+  rpc BeginTransaction (BeginTransactionRequest) returns (BeginTransactionResponse);
+  rpc CommitTransaction (CommitTransactionRequest) returns (CommitTransactionResponse);
+  rpc RollbackTransaction (RollbackTransactionRequest) returns (RollbackTransactionResponse);
+  rpc ExecuteQuery (ExecuteQueryRequest) returns (stream ExecuteQueryResponse);
+  rpc ExecuteNonQuery (ExecuteQueryRequest) returns (ExecuteNonQueryResponse);
+}
+
+message DataException {
+  string className = 1;
+  string message = 2;
+  repeated google.protobuf.Any properties = 3;
+}
+
+message OpenConnectionRequest {
+  string providerInvariantName = 1;
+  string connectionString = 2;
+}
+
+message OpenConnectionResponse {
+  string connectionIdentifier = 1;
+  optional DataException dataException = 2;
+}
+
+message CloseConnectionRequest {
+  string connectionIdentifier = 1;
+}
+
+message CreateCommandRequest {
+  string connectionIdentifier = 1;
+}
+
+message CreateCommandResponse {
+  string commandIdentifier = 1;
+}
+
+message DestroyCommandRequest {
+  string connectionIdentifier = 1;
+  string commandIdentifier = 2;
+}
+
+enum IsolationLevel {
+  UNSPECIFIED = 0;
+  CHAOS = 1;
+  READ_UNCOMMITTED = 2;
+  READ_COMMITTED = 3;
+  REPEATABLE_READ = 4;
+  SERIALIZABLE = 5;
+  SNAPSHOT = 6;
+}
+
+message BeginTransactionRequest {
+  string connectionIdentifier = 1;
+  IsolationLevel isolationLevel = 2;
+}
+
+message BeginTransactionResponse {
+  string transactionIdentifier = 1;
+}
+
+message CommitTransactionRequest {
+  string connectionIdentifier = 1;
+  string transactionIdentifier = 2;
+}
+
+message CommitTransactionResponse {
+  optional DataException dataException = 2;
+}
+
+message RollbackTransactionRequest {
+  string connectionIdentifier = 1;
+  string transactionIdentifier = 2;
+}
+
+message RollbackTransactionResponse {
+  optional DataException dataException = 2;
+}
+
+message InnerField {
+  string name = 1;
+  string type = 2;
+  bytes content = 3;
+  string dataTypeName = 4;
+}
+
+message InnerParameter {
+  string name = 1;
+  string type = 2;
+  bytes content = 3;
+}
+
+message InnerProperty {
+  string name = 1;
+  string type = 2;
+  bytes content = 3;
+}
+
+message ExecuteQueryRequest {
+  string connectionString = 1;
+  string query = 2;
+  string connectionIdentifier = 3;
+  string transactionIdentifier = 4;
+  string commandIdentifier = 5;
+  repeated google.protobuf.Any parameters = 6;
+}
+
+message ExecuteQueryResponse {
+  repeated google.protobuf.Any fields = 1;
+  optional DataException dataException = 2;
+}
+
+message ExecuteNonQueryResponse {
+  int32 rowsAffected = 1;
+  optional DataException dataException = 2;
+}
