@@ -43,4 +43,4 @@ catch (GrpcDataException e)
 ````
 For more information, see JamesBrighton.Data.GrpcTest.ConsoleClient or JamesBrighton.Data.GrpcTest.WebClient on how to use the project.
 
-**Note:** The implementation is not yet complete: custom interfaces are used to mask the fact that DbConnection, DbCommand, DbTransaction, and so on, are not fully realized.
+**Note:** The implementation is not yet complete. Custom interfaces are used to mask the fact that DbConnection, DbCommand, DbTransaction, and so on, are not fully realized.
