@@ -48,16 +48,13 @@ public class GrpcConnection : IAsyncGrpcConnection
     public IDbTransaction BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
 
     /// <inheritdoc />
-    public IDbTransaction BeginTransaction(IsolationLevel il) =>
-        GrpcTransaction.BeginTransaction(channel, connectionIdentifier, this, il);
+    public IDbTransaction BeginTransaction(IsolationLevel il) => GrpcTransaction.BeginTransaction(channel, connectionIdentifier, this, il);
 
     /// <inheritdoc />
-    public async Task<IAsyncDbTransaction> BeginTransactionAsync() =>
-        await BeginTransactionAsync(IsolationLevel.ReadCommitted);
+    public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
 
     /// <inheritdoc />
-    public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) =>
-        await GrpcTransaction.BeginTransactionAsync(channel, connectionIdentifier, this, il);
+    public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) => await GrpcTransaction.BeginTransactionAsync(channel, connectionIdentifier, this, il);
 
     /// <inheritdoc />
     public void ChangeDatabase(string databaseName)
@@ -78,8 +75,7 @@ public class GrpcConnection : IAsyncGrpcConnection
     public IDbCommand CreateCommand() => GrpcCommand.CreateCommand(channel, connectionIdentifier, this);
 
     /// <inheritdoc />
-    public async Task<IAsyncDbCommand> CreateCommandAsync() =>
-        await GrpcCommand.CreateCommandAsync(channel, connectionIdentifier, this);
+    public async Task<IAsyncDbCommand> CreateCommandAsync() => await GrpcCommand.CreateCommandAsync(channel, connectionIdentifier, this);
 
     /// <inheritdoc />
     public void Dispose()
@@ -105,6 +101,12 @@ public class GrpcConnection : IAsyncGrpcConnection
     {
         var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
         channel = GrpcChannel.ForAddress(ConnectionString, new GrpcChannelOptions { HttpClient = httpClient });
+        var client = new DatabaseService.DatabaseServiceClient(channel);
+        var reply = client.OpenConnection(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString });
+        if (reply.DataException != null)
+            GrpcDataException.ThrowDataException(reply.DataException);
+
+        connectionIdentifier = reply.ConnectionIdentifier;
     }
 
     /// <inheritdoc />
@@ -116,9 +118,7 @@ public class GrpcConnection : IAsyncGrpcConnection
         var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
         channel = GrpcChannel.ForAddress(ConnectionString, new GrpcChannelOptions { HttpClient = httpClient });
         var client = new DatabaseService.DatabaseServiceClient(channel);
-        var reply = await client.OpenConnectionAsync(
-            new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString },
-            cancellationToken: cancellationToken);
+        var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
 
@@ -133,8 +133,7 @@ public class GrpcConnection : IAsyncGrpcConnection
     {
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier)) return;
         var client = new DatabaseService.DatabaseServiceClient(channel);
-        await client.CloseConnectionAsync(new CloseConnectionRequest { ConnectionIdentifier = connectionIdentifier },
-            cancellationToken: cancellationToken);
+        await client.CloseConnectionAsync(new CloseConnectionRequest { ConnectionIdentifier = connectionIdentifier }, cancellationToken: cancellationToken);
         channel?.Dispose();
         channel = null;
     }
