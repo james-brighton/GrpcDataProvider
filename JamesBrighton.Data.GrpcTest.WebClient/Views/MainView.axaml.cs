@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using JamesBrighton.Data;
 using JamesBrighton.Data.GrpcClient;
 
 namespace JamesBrighton.Data.GrpcTest.WebClient.Views;
