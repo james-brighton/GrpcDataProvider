@@ -2,11 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch JamesBrighton.Data.GrpcTestClient",
+            "name": "Launch JamesBrighton.Data.GrpcTest.ConsoleClient",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildTest",
-            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTestClient/bin/Debug/net7.0/JamesBrighton.Data.GrpcTestClient.dll",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.ConsoleClient/bin/Debug/net7.0/JamesBrighton.Data.GrpcTest.ConsoleClient.dll",
             "args": [
                 "http://localhost:5056",
                 "FirebirdSql.Data.FirebirdClient",
@@ -15,7 +15,7 @@
                 "@EMP_NO",
                 "0"
             ],
-            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTestClient",
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.ConsoleClient",
             "console": "internalConsole",
             "stopAtEntry": false
         },

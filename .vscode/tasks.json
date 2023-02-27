@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/JamesBrighton.Data.GrpcTestClient/JamesBrighton.Data.GrpcTestClient.csproj",
+                "${workspaceFolder}/JamesBrighton.Data.GrpcTest.ConsoleClient/JamesBrighton.Data.GrpcTest.ConsoleClient.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
