@@ -17,6 +17,6 @@
     <PackageReference Include="Avalonia.Web" Version="11.0.0-preview4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="./../../GrpcDataProvider/JamesBrighton.Data.GrpcClient/JamesBrighton.Data.GrpcClient.csproj" />
+    <ProjectReference Include="./../JamesBrighton.Data.GrpcClient/JamesBrighton.Data.GrpcClient.csproj" />
   </ItemGroup>
 </Project>
