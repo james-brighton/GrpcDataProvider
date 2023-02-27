@@ -1,6 +1,6 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using Database;
+using Brighton.James.Dataprovider.Grpc;
 using Grpc.Net.Client;
 using JamesBrighton.Data.Common;
 

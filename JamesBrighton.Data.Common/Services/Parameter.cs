@@ -1,4 +1,4 @@
-using Database;
+using Brighton.James.Dataprovider.Grpc;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Google.Protobuf.WellKnownTypes;

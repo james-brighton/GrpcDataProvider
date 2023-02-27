@@ -2,14 +2,14 @@ using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
+using Brighton.James.Dataprovider.Grpc;
+using JamesBrighton.Data.Common;
 using JamesBrighton.Data.GrpcServer.Helpers;
-using Database;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using JamesBrighton.Data.Common;
 
-using static Database.DatabaseService;
-using DataException = Database.DataException;
+using static Brighton.James.Dataprovider.Grpc.DatabaseService;
+using DataException = Brighton.James.Dataprovider.Grpc.DataException;
 using IsolationLevel = System.Data.IsolationLevel;
 
 namespace JamesBrighton.Data.GrpcServer.Services;
@@ -153,16 +153,16 @@ public class DatabaseService : DatabaseServiceBase
     /// </summary>
     /// <param name="isolationLevel">Given isolation level.</param>
     /// <returns>The converted value.</returns>
-    static IsolationLevel ToIsolationLevel(Database.IsolationLevel isolationLevel)
+    static IsolationLevel ToIsolationLevel(Brighton.James.Dataprovider.Grpc.IsolationLevel isolationLevel)
     {
         return isolationLevel switch
         {
-            Database.IsolationLevel.Unspecified => IsolationLevel.Unspecified,
-            Database.IsolationLevel.Chaos => IsolationLevel.Chaos,
-            Database.IsolationLevel.ReadUncommitted => IsolationLevel.ReadUncommitted,
-            Database.IsolationLevel.ReadCommitted => IsolationLevel.ReadCommitted,
-            Database.IsolationLevel.RepeatableRead => IsolationLevel.RepeatableRead,
-            Database.IsolationLevel.Serializable => IsolationLevel.Serializable,
+            Brighton.James.Dataprovider.Grpc.IsolationLevel.Unspecified => IsolationLevel.Unspecified,
+            Brighton.James.Dataprovider.Grpc.IsolationLevel.Chaos => IsolationLevel.Chaos,
+            Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadUncommitted => IsolationLevel.ReadUncommitted,
+            Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadCommitted => IsolationLevel.ReadCommitted,
+            Brighton.James.Dataprovider.Grpc.IsolationLevel.RepeatableRead => IsolationLevel.RepeatableRead,
+            Brighton.James.Dataprovider.Grpc.IsolationLevel.Serializable => IsolationLevel.Serializable,
             _ => IsolationLevel.Snapshot
         };
     }

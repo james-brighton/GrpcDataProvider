@@ -1,5 +1,5 @@
 using System.Data;
-using Database;
+using Brighton.James.Dataprovider.Grpc;
 using Grpc.Net.Client;
 using IsolationLevel = System.Data.IsolationLevel;
 
@@ -183,17 +183,17 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// </summary>
     /// <param name="isolationLevel">Given isolation level.</param>
     /// <returns>The gRPC version.</returns>
-    static Database.IsolationLevel ToIsolationLevel(IsolationLevel isolationLevel)
+    static Brighton.James.Dataprovider.Grpc.IsolationLevel ToIsolationLevel(IsolationLevel isolationLevel)
     {
         return isolationLevel switch
         {
-            IsolationLevel.Unspecified => Database.IsolationLevel.Unspecified,
-            IsolationLevel.Chaos => Database.IsolationLevel.Chaos,
-            IsolationLevel.ReadUncommitted => Database.IsolationLevel.ReadUncommitted,
-            IsolationLevel.ReadCommitted => Database.IsolationLevel.ReadCommitted,
-            IsolationLevel.RepeatableRead => Database.IsolationLevel.RepeatableRead,
-            IsolationLevel.Serializable => Database.IsolationLevel.Serializable,
-            _ => Database.IsolationLevel.Snapshot
+            IsolationLevel.Unspecified => Brighton.James.Dataprovider.Grpc.IsolationLevel.Unspecified,
+            IsolationLevel.Chaos => Brighton.James.Dataprovider.Grpc.IsolationLevel.Chaos,
+            IsolationLevel.ReadUncommitted => Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadUncommitted,
+            IsolationLevel.ReadCommitted => Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadCommitted,
+            IsolationLevel.RepeatableRead => Brighton.James.Dataprovider.Grpc.IsolationLevel.RepeatableRead,
+            IsolationLevel.Serializable => Brighton.James.Dataprovider.Grpc.IsolationLevel.Serializable,
+            _ => Brighton.James.Dataprovider.Grpc.IsolationLevel.Snapshot
         };
     }
 }
