@@ -1,7 +1,6 @@
 using System.Data.Common;
 using JamesBrighton.Data.GrpcServer.Services;
 using FirebirdSql.Data.FirebirdClient;
-using Microsoft.AspNetCore.ResponseCompression;
 
 const string providerInvariantName = "FirebirdSql.Data.FirebirdClient";
 DbProviderFactories.RegisterFactory(providerInvariantName, FirebirdClientFactory.Instance);
