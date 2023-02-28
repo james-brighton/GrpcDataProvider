@@ -1,5 +1,6 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Brighton.James.Dataprovider.Grpc;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
@@ -115,8 +116,14 @@ public class GrpcConnection : IAsyncGrpcConnection
     /// <inheritdoc />
     public async Task OpenAsync(CancellationToken cancellationToken)
     {
-        var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-        channel = GrpcChannel.ForAddress(ConnectionString, new GrpcChannelOptions { HttpClient = httpClient });
+        var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
+        {
+            HttpVersion = HttpVersion.Version11
+        });
+        channel = GrpcChannel.ForAddress(ConnectionString, new GrpcChannelOptions
+        {
+            HttpClient = httpClient
+        });
         var client = new DatabaseService.DatabaseServiceClient(channel);
         var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
         if (reply.DataException != null)
