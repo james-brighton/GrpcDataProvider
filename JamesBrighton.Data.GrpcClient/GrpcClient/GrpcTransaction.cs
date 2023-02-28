@@ -1,6 +1,7 @@
 using System.Data;
 using Brighton.James.Dataprovider.Grpc;
 using Grpc.Net.Client;
+using JamesBrighton.Data.Common.Helpers;
 using IsolationLevel = System.Data.IsolationLevel;
 
 namespace JamesBrighton.Data.GrpcClient;
@@ -151,7 +152,7 @@ public class GrpcTransaction : IAsyncDbTransaction
         var client = new DatabaseService.DatabaseServiceClient(channel);
 
         var reply = client.BeginTransaction(new BeginTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = ToIsolationLevel(isolationLevel) });
+        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
         result.TransactionIdentifier = reply.TransactionIdentifier;
         return result;
     }
@@ -173,27 +174,8 @@ public class GrpcTransaction : IAsyncDbTransaction
         var client = new DatabaseService.DatabaseServiceClient(channel);
 
         var reply = await client.BeginTransactionAsync(new BeginTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = ToIsolationLevel(isolationLevel) });
+        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
         result.TransactionIdentifier = reply.TransactionIdentifier;
         return result;
-    }
-
-    /// <summary>
-    /// Converts the given isolation level to a gRPC friendly version.
-    /// </summary>
-    /// <param name="isolationLevel">Given isolation level.</param>
-    /// <returns>The gRPC version.</returns>
-    static Brighton.James.Dataprovider.Grpc.IsolationLevel ToIsolationLevel(IsolationLevel isolationLevel)
-    {
-        return isolationLevel switch
-        {
-            IsolationLevel.Unspecified => Brighton.James.Dataprovider.Grpc.IsolationLevel.Unspecified,
-            IsolationLevel.Chaos => Brighton.James.Dataprovider.Grpc.IsolationLevel.Chaos,
-            IsolationLevel.ReadUncommitted => Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadUncommitted,
-            IsolationLevel.ReadCommitted => Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadCommitted,
-            IsolationLevel.RepeatableRead => Brighton.James.Dataprovider.Grpc.IsolationLevel.RepeatableRead,
-            IsolationLevel.Serializable => Brighton.James.Dataprovider.Grpc.IsolationLevel.Serializable,
-            _ => Brighton.James.Dataprovider.Grpc.IsolationLevel.Snapshot
-        };
     }
 }

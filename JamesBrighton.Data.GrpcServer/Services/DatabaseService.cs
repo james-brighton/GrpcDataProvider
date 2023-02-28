@@ -11,6 +11,7 @@ using Grpc.Core;
 using static Brighton.James.Dataprovider.Grpc.DatabaseService;
 using DataException = Brighton.James.Dataprovider.Grpc.DataException;
 using IsolationLevel = System.Data.IsolationLevel;
+using JamesBrighton.Data.Common.Helpers;
 
 namespace JamesBrighton.Data.GrpcServer.Services;
 
@@ -124,7 +125,7 @@ public class DatabaseService : DatabaseServiceBase
         if (!clients.TryGetValue(request.ConnectionIdentifier, out var connection))
             return new BeginTransactionResponse();
 
-        var transaction = await connection.Connection.BeginTransactionAsync(ToIsolationLevel(request.IsolationLevel));
+        var transaction = await connection.Connection.BeginTransactionAsync(IsolationLevelConverter.Convert(request.IsolationLevel));
         var transactionIdentifier = Guid.NewGuid().ToString();
         connection.AddTransaction(transactionIdentifier, transaction);
 
@@ -146,25 +147,6 @@ public class DatabaseService : DatabaseServiceBase
             return null;
         connection.ConnectionString = connectionString;
         return connection;
-    }
-
-    /// <summary>
-    /// Converts a given isolation level to another format.
-    /// </summary>
-    /// <param name="isolationLevel">Given isolation level.</param>
-    /// <returns>The converted value.</returns>
-    static IsolationLevel ToIsolationLevel(Brighton.James.Dataprovider.Grpc.IsolationLevel isolationLevel)
-    {
-        return isolationLevel switch
-        {
-            Brighton.James.Dataprovider.Grpc.IsolationLevel.Unspecified => IsolationLevel.Unspecified,
-            Brighton.James.Dataprovider.Grpc.IsolationLevel.Chaos => IsolationLevel.Chaos,
-            Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadUncommitted => IsolationLevel.ReadUncommitted,
-            Brighton.James.Dataprovider.Grpc.IsolationLevel.ReadCommitted => IsolationLevel.ReadCommitted,
-            Brighton.James.Dataprovider.Grpc.IsolationLevel.RepeatableRead => IsolationLevel.RepeatableRead,
-            Brighton.James.Dataprovider.Grpc.IsolationLevel.Serializable => IsolationLevel.Serializable,
-            _ => IsolationLevel.Snapshot
-        };
     }
 
     /// <summary>
