@@ -107,22 +107,10 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
             if (keyPair.Groups.Count != 8)
                 continue;
 
-            var values = new string[]
-            {
-                (keyPair.Groups[2].Success ? keyPair.Groups[2].Value
-                    : keyPair.Groups[4].Success ? keyPair.Groups[4].Value
-                        : keyPair.Groups[6].Success ? keyPair.Groups[6].Value
-                            : string.Empty)
-                .Trim(),
-                keyPair.Groups[3].Success ? keyPair.Groups[3].Value
-                    : keyPair.Groups[5].Success ? keyPair.Groups[5].Value
-                        : keyPair.Groups[7].Success ? keyPair.Groups[7].Value
-                            : string.Empty
-            };
-            if (values.Length != 2 || string.IsNullOrEmpty(values[0]) || string.IsNullOrEmpty(values[1]))
+            var key = FirstMatch(keyPair, new int[] { 2, 4, 6 });
+            var value = FirstMatch(keyPair, new int[] { 3, 5, 7 });
+            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
                 continue;
-            var key = values[0];
-            var value = values[1];
             if (ContainsKey(key, StringComparison.OrdinalIgnoreCase) && string.Equals(key, "provider", StringComparison.OrdinalIgnoreCase))
                 continue;
 
@@ -153,6 +141,24 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
             return "'" + value + "'";
 
         return value;
+    }
+
+    /// <summary>
+    /// Returns the first matched group value from the provided <paramref name="match"/> object
+    /// based on the provided <paramref name="groupNumbers"/> array.
+    /// </summary>
+    /// <param name="match">The Match object to retrieve the groups from.</param>
+    /// <param name="groupNumbers">An array of integers representing the group numbers to retrieve.</param>
+    /// <returns>The value of the first successful match in the provided <paramref name="groupNumbers"/> array, or an empty string if none found.</returns>
+    static string FirstMatch(Match match, int[] groupNumbers)
+    {
+        foreach (var groupNumber in groupNumbers)
+        {
+            if (match.Groups[groupNumber].Success)
+                return match.Groups[groupNumber].Value;
+        }
+
+        return string.Empty;
     }
 
     /// <summary>
