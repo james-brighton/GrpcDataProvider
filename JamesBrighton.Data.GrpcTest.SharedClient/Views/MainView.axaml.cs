@@ -117,7 +117,7 @@ public partial class MainView : UserControl
             var dataGridTextColumn = new DataGridTextColumn
             {
                 Binding = new Binding("[" + i + "]"),
-                Header = new TextBlock { Text = reader.GetName(i) + " (" + reader.GetDataTypeName(i) + ")" },
+                Header = new TextBlock { Text = reader.GetName(i) + Environment.NewLine + reader.GetDataTypeName(i) },
                 Width = DataGridLength.Auto
             };
             dataGrid.Columns.Add(dataGridTextColumn);

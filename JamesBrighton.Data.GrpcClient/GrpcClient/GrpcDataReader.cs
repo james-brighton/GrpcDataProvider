@@ -91,15 +91,13 @@ public class GrpcDataReader : IAsyncDataReader
     public byte GetByte(int i) => items[i].GetValue<byte>();
 
     /// <inheritdoc />
-    public long GetBytes(int i, long fieldOffset, byte[]? buffer, int bufferoffset, int length) =>
-        GetFieldArray(i, fieldOffset, buffer, bufferoffset, length);
+    public long GetBytes(int i, long fieldOffset, byte[]? buffer, int bufferoffset, int length) => GetFieldArray(i, fieldOffset, buffer, bufferoffset, length);
 
     /// <inheritdoc />
     public char GetChar(int i) => items[i].GetValue<char>();
 
     /// <inheritdoc />
-    public long GetChars(int i, long fieldoffset, char[]? buffer, int bufferoffset, int length) =>
-        GetFieldArray(i, fieldoffset, buffer, bufferoffset, length);
+    public long GetChars(int i, long fieldoffset, char[]? buffer, int bufferoffset, int length) => GetFieldArray(i, fieldoffset, buffer, bufferoffset, length);
 
     /// <inheritdoc />
     public IDataReader GetData(int i) => this;
