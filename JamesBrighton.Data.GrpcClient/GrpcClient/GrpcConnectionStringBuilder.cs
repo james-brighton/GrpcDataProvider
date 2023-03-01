@@ -43,7 +43,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     /// <inheritdoc />
     public string this[string key]
     {
-        get => options[key];
+        get => options.FirstOrDefault(x => string.Equals(x.Key, key, StringComparison.OrdinalIgnoreCase)).Value ?? "";
         set => options[key] = value;
     }
 
@@ -63,7 +63,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => options.TryGetValue(key, out value);
 
     /// <inheritdoc />
-    public void Add(KeyValuePair<string, string> item) =>  options.Add(item.Key, item.Value);
+    public void Add(KeyValuePair<string, string> item) => options.Add(item.Key, item.Value);
 
     /// <inheritdoc />
     public void Clear() => options.Clear();
@@ -82,6 +82,13 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
 
     /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator() => options.GetEnumerator();
+
+    /// <summary>
+    /// Converts a GrpcConnectionStringBuilder object into an instance of string.
+    /// </summary>
+    /// <param name="obj">The GrpcConnectionStringBuilder object to convert.</param>
+    /// <returns>An instance of string that represents the GrpcConnectionStringBuilder object.</returns>
+    public static implicit operator string(GrpcConnectionStringBuilder obj) => obj.ToString();
 
     /// <summary>
     /// Loads the options from the specified connection string.
@@ -107,11 +114,10 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
                         : keyPair.Groups[6].Success ? keyPair.Groups[6].Value
                             : string.Empty)
                 .Trim(),
-                (keyPair.Groups[3].Success ? keyPair.Groups[3].Value
+                keyPair.Groups[3].Success ? keyPair.Groups[3].Value
                     : keyPair.Groups[5].Success ? keyPair.Groups[5].Value
                         : keyPair.Groups[7].Success ? keyPair.Groups[7].Value
-                            : string.Empty)
-                .Trim()
+                            : string.Empty
             };
             if (values.Length != 2 || string.IsNullOrEmpty(values[0]) || string.IsNullOrEmpty(values[1]) || ContainsKey(values[0], StringComparison.OrdinalIgnoreCase))
                 continue;
@@ -132,7 +138,17 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     /// </summary>
     /// <param name="value">The value to wrap.</param>
     /// <returns>The wrapped value, if needed.</returns>
-    static string WrapValueIfNeeded(string value) => value.Contains(';') ? "'" + value + "'" : value;
+    static string WrapValueIfNeeded(string value)
+    {
+        if (value.StartsWith('\''))
+            return "\"" + value + "\"";
+        else if (value.StartsWith('\"'))
+            return "\'" + value + "\'";
+        else if (value.Contains(';') || value.StartsWith(' ') || value.EndsWith(' '))
+            return "'" + value + "'";
+        
+        return value;
+    }
 
     /// <summary>
     /// The options.
