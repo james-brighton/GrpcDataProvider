@@ -5,18 +5,24 @@ await using var connection = GrpcClientFactory.Instance.CreateConnection() as IA
 if (connection == null) return;
 connection.ConnectionString = args[0];
 connection.ServerProviderInvariantName = args[1];
-connection.ServerConnectionString = args[2];
+
+var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
+connectionStringBuilder[args[2].Split('=')[0]] = args[2].Split('=')[1];
+connectionStringBuilder[args[3].Split('=')[0]] = args[3].Split('=')[1];
+connectionStringBuilder[args[4].Split('=')[0]] = args[4].Split('=')[1];
+connectionStringBuilder[args[5].Split('=')[0]] = args[5].Split('=')[1];
+connection.ServerConnectionString = connectionStringBuilder.ToString() ?? "";
 
 await connection.OpenAsync();
 await using var transaction = await connection.BeginTransactionAsync();
 await using var command = await connection.CreateCommandAsync();
 command.Transaction = transaction;
-command.CommandText = args[3];
-if (args.Length >= 5)
+command.CommandText = args[6];
+if (args.Length >= 8)
 {
     var parameter = command.CreateParameter();
-    parameter.ParameterName = args[4];
-    parameter.Value = int.Parse(args[5]);
+    parameter.ParameterName = args[7];
+    parameter.Value = int.Parse(args[8]);
     command.Parameters.Add(parameter);
 }
 

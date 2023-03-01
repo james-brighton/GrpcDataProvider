@@ -19,7 +19,12 @@ public partial class MainView : UserControl
         if (connection == null) return;
         connection.ConnectionString = "http://localhost:5056/";
         connection.ServerProviderInvariantName = "FirebirdSql.Data.FirebirdClient";
-        connection.ServerConnectionString = "UserId=SYSDBA;Password=m4573rk3y;Database=localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb;WireCrypt=Required";
+        var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
+        connectionStringBuilder["UserId"] = "SYSDBA";
+        connectionStringBuilder["Password"] = "m4573rk3y";
+        connectionStringBuilder["Database"] = "localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb";
+        connectionStringBuilder["WireCrypt"] = "Required";
+        connection.ServerConnectionString = connectionStringBuilder.ToString() ?? "";
         try
         {
             await connection.OpenAsync();

@@ -24,6 +24,9 @@ public sealed class GrpcClientFactory : IAsyncProviderFactory
     public IAsyncConnection CreateConnection() => new GrpcConnection();
 
     /// <inheritdoc />
+	public IConnectionStringBuilder CreateConnectionStringBuilder() =>  new GrpcConnectionStringBuilder();
+
+    /// <inheritdoc />
     public IDbDataParameter CreateParameter() => new GrpcParameter();
 
     /// <inheritdoc />

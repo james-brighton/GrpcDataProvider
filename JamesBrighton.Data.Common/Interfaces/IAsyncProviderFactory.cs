@@ -17,6 +17,12 @@ public interface IAsyncProviderFactory
     /// </summary>
     /// <returns>An <see cref="IAsyncConnection"/> object.</returns>
     IAsyncConnection CreateConnection();
+    /// <inheritdoc />
+    /// <summary>
+    /// Creates a new instance of a  database connection string builder object.
+    /// </summary>
+    /// <returns>An <see cref="IConnectionStringBuilder"/> object.</returns>
+	IConnectionStringBuilder CreateConnectionStringBuilder();
     /// <summary>
     /// Creates a new instance of an asynchronous database parameter object.
     /// </summary>
