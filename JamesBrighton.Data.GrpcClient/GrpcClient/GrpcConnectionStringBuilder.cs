@@ -119,9 +119,14 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
                         : keyPair.Groups[7].Success ? keyPair.Groups[7].Value
                             : string.Empty
             };
-            if (values.Length != 2 || string.IsNullOrEmpty(values[0]) || string.IsNullOrEmpty(values[1]) || ContainsKey(values[0], StringComparison.OrdinalIgnoreCase))
+            if (values.Length != 2 || string.IsNullOrEmpty(values[0]) || string.IsNullOrEmpty(values[1]))
                 continue;
-            options.TryAdd(values[0], values[1]);
+            var key = values[0];
+            var value = values[1];
+            if (ContainsKey(key, StringComparison.OrdinalIgnoreCase) && string.Equals(key, "provider", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            options[key] = value;
         }
     }
 
@@ -146,7 +151,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
             return "\'" + value + "\'";
         else if (value.Contains(';') || value.StartsWith(' ') || value.EndsWith(' '))
             return "'" + value + "'";
-        
+
         return value;
     }
 
