@@ -13,16 +13,20 @@
   </UserControl.Resources>
   <Grid Margin="8,8,8,8">
     <StackPanel Spacing="8">
-      <TextBlock Text="UserId"/>
-      <TextBox Name="userIdTextBox" Text="SYSDBA"/>
-      <TextBlock Text="Password"/>
-      <TextBox Name="passwordTextBox" Text="masterkey"/>
+      <Grid ColumnDefinitions="*,8,*" RowDefinitions="*,*">
+        <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,8" Text="UserId"/>
+        <TextBox Grid.Column="0" Grid.Row="1" Name="userIdTextBox" Text="SYSDBA"/>
+        <TextBlock Grid.Column="2" Grid.Row="0" Margin="0,0,0,8" Text="Password"/>
+        <TextBox Grid.Column="2" Grid.Row="1" Name="passwordTextBox" Text="masterkey"/>
+      </Grid>
       <TextBlock Text="Database"/>
       <TextBox Name="databaseTextBox" Text="localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb"/>
-      <TextBlock Text="Query"/>
-      <TextBox Name="queryTextBox" Text="SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO"/>
-      <TextBlock Text="Parameter"/>
-      <TextBox Name="parameterTextBox" Text="0"/>
+      <Grid ColumnDefinitions="*,8,*" RowDefinitions="*,*">
+        <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,8" Text="Query"/>
+        <TextBox Grid.Column="0" Grid.Row="1" Name="queryTextBox" Text="SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO"/>
+        <TextBlock Grid.Column="2" Grid.Row="0" Margin="0,0,0,8" Text="Parameter"/>
+        <TextBox Grid.Column="2" Grid.Row="1" Name="parameterTextBox" Text="0"/>
+      </Grid>
       <Button Click="ButtonClick">Get data</Button>
       <DataGrid AutoGenerateColumns="False" Name="dataGrid"></DataGrid>
       <TextBlock Name="outputTextBlock"/>
