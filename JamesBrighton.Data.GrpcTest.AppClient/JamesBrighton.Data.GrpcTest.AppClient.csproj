@@ -1,25 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
-    <WasmMainJSPath>AppBundle\main.js</WasmMainJSPath>
     <OutputType>Exe</OutputType>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
-    <WasmExtraFilesToDeploy Include="AppBundle\**" />
+    <AvaloniaResource Include="Assets\**" />
+    <None Remove=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview4" />
-    <PackageReference Include="Avalonia.Web" Version="11.0.0-preview4" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="./../JamesBrighton.Data.GrpcTest.SharedClient/JamesBrighton.Data.GrpcTest.SharedClient.csproj" />
   </ItemGroup>
-	<ItemGroup>
-		<AvaloniaResource Include="Font/**/*" />
-	</ItemGroup>
 </Project>

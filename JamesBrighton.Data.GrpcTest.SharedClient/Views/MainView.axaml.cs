@@ -1,20 +1,21 @@
+using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using JamesBrighton.Data.GrpcClient;
 
-namespace JamesBrighton.Data.GrpcTest.WebClient.Views;
+namespace JamesBrighton.Data.GrpcTest.SharedClient.Views;
 
 public partial class MainView : UserControl
 {
     public MainView()
     {
         InitializeComponent();
+        dataGrid.Items = items;
     }
 
     async void ButtonClick(object? sender, RoutedEventArgs e)
     {
-        var textBlock = this.FindControl<TextBlock>("TextBlock");
-        if (textBlock == null) return;
         await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
         if (connection == null) return;
         var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
@@ -22,9 +23,9 @@ public partial class MainView : UserControl
         connection.ConnectionString = connectionStringBuilder.ToString() ?? "";
         connection.ServerProviderInvariantName = "FirebirdSql.Data.FirebirdClient";
         connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
-        connectionStringBuilder["UserId"] = "SYSDBA";
-        connectionStringBuilder["Password"] = "m4573rk3y";
-        connectionStringBuilder["Database"] = "localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb";
+        connectionStringBuilder["UserId"] = userIdTextBox.Text ?? "";
+        connectionStringBuilder["Password"] = passwordTextBox.Text ?? "";
+        connectionStringBuilder["Database"] = databaseTextBox.Text ?? "";
         connectionStringBuilder["WireCrypt"] = "Required";
         connection.ServerConnectionString = connectionStringBuilder.ToString() ?? "";
         try
@@ -33,7 +34,7 @@ public partial class MainView : UserControl
         }
         catch (Grpc.Core.RpcException e1)
         {
-            textBlock.Text = e1.Message + "\n" + e1.StackTrace;
+            outputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
             return;
         }
         await using var transaction = await connection.BeginTransactionAsync();
@@ -48,17 +49,25 @@ public partial class MainView : UserControl
         try
         {
             await using var reader = await command.ExecuteReaderAsync();
-            var lines = new List<string>();
+            var firstTime = true;
+            items.Clear();
             while (await reader.ReadAsync(CancellationToken.None))
             {
-                var line = new List<string>();
+                if (firstTime)
+                {
+                    SetupColumns(reader);
+                    firstTime = false;
+                }
+                var item = new List<string>();
                 for (var i = 0; i < reader.FieldCount; i++)
                 {
-                    line.Add(reader.GetName(i) + (!reader.IsDBNull(i) ? (": " + reader[i] + " (") : ": <Empty> (") + reader.GetDataTypeName(i) + ")");
+                    if (!reader.IsDBNull(i))
+                        item.Add(reader[i].ToString() ?? "");
+                    else
+                        item.Add("<Empty>");
                 }
-                lines.Add(string.Join(", ", line));
+                items.Add(item);
             }
-            textBlock.Text = string.Join(Environment.NewLine, lines);
 
             await transaction.CommitAsync(CancellationToken.None);
         }
@@ -69,7 +78,24 @@ public partial class MainView : UserControl
             var s = e1.ClassName + ": " + e1.Message;
             for (var i = 0; i < e1.GetPropertyCount(); i++)
                 list.Add(e1.GetPropertyName(i) + ": " + e1[i]);
-            textBlock.Text = s + Environment.NewLine + string.Join(Environment.NewLine, list);
+            outputTextBlock.Text = s + Environment.NewLine + string.Join(Environment.NewLine, list);
         }
     }
+
+    void SetupColumns(IAsyncDataReader reader)
+    {
+        dataGrid.Columns.Clear();
+        for (var i = 0; i < reader.FieldCount; i++)
+        {
+            var dataGridTextColumn = new DataGridTextColumn
+            {
+                Binding = new Binding("[" + i.ToString() + "]"),
+                Header = new TextBlock { Text = reader.GetName(i) + " (" + reader.GetDataTypeName(i) + ")" },
+                Width = DataGridLength.Auto
+            };
+            dataGrid.Columns.Add(dataGridTextColumn);
+        }
+    }
+
+    readonly AvaloniaList<List<string>> items = new();
 }

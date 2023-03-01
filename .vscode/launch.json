@@ -20,6 +20,17 @@
             }
         },
         {
+            "name": "JamesBrighton.Data.GrpcTest.AppClient",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildTestApp",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.AppClient/bin/Debug/net7.0/JamesBrighton.Data.GrpcTest.AppClient.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.AppClient",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
             "name": "JamesBrighton.Data.GrpcTest.ConsoleClient",
             "type": "coreclr",
             "request": "launch",

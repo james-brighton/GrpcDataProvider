@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using JamesBrighton.Data.GrpcTest.WebClient.Views;
+using JamesBrighton.Data.GrpcTest.SharedClient.Views;
 
 namespace JamesBrighton.Data.GrpcTest.WebClient;
 

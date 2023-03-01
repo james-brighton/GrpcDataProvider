@@ -216,7 +216,7 @@ public class DatabaseService : DatabaseServiceBase
                 {
                     var field = !reader.IsDBNull(i)
                         ? new DataField { Name = reader.GetName(i), Value = reader[i], DataTypeName = reader.GetDataTypeName(i) }
-                        : new DataField();
+                        : new DataField { Name = reader.GetName(i), DataTypeName = reader.GetDataTypeName(i) };
                     row.Fields.Add(field);
                 }
 

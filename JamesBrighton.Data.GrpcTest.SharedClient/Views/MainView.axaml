@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JamesBrighton.Data.GrpcTest.SharedClient.Views.MainView"
+             Foreground="White"
+             Background="#171C2C"
+             FontFamily="{DynamicResource ContentControlThemeFontFamily}">
+  <UserControl.Resources>
+    <FontFamily x:Key="ContentControlThemeFontFamily">avares://Avalonia.Themes.Fluent/Assets#Inter</FontFamily>
+  </UserControl.Resources>
+  <Grid Margin="8,8,8,8">
+    <StackPanel Spacing="8">
+      <TextBlock Text="UserId"/>
+      <TextBox Name="userIdTextBox" Text="SYSDBA"/>
+      <TextBlock Text="Password"/>
+      <TextBox Name="passwordTextBox" Text="m4573rk3y"/>
+      <TextBlock Text="Database"/>
+      <TextBox Name="databaseTextBox" Text="localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb"/>
+      <Button Click="ButtonClick">Get data</Button>
+      <DataGrid AutoGenerateColumns="False" Name="dataGrid"></DataGrid>
+      <TextBlock Name="outputTextBlock"/>
+    </StackPanel>
+  </Grid>
+</UserControl>
