@@ -12,8 +12,6 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview4" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview4" />
-    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="./../JamesBrighton.Data.GrpcTest.SharedClient/JamesBrighton.Data.GrpcTest.SharedClient.csproj" />

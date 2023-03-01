@@ -1,3 +1,4 @@
+using System.Data;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -63,7 +64,7 @@ public partial class MainView : UserControl
         }
     }
 
-    void SetupConnection(IAsyncGrpcConnection? connection)
+    void SetupConnection(IAsyncGrpcConnection connection)
     {
         var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
         connectionStringBuilder["GrpcServer"] = "http://localhost:5056/";
@@ -77,7 +78,7 @@ public partial class MainView : UserControl
         connection.ServerConnectionString = connectionStringBuilder.ToString() ?? "";
     }
 
-    static void SetupCommand(IAsyncDbTransaction transaction, IAsyncDbCommand command)
+    static void SetupCommand(IDbTransaction transaction, IDbCommand command)
     {
         command.Transaction = transaction;
         command.CommandText = "SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO";
@@ -87,13 +88,13 @@ public partial class MainView : UserControl
         command.Parameters.Add(parameter);
     }
 
-    void SetupColumns(IAsyncDataReader reader)
+    void SetupColumns(IDataRecord reader)
     {
         for (var i = 0; i < reader.FieldCount; i++)
         {
             var dataGridTextColumn = new DataGridTextColumn
             {
-                Binding = new Binding("[" + i.ToString() + "]"),
+                Binding = new Binding("[" + i + "]"),
                 Header = new TextBlock { Text = reader.GetName(i) + " (" + reader.GetDataTypeName(i) + ")" },
                 Width = DataGridLength.Auto
             };
