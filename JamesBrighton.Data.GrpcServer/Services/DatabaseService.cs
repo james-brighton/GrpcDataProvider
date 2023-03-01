@@ -10,7 +10,6 @@ using Grpc.Core;
 
 using static Brighton.James.Dataprovider.Grpc.DatabaseService;
 using DataException = Brighton.James.Dataprovider.Grpc.DataException;
-using IsolationLevel = System.Data.IsolationLevel;
 using JamesBrighton.Data.Common.Helpers;
 
 namespace JamesBrighton.Data.GrpcServer.Services;

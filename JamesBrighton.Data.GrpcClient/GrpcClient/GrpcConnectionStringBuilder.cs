@@ -1,15 +1,15 @@
 using System.Collections;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+
+using static System.FormattableString;
 
 namespace JamesBrighton.Data.GrpcClient;
 
 /// <summary>
 /// A class for building a gRPC connection string.
 /// </summary>
-public class GrpcConnectionStringBuilder : IConnectionStringBuilder
+public partial class GrpcConnectionStringBuilder : IConnectionStringBuilder
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="GrpcConnectionStringBuilder"/> class.
@@ -48,7 +48,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     }
 
     /// <inheritdoc />
-    public override string ToString() => string.Join(";", options.Select(x => string.Format("{0}={1}", x.Key, WrapValue(x.Value))));
+    public override string ToString() => string.Join(";", options.Select(x => Invariant($"{x.Key}={WrapValue(x.Value)}")));
 
     /// <inheritdoc />
     public void Add(string key, string value) => options.Add(key, value);
@@ -97,18 +97,16 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     void FromString(string connectionString)
     {
         options.Clear();
-        const string KeyPairsRegex = "(([\\w\\s\\d]*)\\s*?=\\s*?\"([^\"]*)\"|([\\w\\s\\d]*)\\s*?=\\s*?'([^']*)'|([\\w\\s\\d]*)\\s*?=\\s*?([^\"';][^;]*))";
-
         if (string.IsNullOrEmpty(connectionString))
             return;
 
-        foreach (var keyPair in Regex.Matches(connectionString, KeyPairsRegex).Cast<Match>())
+        foreach (var keyPair in CreateRegEx().Matches(connectionString).Cast<Match>())
         {
             if (keyPair.Groups.Count != 8)
                 continue;
 
-            var key = FirstMatch(keyPair, new int[] { 2, 4, 6 });
-            var value = FirstMatch(keyPair, new int[] { 3, 5, 7 });
+            var key = FirstMatch(keyPair, new[] { 2, 4, 6 });
+            var value = FirstMatch(keyPair, new[] { 3, 5, 7 });
             if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
                 continue;
             if (ContainsKey(key, StringComparison.OrdinalIgnoreCase) && string.Equals(key, "provider", StringComparison.OrdinalIgnoreCase))
@@ -135,9 +133,9 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     {
         if (value.StartsWith('\''))
             return "\"" + value + "\"";
-        else if (value.StartsWith('\"'))
+        if (value.StartsWith('\"'))
             return "\'" + value + "\'";
-        else if (value.Contains(';') || value.StartsWith(' ') || value.EndsWith(' '))
+        if (value.Contains(';') || value.StartsWith(' ') || value.EndsWith(' '))
             return "'" + value + "'";
 
         return value;
@@ -148,9 +146,9 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     /// based on the provided <paramref name="groupNumbers"/> array.
     /// </summary>
     /// <param name="match">The Match object to retrieve the groups from.</param>
-    /// <param name="groupNumbers">An array of integers representing the group numbers to retrieve.</param>
+    /// <param name="groupNumbers">An enumerable of integers representing the group numbers to retrieve.</param>
     /// <returns>The value of the first successful match in the provided <paramref name="groupNumbers"/> array, or an empty string if none found.</returns>
-    static string FirstMatch(Match match, int[] groupNumbers)
+    static string FirstMatch(Match match, IEnumerable<int> groupNumbers)
     {
         foreach (var groupNumber in groupNumbers)
         {
@@ -165,4 +163,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     /// The options.
     /// </summary>
     readonly IDictionary<string, string> options = new Dictionary<string, string>();
+
+    [GeneratedRegex("(([\\w\\s\\d]*)\\s*?=\\s*?\"([^\"]*)\"|([\\w\\s\\d]*)\\s*?=\\s*?'([^']*)'|([\\w\\s\\d]*)\\s*?=\\s*?([^\"';][^;]*))")]
+    private static partial Regex CreateRegEx();
 }

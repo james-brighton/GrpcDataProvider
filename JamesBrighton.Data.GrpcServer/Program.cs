@@ -7,7 +7,7 @@ DbProviderFactories.RegisterFactory(providerInvariantName, FirebirdClientFactory
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding")));
+builder.Services.AddCors(o => o.AddPolicy("AllowAll", x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding")));
 builder.Services.AddGrpc();
 
 var app = builder.Build();
