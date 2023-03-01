@@ -2,10 +2,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch JamesBrighton.Data.GrpcTest.ConsoleClient",
+            "name": "JamesBrighton.Data.GrpcServer",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildTest",
+            "preLaunchTask": "buildServer",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcServer/bin/Debug/net7.0/JamesBrighton.Data.GrpcServer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcServer",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "JamesBrighton.Data.GrpcTest.ConsoleClient",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildTestConsole",
             "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.ConsoleClient/bin/Debug/net7.0/JamesBrighton.Data.GrpcTest.ConsoleClient.dll",
             "args": [
                 "http://localhost:5056",
@@ -23,22 +41,15 @@
             "stopAtEntry": false
         },
         {
-            "name": "Launch JamesBrighton.Data.GrpcServer",
+            "name": "JamesBrighton.Data.GrpcTest.WebClient",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildServer",
-            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcServer/bin/Debug/net7.0/JamesBrighton.Data.GrpcServer.dll",
+            "preLaunchTask": "buildTestWeb",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.WebClient/bin/Debug/net7.0/browser-wasm/JamesBrighton.Data.GrpcTest.WebClient.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcServer",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.WebClient",
+            "console": "internalConsole",
+            "stopAtEntry": false
         }
     ]
 }

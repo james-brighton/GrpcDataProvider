@@ -2,7 +2,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildTest",
+            "label": "buildServer",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/JamesBrighton.Data.GrpcServer/JamesBrighton.Data.GrpcServer.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "buildTestConsole",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -14,12 +26,12 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildServer",
+            "label": "buildTestWeb",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/JamesBrighton.Data.GrpcServer/JamesBrighton.Data.GrpcServer.csproj",
+                "${workspaceFolder}/JamesBrighton.Data.GrpcTest.WebClient/JamesBrighton.Data.GrpcTest.WebClient.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
