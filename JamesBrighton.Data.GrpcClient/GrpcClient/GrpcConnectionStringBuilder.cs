@@ -48,7 +48,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     }
 
     /// <inheritdoc />
-    public override string ToString() => string.Join(";", options.OrderBy(x => x.Key, StringComparer.Ordinal).Select(x => string.Format("{0}={1}", x.Key, WrapValueIfNeeded(x.Value))));
+    public override string ToString() => string.Join(";", options.Select(x => string.Format("{0}={1}", x.Key, WrapValue(x.Value))));
 
     /// <inheritdoc />
     public void Add(string key, string value) => options.Add(key, value);
@@ -143,7 +143,7 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     /// </summary>
     /// <param name="value">The value to wrap.</param>
     /// <returns>The wrapped value, if needed.</returns>
-    static string WrapValueIfNeeded(string value)
+    static string WrapValue(string value)
     {
         if (value.StartsWith('\''))
             return "\"" + value + "\"";
