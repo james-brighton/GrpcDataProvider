@@ -19,6 +19,10 @@
       <TextBox Name="passwordTextBox" Text="masterkey"/>
       <TextBlock Text="Database"/>
       <TextBox Name="databaseTextBox" Text="localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb"/>
+      <TextBlock Text="Query"/>
+      <TextBox Name="queryTextBox" Text="SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO"/>
+      <TextBlock Text="Parameter"/>
+      <TextBox Name="parameterTextBox" Text="0"/>
       <Button Click="ButtonClick">Get data</Button>
       <DataGrid AutoGenerateColumns="False" Name="dataGrid"></DataGrid>
       <TextBlock Name="outputTextBlock"/>

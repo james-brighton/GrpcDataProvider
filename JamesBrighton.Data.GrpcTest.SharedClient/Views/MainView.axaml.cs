@@ -1,4 +1,5 @@
 using System.Data;
+using System.Globalization;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -78,14 +79,35 @@ public partial class MainView : UserControl
         connection.ServerConnectionString = connectionStringBuilder.ToString() ?? "";
     }
 
-    static void SetupCommand(IDbTransaction transaction, IDbCommand command)
+    void SetupCommand(IDbTransaction transaction, IDbCommand command)
     {
         command.Transaction = transaction;
-        command.CommandText = "SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO";
+        var query = queryTextBox.Text ?? "";
+        command.CommandText = query;
+        var queryElements = query.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+        var index = queryElements.FindIndex(x => x.StartsWith('@'));
+        if (index < 0)
+            return;
+        var value = GetParameterValue();
+        if (value == null)
+            return;
         var parameter = command.CreateParameter();
-        parameter.ParameterName = "@EMP_NO";
-        parameter.Value = 0;
+        parameter.ParameterName = queryElements[index];
+        parameter.Value = value;
         command.Parameters.Add(parameter);
+    }
+
+    object? GetParameterValue()
+    {
+        var value = parameterTextBox.Text ?? "";
+        if (value.StartsWith('\"') && value.EndsWith('\"'))
+            return value[1..^1];
+        if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d))
+            return d;
+        if (int.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var i))
+            return i;
+
+        return null;
     }
 
     void SetupColumns(IDataRecord reader)
