@@ -14,19 +14,13 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
     /// <summary>
     /// Initializes a new instance of the <see cref="GrpcConnectionStringBuilder"/> class.
     /// </summary>
-    public GrpcConnectionStringBuilder()
-    {
-        ConnectionString = "";
-    }
+    public GrpcConnectionStringBuilder() => ConnectionString = "";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GrpcConnectionStringBuilder"/> class with the specified connection string.
     /// </summary>
     /// <param name="connectionString">The connection string to use.</param>
-    public GrpcConnectionStringBuilder(string connectionString)
-    {
-        ConnectionString = connectionString;
-    }
+    public GrpcConnectionStringBuilder(string connectionString) => ConnectionString = connectionString;
 
     /// <summary>
     /// Gets or sets the connection string.
@@ -112,18 +106,26 @@ public class GrpcConnectionStringBuilder : IConnectionStringBuilder
                     : keyPair.Groups[4].Success ? keyPair.Groups[4].Value
                         : keyPair.Groups[6].Success ? keyPair.Groups[6].Value
                             : string.Empty)
-                .Trim().ToLowerInvariant(),
+                .Trim(),
                 (keyPair.Groups[3].Success ? keyPair.Groups[3].Value
                     : keyPair.Groups[5].Success ? keyPair.Groups[5].Value
                         : keyPair.Groups[7].Success ? keyPair.Groups[7].Value
                             : string.Empty)
                 .Trim()
             };
-            if (values.Length != 2 || string.IsNullOrEmpty(values[0]) || string.IsNullOrEmpty(values[1]))
+            if (values.Length != 2 || string.IsNullOrEmpty(values[0]) || string.IsNullOrEmpty(values[1]) || ContainsKey(values[0], StringComparison.OrdinalIgnoreCase))
                 continue;
             options.TryAdd(values[0], values[1]);
         }
     }
+
+    /// <summary>
+    /// Determines whether the options contains an element with the specified key using the given comparison type.
+    /// </summary>
+    /// <param name="key">The key to locate in the options.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the comparison.</param>
+    /// <returns>true if the options contains an element with the key; otherwise, false.</returns>
+    bool ContainsKey(string key, StringComparison comparisonType) => options.Any(x => string.Equals(x.Key, key, comparisonType));
 
     /// <summary>
     /// Wraps the value in quotes if needed.

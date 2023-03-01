@@ -17,9 +17,11 @@ public partial class MainView : UserControl
         if (textBlock == null) return;
         await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
         if (connection == null) return;
-        connection.ConnectionString = "http://localhost:5056/";
-        connection.ServerProviderInvariantName = "FirebirdSql.Data.FirebirdClient";
         var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
+        connectionStringBuilder["GrpcServer"] = "http://localhost:5056/";
+        connection.ConnectionString = connectionStringBuilder.ToString() ?? "";
+        connection.ServerProviderInvariantName = "FirebirdSql.Data.FirebirdClient";
+        connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
         connectionStringBuilder["UserId"] = "SYSDBA";
         connectionStringBuilder["Password"] = "m4573rk3y";
         connectionStringBuilder["Database"] = "localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb";

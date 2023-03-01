@@ -3,10 +3,11 @@ using JamesBrighton.Data.GrpcClient;
 
 await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
 if (connection == null) return;
-connection.ConnectionString = args[0];
-connection.ServerProviderInvariantName = args[1];
-
 var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
+connectionStringBuilder["GrpcServer"] = args[0];
+connection.ConnectionString = connectionStringBuilder.ToString() ?? "";
+connection.ServerProviderInvariantName = args[1];
+connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
 connectionStringBuilder[args[2].Split('=')[0]] = args[2].Split('=')[1];
 connectionStringBuilder[args[3].Split('=')[0]] = args[3].Split('=')[1];
 connectionStringBuilder[args[4].Split('=')[0]] = args[4].Split('=')[1];

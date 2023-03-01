@@ -120,7 +120,8 @@ public class GrpcConnection : IAsyncGrpcConnection
         {
             HttpVersion = HttpVersion.Version11
         });
-        channel = GrpcChannel.ForAddress(ConnectionString, new GrpcChannelOptions
+        var connectionStringBuilder = new GrpcConnectionStringBuilder(ConnectionString);
+        channel = GrpcChannel.ForAddress(connectionStringBuilder["GrpcServer"], new GrpcChannelOptions
         {
             HttpClient = httpClient
         });
