@@ -40,7 +40,7 @@
                 "http://localhost:5056",
                 "FirebirdSql.Data.FirebirdClient",
                 "UserId=SYSDBA",
-                "Password=m4573rk3y",
+                "Password=masterkey",
                 "Database=localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb",
                 "WireCrypt=Required",
                 "SELECT * FROM EMPLOYEE WHERE EMP_NO > @EMP_NO",

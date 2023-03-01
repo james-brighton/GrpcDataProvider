@@ -15,7 +15,7 @@
       <TextBlock Text="UserId"/>
       <TextBox Name="userIdTextBox" Text="SYSDBA"/>
       <TextBlock Text="Password"/>
-      <TextBox Name="passwordTextBox" Text="m4573rk3y"/>
+      <TextBox Name="passwordTextBox" Text="masterkey"/>
       <TextBlock Text="Database"/>
       <TextBox Name="databaseTextBox" Text="localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb"/>
       <Button Click="ButtonClick">Get data</Button>
