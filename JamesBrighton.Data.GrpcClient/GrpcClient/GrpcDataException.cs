@@ -1,4 +1,4 @@
-using Brighton.James.Dataprovider.Grpc;
+using JamesBrighton.DataProvider.Grpc;
 using JamesBrighton.Data.Common;
 
 namespace JamesBrighton.Data.GrpcClient;

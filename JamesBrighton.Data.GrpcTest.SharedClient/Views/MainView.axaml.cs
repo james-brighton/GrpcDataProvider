@@ -13,14 +13,14 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        dataGrid.Items = items;
+        DataGrid.Items = items;
     }
 
     async void ButtonClick(object? sender, RoutedEventArgs e)
     {
         items.Clear();
-        dataGrid.Columns.Clear();
-        outputTextBlock.Text = "";
+        DataGrid.Columns.Clear();
+        OutputTextBlock.Text = "";
 
         await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
         if (connection == null) return;
@@ -31,12 +31,12 @@ public partial class MainView : UserControl
         }
         catch (Grpc.Core.RpcException e1)
         {
-            outputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
+            OutputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
             return;
         }
         catch (GrpcDataException e1)
         {
-            outputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
+            OutputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
             return;
         }
         await using var transaction = await connection.BeginTransactionAsync();
@@ -72,9 +72,9 @@ public partial class MainView : UserControl
         connection.ConnectionString = connectionStringBuilder.ToString() ?? "";
         connection.ServerProviderInvariantName = "FirebirdSql.Data.FirebirdClient";
         connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
-        connectionStringBuilder["UserId"] = userIdTextBox.Text ?? "";
-        connectionStringBuilder["Password"] = passwordTextBox.Text ?? "";
-        connectionStringBuilder["Database"] = databaseTextBox.Text ?? "";
+        connectionStringBuilder["UserId"] = UserIdTextBox.Text ?? "";
+        connectionStringBuilder["Password"] = PasswordTextBox.Text ?? "";
+        connectionStringBuilder["Database"] = DatabaseTextBox.Text ?? "";
         connectionStringBuilder["WireCrypt"] = "Required";
         connection.ServerConnectionString = connectionStringBuilder.ToString() ?? "";
     }
@@ -82,7 +82,7 @@ public partial class MainView : UserControl
     void SetupCommand(IDbTransaction transaction, IDbCommand command)
     {
         command.Transaction = transaction;
-        var query = queryTextBox.Text ?? "";
+        var query = QueryTextBox.Text ?? "";
         command.CommandText = query;
         var queryElements = query.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
         var index = queryElements.FindIndex(x => x.StartsWith('@'));
@@ -99,7 +99,7 @@ public partial class MainView : UserControl
 
     object? GetParameterValue()
     {
-        var value = parameterTextBox.Text ?? "";
+        var value = ParameterTextBox.Text ?? "";
         if (value.StartsWith('\"') && value.EndsWith('\"'))
             return value[1..^1];
         if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d))
@@ -120,11 +120,11 @@ public partial class MainView : UserControl
                 Header = new TextBlock { Text = reader.GetName(i) + Environment.NewLine + reader.GetDataTypeName(i) },
                 Width = DataGridLength.Auto
             };
-            dataGrid.Columns.Add(dataGridTextColumn);
+            DataGrid.Columns.Add(dataGridTextColumn);
         }
     }
 
-    void ReadLine(IAsyncDataReader reader)
+    void ReadLine(IDataRecord reader)
     {
         var item = new List<string>();
         for (var i = 0; i < reader.FieldCount; i++)
@@ -144,7 +144,7 @@ public partial class MainView : UserControl
         var s = exception.ClassName + ": " + exception.Message;
         for (var i = 0; i < exception.GetPropertyCount(); i++)
             list.Add(exception.GetPropertyName(i) + ": " + exception[i]);
-        outputTextBlock.Text = s + Environment.NewLine + string.Join(Environment.NewLine, list);
+        OutputTextBlock.Text = s + Environment.NewLine + string.Join(Environment.NewLine, list);
     }
 
     readonly AvaloniaList<List<string>> items = new();

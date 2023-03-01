@@ -1,7 +1,7 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using Brighton.James.Dataprovider.Grpc;
+using JamesBrighton.DataProvider.Grpc;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using IsolationLevel = System.Data.IsolationLevel;

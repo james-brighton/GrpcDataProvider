@@ -1,5 +1,5 @@
 using System.Data;
-using Brighton.James.Dataprovider.Grpc;
+using JamesBrighton.DataProvider.Grpc;
 using Grpc.Core;
 using JamesBrighton.Data.Common;
 
