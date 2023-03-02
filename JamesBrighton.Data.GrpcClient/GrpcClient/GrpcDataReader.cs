@@ -165,7 +165,8 @@ public class GrpcDataReader : IAsyncDataReader
     public bool Read()
     {
         items.Clear();
-        var result = queryResponse.ResponseStream.MoveNext(CancellationToken.None).Result;
+        // TODO: Test this properly
+        var result = queryResponse.ResponseStream.MoveNext(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
         if (!result) return false;
         var r = queryResponse.ResponseStream.Current;
         if (r.DataException != null)
