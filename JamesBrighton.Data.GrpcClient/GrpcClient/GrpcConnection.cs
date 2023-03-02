@@ -81,8 +81,7 @@ public class GrpcConnection : IAsyncGrpcConnection
     /// <inheritdoc />
     public void Dispose()
     {
-        // Trouble here?
-        CloseAsync().Wait();
+        Close();
         channel?.Dispose();
         channel = null;
         GC.SuppressFinalize(this);
