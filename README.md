@@ -10,7 +10,7 @@ An example (with Firebird):
 
 ````csharp
 await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
-connection.ConnectionString = "GrpsServer=http://localhost:5056";
+connection.ConnectionString = "GrpServer=http://localhost:5056";
 connection.ServerProviderInvariantName = "FirebirdSql.Data.FirebirdClient";
 connection.ServerConnectionString = "UserId=SYSDBA;Password=masterkey;Database=localhost:/Library/Frameworks/Firebird.framework/Versions/A/Resources/examples/empbuild/employee.fdb;WireCrypt=Required";
 
