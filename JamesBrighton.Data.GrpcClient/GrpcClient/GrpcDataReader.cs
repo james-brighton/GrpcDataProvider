@@ -36,7 +36,7 @@ public class GrpcDataReader : IAsyncDataReader
     public object this[int i] => items[i].Value;
 
     /// <inheritdoc />
-    public object this[string name] => items.FirstOrDefault(x => x.Name == name) ?? new DataField().Value;
+    public object this[string name] => items.FirstOrDefault(x => x.Name == name)?.Value ?? new DataField().Value;
 
     /// <inheritdoc />
     public int Depth => 1;
