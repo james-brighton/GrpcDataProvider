@@ -99,8 +99,15 @@ public class GrpcConnection : IAsyncGrpcConnection
     /// <inheritdoc />
     public void Open()
     {
-        var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-        channel = GrpcChannel.ForAddress(ConnectionString, new GrpcChannelOptions { HttpClient = httpClient });
+        var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
+        {
+            HttpVersion = HttpVersion.Version11
+        });
+        var connectionStringBuilder = new GrpcConnectionStringBuilder(ConnectionString);
+        channel = GrpcChannel.ForAddress(connectionStringBuilder["GrpcServer"], new GrpcChannelOptions
+        {
+            HttpClient = httpClient
+        });
         var client = new DatabaseService.DatabaseServiceClient(channel);
         var reply = client.OpenConnection(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString });
         if (reply.DataException != null)
