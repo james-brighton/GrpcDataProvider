@@ -142,7 +142,13 @@ public class GrpcDataReader : IAsyncDataReader
     public DataTable? GetSchemaTable() => null;
 
     /// <inheritdoc />
-    public string GetString(int i) => items[i].GetValue<string>();
+    public string GetString(int i)
+    {
+        var item = items[i];
+        if (!item.IsNull)
+            return item.GetValue<string>();
+        return string.Empty;
+    }
 
     /// <inheritdoc />
     public object GetValue(int i) => items[i].Value;
