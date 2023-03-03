@@ -187,7 +187,7 @@ public class GrpcCommand : IAsyncDbCommand
     public async Task<object?> ExecuteScalarAsync(CancellationToken cancellationToken)
     {
         var reader = await ExecuteReaderAsync(CommandBehavior.SingleResult, cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken) || reader.FieldCount < 0) return null;
+        if (!await reader.ReadAsync(cancellationToken) || reader.FieldCount == 0) return null;
         return reader[0];
     }
 
@@ -195,7 +195,7 @@ public class GrpcCommand : IAsyncDbCommand
     public object? ExecuteScalar()
     {
         var reader = ExecuteReader(CommandBehavior.SingleResult);
-        if (!reader.Read() || reader.FieldCount < 0) return null;
+        if (!reader.Read() || reader.FieldCount == 0) return null;
         return reader[0];
     }
 
