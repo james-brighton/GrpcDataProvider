@@ -12,39 +12,41 @@ public static class Serializer2
 	/// A dictionary that contains deserialize methods for different types.
 	/// </summary>
 	[ThreadStatic]
-	static Dictionary<Type, MemberDelegate>? DeserializeMethods;
+	static Dictionary<Type, MemberDelegate?>? DeserializeMethods;
 
 	/// <summary>
 	/// A dictionary that contains serialize methods for different types.
 	/// </summary>
 	[ThreadStatic]
-	static Dictionary<Type, MemberDelegate>? SerializeMethods;
+	static Dictionary<Type, MemberDelegate?>? SerializeMethods;
 
 	/// <summary>
 	/// Serializes the specified object to a stream using ProtoBuf serializer.
 	/// </summary>
 	/// <param name="destination">The stream to write the serialized object to.</param>
 	/// <param name="content">The object to be serialized.</param>
+	/// <returns>True on success and false otherwise.</returns>
 	/// <remarks>
 	/// This method uses the ProtoBuf.Serializer to perform the serialization.
 	/// </remarks>
-	public static void Serialize(Stream destination, object content)
+	public static bool Serialize(Stream destination, object content)
 	{
 		var type = content.GetType();
 
-        if (SerializeMethods == null)
-            SerializeMethods = new Dictionary<Type, MemberDelegate>();
+        SerializeMethods ??= new Dictionary<Type, MemberDelegate?>();
 		if (SerializeMethods.TryGetValue(type, out var f))
 		{
+			if (f == null)
+				return false;
 			f(destination, content);
-			return;
+			return true;
 		}
 
 		var serializeT = typeof(Serializer).GetMethods(BindingFlags.Public | BindingFlags.Static).FirstOrDefault(x =>
 			x is { Name: nameof(Serializer.Serialize), IsGenericMethodDefinition: true } &&
 			x.GetParameters().Length == 2 &&
 			x.GetParameters()[0].ParameterType == typeof(Stream));
-		if (serializeT == null) return;
+		if (serializeT == null) return false;
 		var serialize = serializeT.MakeGenericMethod(type);
 
 		var createAction = typeof(Serializer2)
@@ -52,36 +54,57 @@ public static class Serializer2
 			?.MakeGenericMethod(typeof(Stream), type);
 
 		if (createAction == null)
-			return;
+			return false;
 
 		var result = createAction.Invoke(null, new object[] { serialize });
 		if (result == null)
-			return;
+			return false;
 		var del = (MemberDelegate)result;
-		SerializeMethods.Add(type, del);
-		del(destination, content);
+		try
+		{
+			del(destination, content);
+			SerializeMethods.Add(type, del);
+			return true;
+		}
+		catch (InvalidOperationException)
+		{
+			SerializeMethods.Add(type, null);
+			return false;
+		}
 	}
 
 	/// <summary>
-	/// Deserializes an object from the specified stream using ProtoBuf serializer.
+	/// Tries to deserialize an object from the specified stream using ProtoBuf serializer.
 	/// </summary>
 	/// <param name="type">The type of the object to be deserialized.</param>
 	/// <param name="source">The stream containing the serialized object.</param>
-	/// <returns>The deserialized object.</returns>
+	/// <param name="value">[out] When this method returns, contains the deserialized value, if it could be deserialized; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+	/// <returns>True of deserialized successfully and false otherwise.</returns>
 	/// <remarks>
 	/// This method uses the ProtoBuf.Serializer to perform the deserialization.
 	/// </remarks>
-	public static object? Deserialize(Type type, Stream source)
+	public static bool TryDeserialize(Type type, Stream source, out object? value)
 	{
-        if (DeserializeMethods == null)
-            DeserializeMethods = new Dictionary<Type, MemberDelegate>();
+        DeserializeMethods ??= new Dictionary<Type, MemberDelegate?>();
 		if (DeserializeMethods.TryGetValue(type, out var f))
-			return f(source);
+		{
+			if (f == null)
+			{
+				value = null;
+				return false;
+			}
+			value = f(source);
+			return true;
+		}
 		var deserializeT = typeof(Serializer).GetMethods(BindingFlags.Public | BindingFlags.Static).FirstOrDefault(x =>
 			x is { Name: nameof(Serializer.Deserialize), IsGenericMethodDefinition: true } &&
 			x.GetParameters().Length == 1 &&
 			x.GetParameters()[0].ParameterType == typeof(Stream));
-		if (deserializeT == null) return null;
+		if (deserializeT == null)
+		{
+			value = null;
+			return false;
+		}
 		var deserialize = deserializeT.MakeGenericMethod(type);
 
 		var createFunc = typeof(Serializer2)
@@ -89,14 +112,32 @@ public static class Serializer2
 			?.MakeGenericMethod(typeof(Stream), type);
 
 		if (createFunc == null)
-			return null;
+		{
+			value = null;
+			return false;
+		}
 
-		var result = createFunc.Invoke(null, new object[] { deserialize });
-		if (result == null)
-			return null;
-		var del = (MemberDelegate)result;
-		DeserializeMethods.Add(type, del);
-		return del(source);
+		var func = createFunc.Invoke(null, new object[] { deserialize });
+		if (func == null)
+		{
+			value = null;
+			return false;
+		}
+		var del = (MemberDelegate)func;
+
+		try
+		{
+			var result = del(source);
+			DeserializeMethods.Add(type, del);
+			value = result;
+			return true;
+		}
+		catch (InvalidOperationException)
+		{
+			DeserializeMethods.Add(type, null);
+			value = null;
+			return false;
+		}
 	}
 
 	/// <summary>

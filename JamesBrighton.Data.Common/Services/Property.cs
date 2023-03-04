@@ -47,11 +47,11 @@ public class Property : IProperty, IMessage
         using var memoryStream = new MemoryStream();
         innerProperty.Content.WriteTo(memoryStream);
         memoryStream.Position = 0;
-        try
+        if (Serializer2.TryDeserialize(type, memoryStream, out var v))
         {
-            value = Serializer2.Deserialize(type, memoryStream) ?? emptyObject;
+            value = v ?? emptyObject;
         }
-        catch (InvalidOperationException)
+        else
         {
             innerProperty = new InnerProperty();
             value = emptyObject;
@@ -78,9 +78,8 @@ public class Property : IProperty, IMessage
         set
         {
             var memoryStream = new MemoryStream();
-            try
+            if (Serializer2.Serialize(memoryStream, value))
             {
-                Serializer2.Serialize(memoryStream, value);
                 memoryStream.Position = 0;
                 innerProperty = new InnerProperty
                 {
@@ -90,7 +89,7 @@ public class Property : IProperty, IMessage
                 };
                 this.value = value;
             }
-            catch (InvalidOperationException)
+            else
             {
                 innerProperty = new InnerProperty();
                 this.value = emptyObject;

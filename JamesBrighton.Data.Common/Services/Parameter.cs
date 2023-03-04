@@ -49,9 +49,8 @@ public class DataParameter : IDataParameter, IMessage
         set
         {
             var memoryStream = new MemoryStream();
-            try
+            if (Serializer2.Serialize(memoryStream, value))
             {
-                Serializer2.Serialize(memoryStream, value);
                 memoryStream.Position = 0;
                 innerParameter = new InnerParameter
                 {
@@ -61,7 +60,7 @@ public class DataParameter : IDataParameter, IMessage
                 };
                 this.value = value;
             }
-            catch (InvalidOperationException)
+            else
             {
                 innerParameter = new InnerParameter();
                 this.value = emptyObject;
@@ -87,11 +86,11 @@ public class DataParameter : IDataParameter, IMessage
         using var memoryStream = new MemoryStream();
         innerParameter.Content.WriteTo(memoryStream);
         memoryStream.Position = 0;
-        try
+        if (Serializer2.TryDeserialize(type, memoryStream, out var v))
         {
-            value = Serializer2.Deserialize(type, memoryStream) ?? emptyObject;
+            value = v ?? emptyObject;
         }
-        catch (InvalidOperationException)
+        else
         {
             innerParameter = new InnerParameter();
             value = emptyObject;
