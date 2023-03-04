@@ -91,8 +91,8 @@ public class GrpcCommand : IAsyncDbCommand
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
         await client.DestroyCommandAsync(new DestroyCommandRequest
-        { ConnectionIdentifier = ConnectionIdentifier, CommandIdentifier = commandIdentifier }).ConfigureAwait(false);
-        for (var i = items.Count - 1; i >= 0; i--) await items[i].DisposeAsync().ConfigureAwait(false);
+        { ConnectionIdentifier = ConnectionIdentifier, CommandIdentifier = commandIdentifier });
+        for (var i = items.Count - 1; i >= 0; i--) await items[i].DisposeAsync();
         GC.SuppressFinalize(this);
     }
 
@@ -158,13 +158,13 @@ public class GrpcCommand : IAsyncDbCommand
 
     /// <inheritdoc />
     public async Task<IAsyncDataReader> ExecuteReaderAsync(CancellationToken cancellationToken) =>
-        await ExecuteReaderAsync(CommandBehavior.Default, CancellationToken.None).ConfigureAwait(false);
+        await ExecuteReaderAsync(CommandBehavior.Default, CancellationToken.None);
 
     /// <inheritdoc />
     public async Task<IAsyncDataReader> ExecuteReaderAsync(CommandBehavior behavior,
         CancellationToken cancellationToken)
     {
-        await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+        await Task.Delay(0, cancellationToken);
         if (ExecuteReader(behavior) is not IAsyncDataReader result)
             throw new InvalidOperationException("Reader is not of type IAsyncDataReader.");
         return result;
@@ -172,22 +172,22 @@ public class GrpcCommand : IAsyncDbCommand
 
     /// <inheritdoc />
     public async Task<IAsyncDataReader> ExecuteReaderAsync(CommandBehavior behavior) =>
-        await ExecuteReaderAsync(behavior, CancellationToken.None).ConfigureAwait(false);
+        await ExecuteReaderAsync(behavior, CancellationToken.None);
 
     /// <inheritdoc />
-    public async Task<IAsyncDataReader> ExecuteReaderAsync() => await ExecuteReaderAsync(CommandBehavior.Default).ConfigureAwait(false);
+    public async Task<IAsyncDataReader> ExecuteReaderAsync() => await ExecuteReaderAsync(CommandBehavior.Default);
 
     /// <inheritdoc />
     public async Task<object?> ExecuteScalarAsync()
     {
-        return await ExecuteScalarAsync(CancellationToken.None).ConfigureAwait(false);
+        return await ExecuteScalarAsync(CancellationToken.None);
     }
 
     /// <inheritdoc />
     public async Task<object?> ExecuteScalarAsync(CancellationToken cancellationToken)
     {
-        var reader = await ExecuteReaderAsync(CommandBehavior.SingleResult, cancellationToken).ConfigureAwait(false);
-        if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false) || reader.FieldCount == 0) return null;
+        var reader = await ExecuteReaderAsync(CommandBehavior.SingleResult, cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken) || reader.FieldCount == 0) return null;
         return reader[0];
     }
 
@@ -242,7 +242,7 @@ public class GrpcCommand : IAsyncDbCommand
         var client = new DatabaseService.DatabaseServiceClient(channel);
 
         var reply = await client.CreateCommandAsync(new CreateCommandRequest
-        { ConnectionIdentifier = connectionIdentifier }).ConfigureAwait(false);
+        { ConnectionIdentifier = connectionIdentifier });
         result.commandIdentifier = reply.CommandIdentifier;
         return result;
     }
@@ -268,7 +268,7 @@ public class GrpcCommand : IAsyncDbCommand
         };
         foreach (var p in parameters)
             query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
-        var reply = await client.ExecuteNonQueryAsync(query, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var reply = await client.ExecuteNonQueryAsync(query, cancellationToken: cancellationToken);
 
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
@@ -277,5 +277,5 @@ public class GrpcCommand : IAsyncDbCommand
     }
 
     /// <inheritdoc />
-    public async Task<int> ExecuteNonQueryAsync() => await ExecuteNonQueryAsync(CancellationToken.None).ConfigureAwait(false);
+    public async Task<int> ExecuteNonQueryAsync() => await ExecuteNonQueryAsync(CancellationToken.None);
 }

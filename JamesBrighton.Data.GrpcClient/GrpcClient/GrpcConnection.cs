@@ -52,10 +52,10 @@ public class GrpcConnection : IAsyncGrpcConnection
     public IDbTransaction BeginTransaction(IsolationLevel il) => GrpcTransaction.BeginTransaction(channel, connectionIdentifier, this, il);
 
     /// <inheritdoc />
-    public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted).ConfigureAwait(false);
+    public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
 
     /// <inheritdoc />
-    public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) => await GrpcTransaction.BeginTransactionAsync(channel, connectionIdentifier, this, il).ConfigureAwait(false);
+    public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) => await GrpcTransaction.BeginTransactionAsync(channel, connectionIdentifier, this, il);
 
     /// <inheritdoc />
     public void ChangeDatabase(string databaseName)
@@ -76,7 +76,7 @@ public class GrpcConnection : IAsyncGrpcConnection
     public IDbCommand CreateCommand() => GrpcCommand.CreateCommand(channel, connectionIdentifier, this);
 
     /// <inheritdoc />
-    public async Task<IAsyncDbCommand> CreateCommandAsync() => await GrpcCommand.CreateCommandAsync(channel, connectionIdentifier, this).ConfigureAwait(false);
+    public async Task<IAsyncDbCommand> CreateCommandAsync() => await GrpcCommand.CreateCommandAsync(channel, connectionIdentifier, this);
 
     /// <inheritdoc />
     public void Dispose()
@@ -90,7 +90,7 @@ public class GrpcConnection : IAsyncGrpcConnection
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync().ConfigureAwait(false);
+        await CloseAsync();
         channel?.Dispose();
         channel = null;
         GC.SuppressFinalize(this);
@@ -117,7 +117,7 @@ public class GrpcConnection : IAsyncGrpcConnection
     }
 
     /// <inheritdoc />
-    public async Task OpenAsync() => await OpenAsync(CancellationToken.None).ConfigureAwait(false);
+    public async Task OpenAsync() => await OpenAsync(CancellationToken.None);
 
     /// <inheritdoc />
     public async Task OpenAsync(CancellationToken cancellationToken)
@@ -132,7 +132,7 @@ public class GrpcConnection : IAsyncGrpcConnection
             HttpClient = httpClient
         });
         var client = new DatabaseService.DatabaseServiceClient(channel);
-        var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
 
@@ -140,14 +140,14 @@ public class GrpcConnection : IAsyncGrpcConnection
     }
 
     /// <inheritdoc />
-    public async Task CloseAsync() => await CloseAsync(CancellationToken.None).ConfigureAwait(false);
+    public async Task CloseAsync() => await CloseAsync(CancellationToken.None);
 
     /// <inheritdoc />
     public async Task CloseAsync(CancellationToken cancellationToken)
     {
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier)) return;
         var client = new DatabaseService.DatabaseServiceClient(channel);
-        await client.CloseConnectionAsync(new CloseConnectionRequest { ConnectionIdentifier = connectionIdentifier }, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await client.CloseConnectionAsync(new CloseConnectionRequest { ConnectionIdentifier = connectionIdentifier }, cancellationToken: cancellationToken);
         channel?.Dispose();
         channel = null;
     }

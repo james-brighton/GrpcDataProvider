@@ -54,7 +54,7 @@ public class DatabaseService : DatabaseServiceBase
         }
         try
         {
-            await connection.OpenAsync().ConfigureAwait(false);
+            await connection.OpenAsync();
         }
         catch (Exception e)
         {
@@ -74,7 +74,7 @@ public class DatabaseService : DatabaseServiceBase
     public override async Task<Empty> CloseConnection(CloseConnectionRequest request, ServerCallContext context)
     {
         if (clients.TryRemove(request.ConnectionIdentifier, out var connection))
-            await connection.Connection.CloseAsync().ConfigureAwait(false);
+            await connection.Connection.CloseAsync();
         return new Empty();
     }
 
@@ -86,7 +86,7 @@ public class DatabaseService : DatabaseServiceBase
     /// <returns>The command identifier.</returns>
     public override async Task<CreateCommandResponse> CreateCommand(CreateCommandRequest request, ServerCallContext context)
     {
-        await Task.Delay(0, context.CancellationToken).ConfigureAwait(false);
+        await Task.Delay(0, context.CancellationToken);
         if (!clients.TryGetValue(request.ConnectionIdentifier, out var connection))
             return new CreateCommandResponse();
 
@@ -108,7 +108,7 @@ public class DatabaseService : DatabaseServiceBase
         if (!clients.TryGetValue(request.ConnectionIdentifier, out var connection))
             return new Empty();
 
-        await connection.DestroyCommand(request.CommandIdentifier).ConfigureAwait(false);
+        await connection.DestroyCommand(request.CommandIdentifier);
         return new Empty();
     }
 
@@ -124,7 +124,7 @@ public class DatabaseService : DatabaseServiceBase
         if (!clients.TryGetValue(request.ConnectionIdentifier, out var connection))
             return new BeginTransactionResponse();
 
-        var transaction = await connection.Connection.BeginTransactionAsync(IsolationLevelConverter.Convert(request.IsolationLevel)).ConfigureAwait(false);
+        var transaction = await connection.Connection.BeginTransactionAsync(IsolationLevelConverter.Convert(request.IsolationLevel));
         var transactionIdentifier = Guid.NewGuid().ToString();
         connection.AddTransaction(transactionIdentifier, transaction);
 
@@ -161,12 +161,12 @@ public class DatabaseService : DatabaseServiceBase
 
         try
         {
-            await connection.CommitAndDestroy(request.TransactionIdentifier).ConfigureAwait(false);
+            await connection.CommitAndDestroy(request.TransactionIdentifier);
             return new CommitTransactionResponse();
         }
         catch (Exception e)
         {
-            await connection.Destroy(request.TransactionIdentifier).ConfigureAwait(false);
+            await connection.Destroy(request.TransactionIdentifier);
             return new CommitTransactionResponse { DataException = CreateException(e) };
         }
     }
@@ -184,12 +184,12 @@ public class DatabaseService : DatabaseServiceBase
 
         try
         {
-            await connection.RollbackAndDestroy(request.TransactionIdentifier).ConfigureAwait(false);
+            await connection.RollbackAndDestroy(request.TransactionIdentifier);
             return new RollbackTransactionResponse();
         }
         catch (Exception e)
         {
-            await connection.Destroy(request.TransactionIdentifier).ConfigureAwait(false);
+            await connection.Destroy(request.TransactionIdentifier);
             return new RollbackTransactionResponse { DataException = CreateException(e) };
         }
     }
@@ -208,8 +208,8 @@ public class DatabaseService : DatabaseServiceBase
             return;
         try
         {
-            await using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
-            while (await reader.ReadAsync().ConfigureAwait(false) && !context.CancellationToken.IsCancellationRequested)
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync() && !context.CancellationToken.IsCancellationRequested)
             {
                 var row = new ExecuteQueryResponse();
                 for (var i = 0; i < reader.FieldCount; i++)
@@ -220,13 +220,13 @@ public class DatabaseService : DatabaseServiceBase
                     row.Fields.Add(field);
                 }
 
-                await responseStream.WriteAsync(row).ConfigureAwait(false);
+                await responseStream.WriteAsync(row);
             }
         }
         catch (Exception e)
         {
             var result = new ExecuteQueryResponse { DataException = CreateException(e) };
-            await responseStream.WriteAsync(result).ConfigureAwait(false);
+            await responseStream.WriteAsync(result);
         }
     }
 
@@ -243,7 +243,7 @@ public class DatabaseService : DatabaseServiceBase
             return new ExecuteNonQueryResponse();
         try
         {
-            var rowsAffected = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+            var rowsAffected = await command.ExecuteNonQueryAsync();
             return new ExecuteNonQueryResponse { RowsAffected = rowsAffected};
         }
         catch (Exception e)

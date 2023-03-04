@@ -67,7 +67,7 @@ public class DatabaseConnection
         var i = GetCommandIndex(commandIdentifier);
         if (i < 0)
             return;
-        await Commands[i].Command.DisposeAsync().ConfigureAwait(false);
+        await Commands[i].Command.DisposeAsync();
         Commands.RemoveAt(i);
     }
 
@@ -81,8 +81,8 @@ public class DatabaseConnection
         var i = GetTransactionIndex(transactionIdentifier);
         if (i < 0)
             return;
-        await Transactions[i].Transaction.CommitAsync().ConfigureAwait(false);
-        await Transactions[i].Transaction.DisposeAsync().ConfigureAwait(false);
+        await Transactions[i].Transaction.CommitAsync();
+        await Transactions[i].Transaction.DisposeAsync();
         Transactions.RemoveAt(i);
     }
 
@@ -96,8 +96,8 @@ public class DatabaseConnection
         var i = GetTransactionIndex(transactionIdentifier);
         if (i < 0)
             return;
-        await Transactions[i].Transaction.RollbackAsync().ConfigureAwait(false);
-        await Transactions[i].Transaction.DisposeAsync().ConfigureAwait(false);
+        await Transactions[i].Transaction.RollbackAsync();
+        await Transactions[i].Transaction.DisposeAsync();
         Transactions.RemoveAt(i);
     }
 
@@ -111,7 +111,7 @@ public class DatabaseConnection
         var i = GetTransactionIndex(transactionIdentifier);
         if (i < 0)
             return;
-        await Transactions[i].Transaction.DisposeAsync().ConfigureAwait(false);
+        await Transactions[i].Transaction.DisposeAsync();
         Transactions.RemoveAt(i);
     }
     /// <summary>

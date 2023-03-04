@@ -60,13 +60,13 @@ public class GrpcDataReader : IAsyncDataReader
     /// <inheritdoc />
     public async Task CloseAsync()
     {
-        await CloseAsync(CancellationToken.None).ConfigureAwait(false);
+        await CloseAsync(CancellationToken.None);
     }
 
     /// <inheritdoc />
     public async Task CloseAsync(CancellationToken cancellationToken)
     {
-        await Task.Delay(0, cancellationToken).ConfigureAwait(false);
+        await Task.Delay(0, cancellationToken);
         queryResponse.Dispose();
         opened = false;
     }
@@ -80,7 +80,7 @@ public class GrpcDataReader : IAsyncDataReader
 
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync().ConfigureAwait(false);
+        await CloseAsync();
         GC.SuppressFinalize(this);
     }
 
@@ -187,13 +187,13 @@ public class GrpcDataReader : IAsyncDataReader
     }
 
     /// <inheritdoc />
-    public async Task<bool> ReadAsync() => await ReadAsync(CancellationToken.None).ConfigureAwait(false);
+    public async Task<bool> ReadAsync() => await ReadAsync(CancellationToken.None);
 
     /// <inheritdoc />
     public async Task<bool> ReadAsync(CancellationToken cancellationToken)
     {
         items.Clear();
-        var result = await queryResponse.ResponseStream.MoveNext(cancellationToken).ConfigureAwait(false);
+        var result = await queryResponse.ResponseStream.MoveNext(cancellationToken);
         if (!result) return false;
         var r = queryResponse.ResponseStream.Current;
         if (r.DataException != null)
