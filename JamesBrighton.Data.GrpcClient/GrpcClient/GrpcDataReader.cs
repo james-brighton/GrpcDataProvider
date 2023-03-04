@@ -16,33 +16,37 @@ public class GrpcDataReader : IAsyncDataReader
     readonly List<DataField> items = new();
 
     /// <summary>
-    /// The query response object.
+    /// The asynchronous query response object.
     /// </summary>
-    readonly AsyncServerStreamingCall<ExecuteQueryResponse>? queryResponse;
+    readonly AsyncServerStreamingCall<ExecuteQueryResponse>? asyncResponse;
     /// <summary>
     /// The synchronous query response object.
     /// </summary>
-    readonly ExecuteQuerySyncResponse? reply;
+    readonly ExecuteQuerySyncResponse? syncResponse;
     /// <summary>
     /// The synchronous query response object index.
     /// </summary>
-    int replyIndex;
+    int syncResponseIndex;
 
     bool opened;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GrpcDataReader" /> class.
     /// </summary>
-    /// <param name="queryResponse">Query response.</param>
-    public GrpcDataReader(AsyncServerStreamingCall<ExecuteQueryResponse> queryResponse)
+    /// <param name="asyncResponse">Query response.</param>
+    public GrpcDataReader(AsyncServerStreamingCall<ExecuteQueryResponse> asyncResponse)
     {
-        this.queryResponse = queryResponse;
+        this.asyncResponse = asyncResponse;
         opened = true;
     }
 
-    public GrpcDataReader(ExecuteQuerySyncResponse reply)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GrpcDataReader" /> class.
+    /// </summary>
+    /// <param name="syncResponse">Query response.</param>
+    public GrpcDataReader(ExecuteQuerySyncResponse syncResponse)
     {
-        this.reply = reply;
+        this.syncResponse = syncResponse;
         opened = true;
     }
 
@@ -67,7 +71,7 @@ public class GrpcDataReader : IAsyncDataReader
     /// <inheritdoc />
     public void Close()
     {
-        queryResponse?.Dispose();
+        asyncResponse?.Dispose();
         opened = false;
     }
 
@@ -81,7 +85,7 @@ public class GrpcDataReader : IAsyncDataReader
     public async Task CloseAsync(CancellationToken cancellationToken)
     {
         await Task.Delay(0, cancellationToken);
-        queryResponse?.Dispose();
+        asyncResponse?.Dispose();
         opened = false;
     }
 
@@ -185,21 +189,21 @@ public class GrpcDataReader : IAsyncDataReader
     public bool Read()
     {
         items.Clear();
-        if (reply == null)
+        if (syncResponse == null)
             return false;
 
-        if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+        if (syncResponse.DataException != null)
+            GrpcDataException.ThrowDataException(syncResponse.DataException);
 
-        if (replyIndex >= reply.Rows.Count)
+        if (syncResponseIndex >= syncResponse.Rows.Count)
             return false;
 
-        foreach (var field in reply.Rows[replyIndex].Fields)
+        foreach (var field in syncResponse.Rows[syncResponseIndex].Fields)
         {
             var f = (DataField)field;
             items.Add(f);
         }
-        replyIndex++;
+        syncResponseIndex++;
         return true;
     }
 
@@ -210,11 +214,11 @@ public class GrpcDataReader : IAsyncDataReader
     public async Task<bool> ReadAsync(CancellationToken cancellationToken)
     {
         items.Clear();
-        if (queryResponse == null)
+        if (asyncResponse == null)
             return false;
-        var result = await queryResponse.ResponseStream.MoveNext(cancellationToken);
+        var result = await asyncResponse.ResponseStream.MoveNext(cancellationToken);
         if (!result) return false;
-        var r = queryResponse.ResponseStream.Current;
+        var r = asyncResponse.ResponseStream.Current;
         if (r.DataException != null)
             GrpcDataException.ThrowDataException(r.DataException);
         foreach (var field in r.Fields)

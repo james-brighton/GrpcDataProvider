@@ -214,9 +214,7 @@ public class DatabaseService : DatabaseServiceBase
                 var row = new ExecuteQueryResponse();
                 for (var i = 0; i < reader.FieldCount; i++)
                 {
-                    var field = !reader.IsDBNull(i)
-                        ? new DataField { Name = reader.GetName(i), Value = reader[i], DataTypeName = reader.GetDataTypeName(i) }
-                        : new DataField { Name = reader.GetName(i), DataTypeName = reader.GetDataTypeName(i) };
+                    var field = GetField(reader, i);
                     row.Fields.Add(field);
                 }
 
@@ -250,9 +248,7 @@ public class DatabaseService : DatabaseServiceBase
                 var row = new ExecuteQuerySyncResponseRow();
                 for (var i = 0; i < reader.FieldCount; i++)
                 {
-                    var field = !reader.IsDBNull(i)
-                        ? new DataField { Name = reader.GetName(i), Value = reader[i], DataTypeName = reader.GetDataTypeName(i) }
-                        : new DataField { Name = reader.GetName(i), DataTypeName = reader.GetDataTypeName(i) };
+                    var field = GetField(reader, i);
                     row.Fields.Add(field);
                 }
 
@@ -395,4 +391,19 @@ public class DatabaseService : DatabaseServiceBase
     /// <returns>A <see cref="DbConnection"/> object associated with the specified connection identifier,
     /// or null if the connection identifier is not found in the dictionary.</returns>
     static DbConnection? GetConnection(ExecuteQueryRequest request) => clients.TryGetValue(request.ConnectionIdentifier, out var connection) ? connection.Connection : null;
+
+    /// <summary>
+    /// Gets the field from a reader with an index.
+    /// </summary>
+    /// <param name="reader">Reader containing the fields.</param>
+    /// <param name="i">Index of field to get.</param>
+    /// <returns>The field.</returns>
+    static DataField GetField(IDataReader reader, int i)
+    {
+        return !reader.IsDBNull(i)
+            ? new DataField { Name = reader.GetName(i), Value = reader[i], DataTypeName = reader.GetDataTypeName(i) }
+            : new DataField { Name = reader.GetName(i), DataTypeName = reader.GetDataTypeName(i) };
+    }
+
+
 }
