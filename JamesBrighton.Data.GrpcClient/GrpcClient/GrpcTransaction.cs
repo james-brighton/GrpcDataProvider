@@ -73,7 +73,7 @@ public class GrpcTransaction : IAsyncDbTransaction
 
     public async ValueTask DisposeAsync()
     {
-        await Task.Delay(0);
+        await Task.Delay(0).ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 
@@ -94,7 +94,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public async Task CommitAsync()
     {
-        await CommitAsync(CancellationToken.None);
+        await CommitAsync(CancellationToken.None).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -108,7 +108,7 @@ public class GrpcTransaction : IAsyncDbTransaction
         var reply = await client.CommitTransactionAsync(
             new CommitTransactionRequest
             { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier },
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
     }
@@ -116,7 +116,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public async Task RollbackAsync()
     {
-        await RollbackAsync(CancellationToken.None);
+        await RollbackAsync(CancellationToken.None).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -130,7 +130,7 @@ public class GrpcTransaction : IAsyncDbTransaction
         var reply = await client.RollbackTransactionAsync(
             new RollbackTransactionRequest
             { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier },
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
         if (reply.DataException != null)
             GrpcDataException.ThrowDataException(reply.DataException);
     }
@@ -174,7 +174,7 @@ public class GrpcTransaction : IAsyncDbTransaction
         var client = new DatabaseService.DatabaseServiceClient(channel);
 
         var reply = await client.BeginTransactionAsync(new BeginTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
+        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) }).ConfigureAwait(false);
         result.TransactionIdentifier = reply.TransactionIdentifier;
         return result;
     }
