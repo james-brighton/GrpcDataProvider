@@ -300,6 +300,7 @@ public class DatabaseService : DatabaseServiceBase
             return null;
         if (GetCommand(request, connection, transaction) is not { } command)
             return null;
+        command.Parameters.Clear();
         foreach (var param in request.Parameters)
         {
             var p = (DataParameter)param;
