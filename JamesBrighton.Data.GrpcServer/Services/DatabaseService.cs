@@ -303,7 +303,7 @@ public class DatabaseService : DatabaseServiceBase
         foreach (var param in request.Parameters)
         {
             var p = (DataParameter)param;
-            AddParameter(command, p.Name, p.Value);
+            AddParameter(command, p.Name, !p.IsNull ? p.Value : null);
         }
         return command;
     }

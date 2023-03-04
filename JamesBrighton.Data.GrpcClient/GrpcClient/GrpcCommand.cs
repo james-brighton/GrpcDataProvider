@@ -116,7 +116,11 @@ public class GrpcCommand : IAsyncDbCommand
             CommandIdentifier = commandIdentifier
         };
         foreach (var p in parameters)
-            query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
+        {
+            var param = p.Value != null ? new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() }
+            : new DataParameter { Name = p.ParameterName };
+            query.Parameters.Add(param);
+        }
         var reply = client.ExecuteNonQuery(query);
 
         if (reply.DataException != null)
@@ -148,7 +152,11 @@ public class GrpcCommand : IAsyncDbCommand
             CommandIdentifier = commandIdentifier
         };
         foreach (var p in parameters)
-            query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
+        {
+            var param = p.Value != null ? new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() }
+            : new DataParameter { Name = p.ParameterName };
+            query.Parameters.Add(param);
+        }
         var reply = client.ExecuteQuerySync(query, cancellationToken: CancellationToken.None);
 
         var result = new GrpcDataReader(reply);
@@ -267,7 +275,11 @@ public class GrpcCommand : IAsyncDbCommand
             CommandIdentifier = commandIdentifier
         };
         foreach (var p in parameters)
-            query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
+        {
+            var param = p.Value != null ? new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() }
+            : new DataParameter { Name = p.ParameterName };
+            query.Parameters.Add(param);
+        }
         var reply = await client.ExecuteNonQueryAsync(query, cancellationToken: cancellationToken);
 
         if (reply.DataException != null)
@@ -305,7 +317,11 @@ public class GrpcCommand : IAsyncDbCommand
             CommandIdentifier = commandIdentifier
         };
         foreach (var p in parameters)
-            query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
+        {
+            var param = p.Value != null ? new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() }
+            : new DataParameter { Name = p.ParameterName };
+            query.Parameters.Add(param);
+        }
         var reply = client.ExecuteQuery(query, cancellationToken: CancellationToken.None);
 
         var result = new GrpcDataReader(reply);
