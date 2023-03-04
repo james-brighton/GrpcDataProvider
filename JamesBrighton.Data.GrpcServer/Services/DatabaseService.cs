@@ -231,6 +231,44 @@ public class DatabaseService : DatabaseServiceBase
     }
 
     /// <summary>
+    /// Executes a database query and returns the result to the client synchronously.
+    /// </summary>
+    /// <param name="request">The request containing the query and parameters.</param>
+    /// <param name="context">The context of the server call.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public override async Task<ExecuteQuerySyncResponse> ExecuteQuerySync(ExecuteQueryRequest request, ServerCallContext context)
+    {
+        var command = GetCommand(request);
+        if (command == null)
+            return new ExecuteQuerySyncResponse();
+        try
+        {
+            var result = new ExecuteQuerySyncResponse();
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync() && !context.CancellationToken.IsCancellationRequested)
+            {
+                var row = new ExecuteQuerySyncResponseRow();
+                for (var i = 0; i < reader.FieldCount; i++)
+                {
+                    var field = !reader.IsDBNull(i)
+                        ? new DataField { Name = reader.GetName(i), Value = reader[i], DataTypeName = reader.GetDataTypeName(i) }
+                        : new DataField { Name = reader.GetName(i), DataTypeName = reader.GetDataTypeName(i) };
+                    row.Fields.Add(field);
+                }
+
+                result.Rows.Add(row);
+            }
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            return new ExecuteQuerySyncResponse { DataException = CreateException(e) };
+        }
+    }
+
+
+    /// <summary>
     /// Executes a database non query and returns the rows affected.
     /// </summary>
     /// <param name="request">The request containing the query and parameters.</param>

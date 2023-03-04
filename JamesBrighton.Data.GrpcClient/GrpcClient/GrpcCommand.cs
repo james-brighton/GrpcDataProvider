@@ -149,7 +149,7 @@ public class GrpcCommand : IAsyncDbCommand
         };
         foreach (var p in parameters)
             query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
-        var reply = client.ExecuteQuery(query, cancellationToken: CancellationToken.None);
+        var reply = client.ExecuteQuerySync(query, cancellationToken: CancellationToken.None);
 
         var result = new GrpcDataReader(reply);
         items.Add(result);
@@ -165,7 +165,7 @@ public class GrpcCommand : IAsyncDbCommand
         CancellationToken cancellationToken)
     {
         await Task.Delay(0, cancellationToken);
-        if (ExecuteReader(behavior) is not IAsyncDataReader result)
+        if (ExecuteReaderAsyncInternal(behavior) is not IAsyncDataReader result)
             throw new InvalidOperationException("Reader is not of type IAsyncDataReader.");
         return result;
     }
@@ -278,4 +278,38 @@ public class GrpcCommand : IAsyncDbCommand
 
     /// <inheritdoc />
     public async Task<int> ExecuteNonQueryAsync() => await ExecuteNonQueryAsync(CancellationToken.None);
+
+    /// <summary>
+    /// Executes the System.Data.IDbCommand.CommandText against the System.Data.IDbCommand.Connection,
+    /// and builds an System.Data.IDataReader using one of the System.Data.CommandBehavior
+    /// values.
+    /// </summary>
+    /// <param name="behavior">One of the System.Data.CommandBehavior values.</param>
+    /// <returns>An System.Data.IDataReader object.</returns>
+    IDataReader ExecuteReaderAsyncInternal(CommandBehavior behavior)
+    {
+        if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
+            throw new InvalidOperationException("There's no gRPC channel.");
+
+        var client = new DatabaseService.DatabaseServiceClient(Channel);
+
+        if (Parameters is not GrpcParameterCollection parameters)
+            throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
+        if (Transaction is not GrpcTransaction transaction)
+            throw new InvalidOperationException($"Transaction is not of type {nameof(GrpcTransaction)}.");
+        var query = new ExecuteQueryRequest
+        {
+            Query = CommandText,
+            ConnectionIdentifier = ConnectionIdentifier,
+            TransactionIdentifier = transaction.TransactionIdentifier,
+            CommandIdentifier = commandIdentifier
+        };
+        foreach (var p in parameters)
+            query.Parameters.Add(new DataParameter { Name = p.ParameterName, Value = p.Value ?? new object() });
+        var reply = client.ExecuteQuery(query, cancellationToken: CancellationToken.None);
+
+        var result = new GrpcDataReader(reply);
+        items.Add(result);
+        return result;
+    }
 }

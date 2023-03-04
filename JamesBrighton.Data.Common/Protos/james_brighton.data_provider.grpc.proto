@@ -14,6 +14,7 @@ service DatabaseService {
   rpc CommitTransaction (CommitTransactionRequest) returns (CommitTransactionResponse);
   rpc RollbackTransaction (RollbackTransactionRequest) returns (RollbackTransactionResponse);
   rpc ExecuteQuery (ExecuteQueryRequest) returns (stream ExecuteQueryResponse);
+  rpc ExecuteQuerySync (ExecuteQueryRequest) returns (ExecuteQuerySyncResponse);
   rpc ExecuteNonQuery (ExecuteQueryRequest) returns (ExecuteNonQueryResponse);
 }
 
@@ -117,6 +118,15 @@ message ExecuteQueryRequest {
 
 message ExecuteQueryResponse {
   repeated google.protobuf.Any fields = 1;
+  optional DataException dataException = 2;
+}
+
+message ExecuteQuerySyncResponseRow {
+  repeated google.protobuf.Any fields = 1;
+}
+
+message ExecuteQuerySyncResponse {
+  repeated ExecuteQuerySyncResponseRow rows = 1;
   optional DataException dataException = 2;
 }
 

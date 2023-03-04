@@ -18,7 +18,15 @@ public class GrpcDataReader : IAsyncDataReader
     /// <summary>
     /// The query response object.
     /// </summary>
-    readonly AsyncServerStreamingCall<ExecuteQueryResponse> queryResponse;
+    readonly AsyncServerStreamingCall<ExecuteQueryResponse>? queryResponse;
+    /// <summary>
+    /// The synchronous query response object.
+    /// </summary>
+    readonly ExecuteQuerySyncResponse? reply;
+    /// <summary>
+    /// The synchronous query response object index.
+    /// </summary>
+    int replyIndex;
 
     bool opened;
 
@@ -29,6 +37,12 @@ public class GrpcDataReader : IAsyncDataReader
     public GrpcDataReader(AsyncServerStreamingCall<ExecuteQueryResponse> queryResponse)
     {
         this.queryResponse = queryResponse;
+        opened = true;
+    }
+
+    public GrpcDataReader(ExecuteQuerySyncResponse reply)
+    {
+        this.reply = reply;
         opened = true;
     }
 
@@ -53,7 +67,7 @@ public class GrpcDataReader : IAsyncDataReader
     /// <inheritdoc />
     public void Close()
     {
-        queryResponse.Dispose();
+        queryResponse?.Dispose();
         opened = false;
     }
 
@@ -67,7 +81,7 @@ public class GrpcDataReader : IAsyncDataReader
     public async Task CloseAsync(CancellationToken cancellationToken)
     {
         await Task.Delay(0, cancellationToken);
-        queryResponse.Dispose();
+        queryResponse?.Dispose();
         opened = false;
     }
 
@@ -171,19 +185,22 @@ public class GrpcDataReader : IAsyncDataReader
     public bool Read()
     {
         items.Clear();
-        // TODO: Test this properly
-        var result = queryResponse.ResponseStream.MoveNext(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-        if (!result) return false;
-        var r = queryResponse.ResponseStream.Current;
-        if (r.DataException != null)
-            GrpcDataException.ThrowDataException(r.DataException);
-        foreach (var field in r.Fields)
+        if (reply == null)
+            return false;
+
+        if (reply.DataException != null)
+            GrpcDataException.ThrowDataException(reply.DataException);
+
+        if (replyIndex >= reply.Rows.Count)
+            return false;
+
+        foreach (var field in reply.Rows[replyIndex].Fields)
         {
             var f = (DataField)field;
             items.Add(f);
         }
-
-        return result;
+        replyIndex++;
+        return true;
     }
 
     /// <inheritdoc />
@@ -193,6 +210,8 @@ public class GrpcDataReader : IAsyncDataReader
     public async Task<bool> ReadAsync(CancellationToken cancellationToken)
     {
         items.Clear();
+        if (queryResponse == null)
+            return false;
         var result = await queryResponse.ResponseStream.MoveNext(cancellationToken);
         if (!result) return false;
         var r = queryResponse.ResponseStream.Current;
