@@ -139,7 +139,16 @@ public class DatabaseService : DatabaseServiceBase
     /// <returns>The DbConnection or null otherwise.</returns>
     static DbConnection? CreateDbConnection(string providerInvariantName, string connectionString)
     {
-        var factory = DbProviderFactories.GetFactory(providerInvariantName);
+        DbProviderFactory factory;
+        try
+        {
+            factory = DbProviderFactories.GetFactory(providerInvariantName);
+        }
+        catch (ArgumentException)
+        {
+            // Cannot find factory
+            return null;
+        }
 
         var connection = factory.CreateConnection();
         if (connection == null)
@@ -278,7 +287,7 @@ public class DatabaseService : DatabaseServiceBase
         try
         {
             var rowsAffected = await command.ExecuteNonQueryAsync();
-            return new ExecuteNonQueryResponse { RowsAffected = rowsAffected};
+            return new ExecuteNonQueryResponse { RowsAffected = rowsAffected };
         }
         catch (Exception e)
         {

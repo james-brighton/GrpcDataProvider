@@ -107,7 +107,17 @@ public class TunnelConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public void Open()
 	{
-        var factory = DbProviderFactories.GetFactory(ServerProviderInvariantName);
+        DbProviderFactory factory;
+        try
+        {
+            factory = DbProviderFactories.GetFactory(ServerProviderInvariantName);
+        }
+        catch (ArgumentException e)
+        {
+            // Cannot find factory
+			RemoteDataException.ThrowDataException(e);
+			return;
+        }
 
         connection = factory.CreateConnection();
         if (connection == null)
@@ -129,7 +139,17 @@ public class TunnelConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public async Task OpenAsync(CancellationToken cancellationToken)
 	{
-        var factory = DbProviderFactories.GetFactory(ServerProviderInvariantName);
+        DbProviderFactory factory;
+        try
+        {
+            factory = DbProviderFactories.GetFactory(ServerProviderInvariantName);
+        }
+        catch (ArgumentException e)
+        {
+            // Cannot find factory
+			RemoteDataException.ThrowDataException(e);
+			return;
+        }
 
         connection = factory.CreateConnection();
         if (connection == null)
