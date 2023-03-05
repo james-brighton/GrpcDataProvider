@@ -76,7 +76,7 @@ public class TunnelConnection : IAsyncRemoteConnection
     {
         if (connection == null)
             throw new InvalidOperationException("There's no connection.");
-        return Tunnel.CreateCommand(connection);
+        return TunnelCommand.CreateCommand(connection);
     }
 
     /// <inheritdoc />
@@ -84,7 +84,7 @@ public class TunnelConnection : IAsyncRemoteConnection
     {
         if (connection == null)
             throw new InvalidOperationException("There's no connection.");
-        return await Tunnel.CreateCommandAsync(connection);
+        return await TunnelCommand.CreateCommandAsync(connection);
     }
 
     /// <inheritdoc />

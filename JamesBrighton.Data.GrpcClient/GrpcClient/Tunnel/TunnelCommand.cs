@@ -7,18 +7,18 @@ namespace JamesBrighton.Data.GrpcClient.Tunnel;
 /// <summary>
 /// Represents a tunneled command to execute against a database.
 /// </summary>
-public class Tunnel : IAsyncDbCommand
+public class TunnelCommand : IAsyncDbCommand
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Tunnel" /> class.
+    /// Initializes a new instance of the <see cref="TunnelCommand" /> class.
     /// </summary>
-    public Tunnel() { }
+    public TunnelCommand() { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Tunnel" /> class.
+    /// Initializes a new instance of the <see cref="TunnelCommand" /> class.
     /// </summary>
     /// <param name="connection">Connection to use.</param>
-    public Tunnel(IDbConnection connection)
+    public TunnelCommand(IDbConnection connection)
     {
         Connection = connection;
     }
@@ -154,17 +154,17 @@ public class Tunnel : IAsyncDbCommand
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="Tunnel"/> using the specified gRPC channel and database connection.
+    /// Creates a new instance of <see cref="TunnelCommand"/> using the specified gRPC channel and database connection.
     /// </summary>
     /// <param name="connection">The database connection to associate with the command.</param>
-    /// <returns>A new instance of <see cref="Tunnel"/> with the specified properties.</returns>
+    /// <returns>A new instance of <see cref="TunnelCommand"/> with the specified properties.</returns>
     /// <exception cref="InvalidOperationException">Thrown when <paramref name="connection"/> is null or empty.</exception>
-    public static Tunnel CreateCommand(DbConnection connection)
+    public static TunnelCommand CreateCommand(DbConnection connection)
     {
         if (connection == null)
             throw new InvalidOperationException("There's no connection.");
 
-        var result = new Tunnel(connection)
+        var result = new TunnelCommand(connection)
         {
             Command = connection.CreateCommand()
         };
@@ -172,18 +172,18 @@ public class Tunnel : IAsyncDbCommand
     }
 
     /// <summary>
-    /// Asynchronously creates a new instance of <see cref="Tunnel"/> using the specified gRPC channel and database connection.
+    /// Asynchronously creates a new instance of <see cref="TunnelCommand"/> using the specified gRPC channel and database connection.
     /// </summary>
     /// <param name="connection">The database connection to associate with the command.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a new instance of <see cref="Tunnel"/> with the specified properties.</returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a new instance of <see cref="TunnelCommand"/> with the specified properties.</returns>
     /// <exception cref="InvalidOperationException">Thrown when <paramref name="connection"/> is null or empty.</exception>
-    public static async Task<Tunnel> CreateCommandAsync(DbConnection connection)
+    public static async Task<TunnelCommand> CreateCommandAsync(DbConnection connection)
     {
         if (connection == null)
             throw new InvalidOperationException("There's no connection.");
 
         await Task.Delay(0);
-        return new Tunnel(connection)
+        return new TunnelCommand(connection)
         {
             Command = connection.CreateCommand()
         };

@@ -18,7 +18,7 @@ public sealed class TunnelClientFactory : IAsyncProviderFactory
 	TunnelClientFactory() { }
 
     /// <inheritdoc />
-    public IAsyncDbCommand CreateCommand() => new Tunnel();
+    public IAsyncDbCommand CreateCommand() => new TunnelCommand();
 
     /// <inheritdoc />
     public IAsyncConnection CreateConnection() => new TunnelConnection();
