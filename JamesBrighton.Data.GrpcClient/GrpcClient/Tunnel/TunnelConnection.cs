@@ -112,7 +112,14 @@ public class TunnelConnection : IAsyncRemoteConnection
         if (connection == null)
             return;
         connection.ConnectionString = ServerConnectionString;
-        connection.Open();
+		try
+		{
+			connection.Open();
+		}
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+		}
 	}
 
 	/// <inheritdoc />
@@ -127,7 +134,14 @@ public class TunnelConnection : IAsyncRemoteConnection
         if (connection == null)
             return;
         connection.ConnectionString = ServerConnectionString;
-        await connection.OpenAsync(cancellationToken);
+		try
+		{
+        	await connection.OpenAsync(cancellationToken);
+		}
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+		}
 	}
 
 	/// <inheritdoc />

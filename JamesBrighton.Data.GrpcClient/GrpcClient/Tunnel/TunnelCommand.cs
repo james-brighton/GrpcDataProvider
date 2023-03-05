@@ -75,7 +75,15 @@ public class TunnelCommand : IAsyncDbCommand
         if (Connection == null || command == null)
             throw new InvalidOperationException("There's no connection.");
 
-        return command.ExecuteNonQuery();
+        try
+        {
+            return command.ExecuteNonQuery();
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+            return 0;
+		}
     }
 
     /// <inheritdoc />
@@ -103,9 +111,17 @@ public class TunnelCommand : IAsyncDbCommand
         if (Connection == null || command == null)
             throw new InvalidOperationException("There's no connection.");
 
-        var reader = await command.ExecuteReaderAsync(behavior, cancellationToken);
-        var result = new TunnelDataReader(reader);
-        return result;
+        try
+        {
+            var reader = await command.ExecuteReaderAsync(behavior, cancellationToken);
+            var result = new TunnelDataReader(reader);
+            return result;
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+            return null!;
+		}
     }
 
     /// <inheritdoc />
@@ -127,7 +143,15 @@ public class TunnelCommand : IAsyncDbCommand
         if (Connection == null || command == null)
             throw new InvalidOperationException("There's no connection.");
 
-        return await command.ExecuteScalarAsync(cancellationToken);
+        try
+        {
+            return await command.ExecuteScalarAsync(cancellationToken);
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+            return null;
+		}
     }
 
     /// <inheritdoc />
@@ -136,7 +160,15 @@ public class TunnelCommand : IAsyncDbCommand
         if (Connection == null || command == null)
             throw new InvalidOperationException("There's no connection.");
 
-        return command.ExecuteScalar();
+        try
+        {
+            return command.ExecuteScalar();
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+            return null;
+		}
     }
 
     /// <inheritdoc />
@@ -186,7 +218,15 @@ public class TunnelCommand : IAsyncDbCommand
         if (Connection == null || command == null)
             throw new InvalidOperationException("There's no connection.");
 
-        return await command.ExecuteNonQueryAsync(cancellationToken);
+        try
+        {
+            return await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+            return 0;
+		}
     }
 
     /// <inheritdoc />

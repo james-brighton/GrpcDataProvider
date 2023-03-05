@@ -37,7 +37,14 @@ public class TunnelTransaction : IAsyncDbTransaction
         if (Connection == null || transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
-        transaction.Commit();
+        try
+        {
+            transaction.Commit();
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+		}
     }
 
     /// <inheritdoc />
@@ -61,7 +68,14 @@ public class TunnelTransaction : IAsyncDbTransaction
         if (Connection == null || transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
-        transaction.Rollback();
+        try
+        {
+            transaction.Rollback();
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+		}
     }
 
     /// <inheritdoc />
@@ -76,7 +90,14 @@ public class TunnelTransaction : IAsyncDbTransaction
         if (Connection == null || transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
-        await transaction.CommitAsync(cancellationToken);
+        try
+        {
+            await transaction.CommitAsync(cancellationToken);
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+		}
     }
 
     /// <inheritdoc />
@@ -91,7 +112,14 @@ public class TunnelTransaction : IAsyncDbTransaction
         if (Connection == null || transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
-        await transaction.RollbackAsync(cancellationToken);
+        try
+        {
+            await transaction.RollbackAsync(cancellationToken);
+        }
+		catch (Exception e)
+		{
+			GrpcDataException.ThrowDataException(e);
+		}
     }
 
     /// <summary>

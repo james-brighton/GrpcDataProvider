@@ -1,5 +1,6 @@
 using JamesBrighton.DataProvider.Grpc;
 using JamesBrighton.Data.Common;
+using System.Reflection;
 
 namespace JamesBrighton.Data.GrpcClient;
 
@@ -57,9 +58,9 @@ public class GrpcDataException : Exception
     }
 
     /// <summary>
-    /// Throws a data exception from the given query response.
+    /// Throws a data exception from the given data exception.
     /// </summary>
-    /// <param name="dataException">The query response.</param>
+    /// <param name="dataException">The data exception.</param>
     public static void ThrowDataException(DataException dataException)
     {
         var exception = new GrpcDataException(dataException.Message) { ClassName = dataException.ClassName };
@@ -68,6 +69,24 @@ public class GrpcDataException : Exception
             var p = (Property)prop;
             if (!p.IsNull)
                 exception[p.Name] = p.Value;
+        }
+
+        throw exception;
+    }
+
+    /// <summary>
+    /// Throws a data exception from the given exception.
+    /// </summary>
+    /// <param name="e">The exception.</param>
+    public static void ThrowDataException(Exception e)
+    {
+        var exception = new GrpcDataException(e.Message) { ClassName = e.GetType().FullName ?? "" };
+        var props = e.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+        foreach (var prop in props)
+        {
+            var val = prop.GetValue(e);
+            if (val != null)
+                exception[prop.Name] = val;
         }
 
         throw exception;
