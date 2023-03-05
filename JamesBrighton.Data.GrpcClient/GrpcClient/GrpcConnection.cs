@@ -8,12 +8,12 @@ namespace JamesBrighton.Data.GrpcClient;
 /// <summary>
 /// Represents a gRPC implementation of an <see cref="IDbConnection" />.
 /// </summary>
-public class GrpcConnection : IAsyncGrpcConnection
+public class GrpcConnection : IAsyncRemoteConnection
 {
 	/// <summary>
-	/// Gets the gRPC channel associated with the connection.
+	/// The channel connection manager.
 	/// </summary>
-	ChannelManager? channel;
+	ChannelManager? channelManager;
 
 	/// <summary>
 	/// The server side identifier of the connection.
@@ -40,19 +40,19 @@ public class GrpcConnection : IAsyncGrpcConnection
 	public string Database => "";
 
 	/// <inheritdoc />
-	public ConnectionState State => channel != null ? ConnectionState.Open : ConnectionState.Closed;
+	public ConnectionState State => channelManager != null ? ConnectionState.Open : ConnectionState.Closed;
 
 	/// <inheritdoc />
 	public IDbTransaction BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
 
 	/// <inheritdoc />
-	public IDbTransaction BeginTransaction(IsolationLevel il) => GrpcTransaction.BeginTransaction(channel.Channel, connectionIdentifier, this, il);
+	public IDbTransaction BeginTransaction(IsolationLevel il) => GrpcTransaction.BeginTransaction(channelManager.Channel, connectionIdentifier, this, il);
 
 	/// <inheritdoc />
 	public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
 
 	/// <inheritdoc />
-	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) => await GrpcTransaction.BeginTransactionAsync(channel.Channel, connectionIdentifier, this, il);
+	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) => await GrpcTransaction.BeginTransactionAsync(channelManager.Channel, connectionIdentifier, this, il);
 
 	/// <inheritdoc />
 	public void ChangeDatabase(string databaseName)
@@ -62,17 +62,17 @@ public class GrpcConnection : IAsyncGrpcConnection
 	/// <inheritdoc />
 	public void Close()
 	{
-		if (channel == null || string.IsNullOrEmpty(connectionIdentifier)) return;
-		var client = new DatabaseService.DatabaseServiceClient(channel.Channel);
+		if (channelManager == null || string.IsNullOrEmpty(connectionIdentifier)) return;
+		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
 		client.CloseConnection(new CloseConnectionRequest { ConnectionIdentifier = connectionIdentifier });
 		DisposeChannel();
 	}
 
 	/// <inheritdoc />
-	public IDbCommand CreateCommand() => GrpcCommand.CreateCommand(channel.Channel, connectionIdentifier, this);
+	public IDbCommand CreateCommand() => GrpcCommand.CreateCommand(channelManager.Channel, connectionIdentifier, this);
 
 	/// <inheritdoc />
-	public async Task<IAsyncDbCommand> CreateCommandAsync() => await GrpcCommand.CreateCommandAsync(channel.Channel, connectionIdentifier, this);
+	public async Task<IAsyncDbCommand> CreateCommandAsync() => await GrpcCommand.CreateCommandAsync(channelManager.Channel, connectionIdentifier, this);
 
 	/// <inheritdoc />
 	public void Dispose()
@@ -95,8 +95,8 @@ public class GrpcConnection : IAsyncGrpcConnection
 	{
 		var connectionStringBuilder = new GrpcConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
-		channel = new ChannelManager(address);
-		var client = new DatabaseService.DatabaseServiceClient(channel.Channel);
+		channelManager = new ChannelManager(address);
+		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
 		var reply = client.OpenConnection(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString });
 		if (reply.DataException != null)
 			GrpcDataException.ThrowDataException(reply.DataException);
@@ -112,8 +112,8 @@ public class GrpcConnection : IAsyncGrpcConnection
 	{
 		var connectionStringBuilder = new GrpcConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
-		channel = new ChannelManager(address);
-		var client = new DatabaseService.DatabaseServiceClient(channel.Channel);
+		channelManager = new ChannelManager(address);
+		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
 		var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
 		if (reply.DataException != null)
 			GrpcDataException.ThrowDataException(reply.DataException);
@@ -127,8 +127,8 @@ public class GrpcConnection : IAsyncGrpcConnection
 	/// <inheritdoc />
 	public async Task CloseAsync(CancellationToken cancellationToken)
 	{
-		if (channel == null || string.IsNullOrEmpty(connectionIdentifier)) return;
-		var client = new DatabaseService.DatabaseServiceClient(channel.Channel);
+		if (channelManager == null || string.IsNullOrEmpty(connectionIdentifier)) return;
+		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
 		await client.CloseConnectionAsync(new CloseConnectionRequest { ConnectionIdentifier = connectionIdentifier }, cancellationToken: cancellationToken);
 		DisposeChannel();
 	}
@@ -138,10 +138,10 @@ public class GrpcConnection : IAsyncGrpcConnection
 	/// </summary>
 	void DisposeChannel()
 	{
-		if (channel == null)
+		if (channelManager == null)
 			return;
 
-		channel.Dispose();
-		channel = null;
+		channelManager.Dispose();
+		channelManager = null;
 	}
 }

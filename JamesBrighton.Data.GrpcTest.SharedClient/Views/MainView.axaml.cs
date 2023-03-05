@@ -22,7 +22,7 @@ public partial class MainView : UserControl
         DataGrid.Columns.Clear();
         OutputTextBlock.Text = "";
 
-        await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
+        await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncRemoteConnection;
         if (connection == null) return;
         SetupConnection(connection);
         try
@@ -65,7 +65,7 @@ public partial class MainView : UserControl
         }
     }
 
-    void SetupConnection(IAsyncGrpcConnection connection)
+    void SetupConnection(IAsyncRemoteConnection connection)
     {
         var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
         connectionStringBuilder["GrpcServer"] = "http://localhost:5056/";

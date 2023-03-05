@@ -3,7 +3,7 @@ namespace JamesBrighton.Data;
 /// <summary>
 /// Represents an asynchronous gRPC database connection.
 /// </summary>
-public interface IAsyncGrpcConnection : IAsyncConnection
+public interface IAsyncRemoteConnection : IAsyncConnection
 {
     /// <summary>
     /// Gets or sets the provider invariant name at the server side.

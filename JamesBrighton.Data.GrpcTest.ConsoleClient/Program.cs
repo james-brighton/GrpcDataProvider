@@ -1,7 +1,7 @@
 ﻿using JamesBrighton.Data;
 using JamesBrighton.Data.GrpcClient;
 
-await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncGrpcConnection;
+await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncRemoteConnection;
 if (connection == null) return;
 var connectionStringBuilder = GrpcClientFactory.Instance.CreateConnectionStringBuilder();
 connectionStringBuilder["GrpcServer"] = args[0];
