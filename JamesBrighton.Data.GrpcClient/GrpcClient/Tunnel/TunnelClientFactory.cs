@@ -1,4 +1,5 @@
 using System.Data;
+using JamesBrighton.Data.GrpcClient.Common;
 
 namespace JamesBrighton.Data.GrpcClient.Tunnel;
 
@@ -24,7 +25,7 @@ public sealed class TunnelClientFactory : IAsyncProviderFactory
     public IAsyncConnection CreateConnection() => new TunnelConnection();
 
     /// <inheritdoc />
-	public IConnectionStringBuilder CreateConnectionStringBuilder() =>  new GrpcConnectionStringBuilder();
+	public IConnectionStringBuilder CreateConnectionStringBuilder() =>  new ConnectionStringBuilder();
 
     /// <inheritdoc />
     public IDbDataParameter CreateParameter() => new GrpcParameter();

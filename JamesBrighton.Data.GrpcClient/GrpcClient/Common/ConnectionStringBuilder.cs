@@ -4,23 +4,23 @@ using System.Text.RegularExpressions;
 
 using static System.FormattableString;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Common;
 
 /// <summary>
-/// A class for building a gRPC connection string.
+/// A class for building a connection string.
 /// </summary>
-public partial class GrpcConnectionStringBuilder : IConnectionStringBuilder
+public partial class ConnectionStringBuilder : IConnectionStringBuilder
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="GrpcConnectionStringBuilder"/> class.
+    /// Initializes a new instance of the <see cref="ConnectionStringBuilder"/> class.
     /// </summary>
-    public GrpcConnectionStringBuilder() => ConnectionString = "";
+    public ConnectionStringBuilder() => ConnectionString = "";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GrpcConnectionStringBuilder"/> class with the specified connection string.
+    /// Initializes a new instance of the <see cref="ConnectionStringBuilder"/> class with the specified connection string.
     /// </summary>
     /// <param name="connectionString">The connection string to use.</param>
-    public GrpcConnectionStringBuilder(string connectionString) => ConnectionString = connectionString;
+    public ConnectionStringBuilder(string connectionString) => ConnectionString = connectionString;
 
     /// <summary>
     /// Gets or sets the connection string.
@@ -84,11 +84,11 @@ public partial class GrpcConnectionStringBuilder : IConnectionStringBuilder
     IEnumerator IEnumerable.GetEnumerator() => options.GetEnumerator();
 
     /// <summary>
-    /// Converts a GrpcConnectionStringBuilder object into an instance of string.
+    /// Converts a ConnectionStringBuilder object into an instance of string.
     /// </summary>
-    /// <param name="obj">The GrpcConnectionStringBuilder object to convert.</param>
-    /// <returns>An instance of string that represents the GrpcConnectionStringBuilder object.</returns>
-    public static implicit operator string(GrpcConnectionStringBuilder obj) => obj.ToString();
+    /// <param name="obj">The ConnectionStringBuilder object to convert.</param>
+    /// <returns>An instance of string that represents the ConnectionStringBuilder object.</returns>
+    public static implicit operator string(ConnectionStringBuilder obj) => obj.ToString();
 
     /// <summary>
     /// Loads the options from the specified connection string.

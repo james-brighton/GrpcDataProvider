@@ -1,5 +1,6 @@
 using System.Data;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;

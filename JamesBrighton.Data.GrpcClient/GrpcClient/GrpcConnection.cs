@@ -1,5 +1,6 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using JamesBrighton.Data.GrpcClient.Common;
 using JamesBrighton.DataProvider.Grpc;
 using IsolationLevel = System.Data.IsolationLevel;
 
@@ -46,16 +47,26 @@ public class GrpcConnection : IAsyncRemoteConnection
 	public IDbTransaction BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
 
 	/// <inheritdoc />
-	public IDbTransaction BeginTransaction(IsolationLevel il) => GrpcTransaction.BeginTransaction(channelManager.Channel, connectionIdentifier, this, il);
+	public IDbTransaction BeginTransaction(IsolationLevel il)
+    {
+		if (channelManager == null)
+			throw new InvalidOperationException("The channel manager is null.");
+        return GrpcTransaction.BeginTransaction(channelManager.Channel, connectionIdentifier, this, il);
+    }
+
+    /// <inheritdoc />
+    public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
 
 	/// <inheritdoc />
-	public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
+	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il)
+    {
+		if (channelManager == null)
+			throw new InvalidOperationException("The channel manager is null.");
+        return await GrpcTransaction.BeginTransactionAsync(channelManager.Channel, connectionIdentifier, this, il);
+    }
 
-	/// <inheritdoc />
-	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il) => await GrpcTransaction.BeginTransactionAsync(channelManager.Channel, connectionIdentifier, this, il);
-
-	/// <inheritdoc />
-	public void ChangeDatabase(string databaseName)
+    /// <inheritdoc />
+    public void ChangeDatabase(string databaseName)
 	{
 	}
 
@@ -69,13 +80,23 @@ public class GrpcConnection : IAsyncRemoteConnection
 	}
 
 	/// <inheritdoc />
-	public IDbCommand CreateCommand() => GrpcCommand.CreateCommand(channelManager.Channel, connectionIdentifier, this);
+	public IDbCommand CreateCommand()
+    {
+		if (channelManager == null)
+			throw new InvalidOperationException("The channel manager is null.");
+        return GrpcCommand.CreateCommand(channelManager.Channel, connectionIdentifier, this);
+    }
 
-	/// <inheritdoc />
-	public async Task<IAsyncDbCommand> CreateCommandAsync() => await GrpcCommand.CreateCommandAsync(channelManager.Channel, connectionIdentifier, this);
+    /// <inheritdoc />
+    public async Task<IAsyncDbCommand> CreateCommandAsync()
+    {
+		if (channelManager == null)
+			throw new InvalidOperationException("The channel manager is null.");
+        return await GrpcCommand.CreateCommandAsync(channelManager.Channel, connectionIdentifier, this);
+    }
 
-	/// <inheritdoc />
-	public void Dispose()
+    /// <inheritdoc />
+    public void Dispose()
 	{
 		Close();
 		DisposeChannel();
@@ -93,7 +114,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public void Open()
 	{
-		var connectionStringBuilder = new GrpcConnectionStringBuilder(ConnectionString);
+		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
 		channelManager = new ChannelManager(address);
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
@@ -110,7 +131,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public async Task OpenAsync(CancellationToken cancellationToken)
 	{
-		var connectionStringBuilder = new GrpcConnectionStringBuilder(ConnectionString);
+		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
 		channelManager = new ChannelManager(address);
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
