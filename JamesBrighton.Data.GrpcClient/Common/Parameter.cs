@@ -1,12 +1,12 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Common;
 
 /// <summary>
-/// Represents a parameter used in a database command in a gRPC implementation of an <see cref="IDbConnection" />.
+/// Represents a parameter used in a database command of an <see cref="IDbConnection" />.
 /// </summary>
-public class GrpcParameter : IDbDataParameter
+public class Parameter : IDbDataParameter
 {
     /// <summary>
     /// An empty object.
@@ -14,9 +14,9 @@ public class GrpcParameter : IDbDataParameter
     readonly object emptyObject = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GrpcParameter" /> class.
+    /// Initializes a new instance of the <see cref="Parameter" /> class.
     /// </summary>
-    public GrpcParameter()
+    public Parameter()
     {
         Value = emptyObject;
     }

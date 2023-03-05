@@ -35,7 +35,7 @@ try
 
     await transaction.CommitAsync(cancellationTokenSource.Token);
 }
-catch (GrpcDataException e)
+catch (DataException e)
 {
     await transaction.RollbackAsync();
     // Handle the exception

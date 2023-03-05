@@ -1,7 +1,7 @@
 using System.Data;
 using JamesBrighton.Data.GrpcClient.Common;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Grpc;
 
 /// <summary>
 /// Represents a gRPC client factory class.
@@ -28,7 +28,7 @@ public sealed class GrpcClientFactory : IAsyncProviderFactory
 	public IConnectionStringBuilder CreateConnectionStringBuilder() =>  new ConnectionStringBuilder();
 
     /// <inheritdoc />
-    public IDbDataParameter CreateParameter() => new GrpcParameter();
+    public IDbDataParameter CreateParameter() => new Parameter();
 
     /// <inheritdoc />
     public IAsyncDbTransaction CreateTransaction() => new GrpcTransaction();

@@ -2,20 +2,20 @@ using JamesBrighton.DataProvider.Grpc;
 using JamesBrighton.Data.Common;
 using System.Reflection;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Common;
 
 /// <summary>
-/// Represents an exception that occurred while performing a gRPC data operation.
+/// Represents an exception that occurred while performing a data operation.
 /// </summary>
-public class GrpcDataException : Exception
+public sealed class RemoteDataException : Exception
 {
     readonly List<(string Name, object Value)> properties = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GrpcDataException" /> class with the specified error message.
+    /// Initializes a new instance of the <see cref="DataException" /> class with the specified error message.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    GrpcDataException(string? message) : base(message)
+    RemoteDataException(string? message) : base(message)
     {
     }
 
@@ -63,7 +63,7 @@ public class GrpcDataException : Exception
     /// <param name="dataException">The data exception.</param>
     public static void ThrowDataException(DataException dataException)
     {
-        var exception = new GrpcDataException(dataException.Message) { ClassName = dataException.ClassName };
+        var exception = new RemoteDataException(dataException.Message) { ClassName = dataException.ClassName };
         foreach (var prop in dataException.Properties)
         {
             var p = (Property)prop;
@@ -80,7 +80,7 @@ public class GrpcDataException : Exception
     /// <param name="e">The exception.</param>
     public static void ThrowDataException(Exception e)
     {
-        var exception = new GrpcDataException(e.Message) { ClassName = e.GetType().FullName ?? "" };
+        var exception = new RemoteDataException(e.Message) { ClassName = e.GetType().FullName ?? "" };
         var props = e.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
         foreach (var prop in props)
         {

@@ -1,6 +1,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using JamesBrighton.Data.GrpcClient.Common;
 
 namespace JamesBrighton.Data.GrpcClient.Tunnel;
 
@@ -118,7 +119,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 		}
 	}
 
@@ -140,7 +141,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 		}
 	}
 

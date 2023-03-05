@@ -1,5 +1,6 @@
 ﻿using JamesBrighton.Data;
-using JamesBrighton.Data.GrpcClient;
+using JamesBrighton.Data.GrpcClient.Common;
+using JamesBrighton.Data.GrpcClient.Grpc;
 
 await using var connection = GrpcClientFactory.Instance.CreateConnection() as IAsyncRemoteConnection;
 if (connection == null) return;
@@ -43,7 +44,7 @@ try
 
     await transaction.CommitAsync(cancellationTokenSource.Token);
 }
-catch (GrpcDataException e)
+catch (RemoteDataException e)
 {
     await transaction.RollbackAsync();
     var list = new List<string>();

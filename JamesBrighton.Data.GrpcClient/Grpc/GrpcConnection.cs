@@ -4,7 +4,7 @@ using JamesBrighton.Data.GrpcClient.Common;
 using JamesBrighton.DataProvider.Grpc;
 using IsolationLevel = System.Data.IsolationLevel;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Grpc;
 
 /// <summary>
 /// Represents a gRPC implementation of an <see cref="IDbConnection" />.
@@ -120,7 +120,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
 		var reply = client.OpenConnection(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString });
 		if (reply.DataException != null)
-			GrpcDataException.ThrowDataException(reply.DataException);
+			RemoteDataException.ThrowDataException(reply.DataException);
 
 		connectionIdentifier = reply.ConnectionIdentifier;
 	}
@@ -137,7 +137,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
 		var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
 		if (reply.DataException != null)
-			GrpcDataException.ThrowDataException(reply.DataException);
+			RemoteDataException.ThrowDataException(reply.DataException);
 
 		connectionIdentifier = reply.ConnectionIdentifier;
 	}

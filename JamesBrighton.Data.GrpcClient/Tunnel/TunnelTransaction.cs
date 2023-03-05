@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+using JamesBrighton.Data.GrpcClient.Common;
 
 namespace JamesBrighton.Data.GrpcClient.Tunnel;
 
@@ -48,7 +49,7 @@ public class TunnelTransaction : IAsyncDbTransaction
         }
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 		}
     }
 
@@ -79,7 +80,7 @@ public class TunnelTransaction : IAsyncDbTransaction
         }
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 		}
     }
 
@@ -101,7 +102,7 @@ public class TunnelTransaction : IAsyncDbTransaction
         }
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 		}
     }
 
@@ -123,7 +124,7 @@ public class TunnelTransaction : IAsyncDbTransaction
         }
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 		}
     }
 

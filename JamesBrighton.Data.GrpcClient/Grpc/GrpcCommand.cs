@@ -1,10 +1,11 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using JamesBrighton.DataProvider.Grpc;
-using Grpc.Net.Client;
 using JamesBrighton.Data.Common;
+using JamesBrighton.Data.GrpcClient.Common;
+using Grpc.Net.Client;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Grpc;
 
 /// <summary>
 /// Represents a command to execute against a database.
@@ -50,7 +51,7 @@ public class GrpcCommand : IAsyncDbCommand
     public IDbConnection? Connection { get; set; }
 
     /// <inheritdoc />
-    public IDataParameterCollection Parameters { get; } = new GrpcParameterCollection();
+    public IDataParameterCollection Parameters { get; } = new ParameterCollection();
 
     /// <inheritdoc />
     public IDbTransaction? Transaction { get; set; }
@@ -73,7 +74,7 @@ public class GrpcCommand : IAsyncDbCommand
     }
 
     /// <inheritdoc />
-    public IDbDataParameter CreateParameter() => new GrpcParameter();
+    public IDbDataParameter CreateParameter() => new Parameter();
 
     /// <inheritdoc />
     public void Dispose()
@@ -104,8 +105,8 @@ public class GrpcCommand : IAsyncDbCommand
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
-        if (Parameters is not GrpcParameterCollection parameters)
-            throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
+        if (Parameters is not ParameterCollection parameters)
+            throw new InvalidOperationException($"Parameters is not of type {nameof(ParameterCollection)}.");
         if (Transaction is not GrpcTransaction transaction)
             throw new InvalidOperationException($"Transaction is not of type {nameof(GrpcTransaction)}.");
         var query = new ExecuteQueryRequest
@@ -124,7 +125,7 @@ public class GrpcCommand : IAsyncDbCommand
         var reply = client.ExecuteNonQuery(query);
 
         if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+            RemoteDataException.ThrowDataException(reply.DataException);
 
         return reply.RowsAffected;
     }
@@ -140,8 +141,8 @@ public class GrpcCommand : IAsyncDbCommand
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
-        if (Parameters is not GrpcParameterCollection parameters)
-            throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
+        if (Parameters is not ParameterCollection parameters)
+            throw new InvalidOperationException($"Parameters is not of type {nameof(ParameterCollection)}.");
         if (Transaction is not GrpcTransaction transaction)
             throw new InvalidOperationException($"Transaction is not of type {nameof(GrpcTransaction)}.");
         var query = new ExecuteQueryRequest
@@ -263,8 +264,8 @@ public class GrpcCommand : IAsyncDbCommand
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
-        if (Parameters is not GrpcParameterCollection parameters)
-            throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
+        if (Parameters is not ParameterCollection parameters)
+            throw new InvalidOperationException($"Parameters is not of type {nameof(ParameterCollection)}.");
         if (Transaction is not GrpcTransaction transaction)
             throw new InvalidOperationException($"Transaction is not of type {nameof(GrpcTransaction)}.");
         var query = new ExecuteQueryRequest
@@ -283,7 +284,7 @@ public class GrpcCommand : IAsyncDbCommand
         var reply = await client.ExecuteNonQueryAsync(query, cancellationToken: cancellationToken);
 
         if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+            RemoteDataException.ThrowDataException(reply.DataException);
 
         return reply.RowsAffected;
     }
@@ -305,8 +306,8 @@ public class GrpcCommand : IAsyncDbCommand
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
-        if (Parameters is not GrpcParameterCollection parameters)
-            throw new InvalidOperationException($"Parameters is not of type {nameof(GrpcParameterCollection)}.");
+        if (Parameters is not ParameterCollection parameters)
+            throw new InvalidOperationException($"Parameters is not of type {nameof(ParameterCollection)}.");
         if (Transaction is not GrpcTransaction transaction)
             throw new InvalidOperationException($"Transaction is not of type {nameof(GrpcTransaction)}.");
         var query = new ExecuteQueryRequest

@@ -2,7 +2,7 @@ using System.Net;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Common;
 
 /// <summary>
 /// Manages the creation and disposal of gRPC channels.
@@ -15,7 +15,7 @@ internal class ChannelManager : IDisposable
 	/// <param name="address">The address of the gRPC channel.</param>
 	public ChannelManager(string address)
 	{
-		this.Channel = GetChannel(address);
+		Channel = GetChannel(address);
 	}
 
 	/// <summary>
@@ -46,19 +46,17 @@ internal class ChannelManager : IDisposable
 				dictionary[address] = (v.Item1, v.Item2 + 1);
 				return v.Item1;
 			}
-			else
+
+			var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
 			{
-				var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
-				{
-					HttpVersion = HttpVersion.Version11
-				});
-				var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-				{
-					HttpClient = httpClient
-				});
-				dictionary[address] = (channel, 1);
-				return channel;
-			}
+				HttpVersion = HttpVersion.Version11
+			});
+			var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
+			{
+				HttpClient = httpClient
+			});
+			dictionary[address] = (channel, 1);
+			return channel;
 		}
 	}
 
@@ -95,15 +93,13 @@ internal class ChannelManager : IDisposable
 	/// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
 	protected virtual void Dispose(bool disposing)
 	{
-		if (!disposedValue)
+		if (disposedValue) return;
+		if (disposing)
 		{
-			if (disposing)
-			{
-				Dispose(Channel);
-			}
-
-			disposedValue = true;
+			Dispose(Channel);
 		}
+
+		disposedValue = true;
 	}
 
 	/// <summary>

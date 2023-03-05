@@ -4,13 +4,13 @@ using System.Data.Common;
 using System.Reflection;
 using JamesBrighton.DataProvider.Grpc;
 using JamesBrighton.Data.Common;
+using JamesBrighton.Data.Common.Helpers;
 using JamesBrighton.Data.GrpcServer.Helpers;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 
 using static JamesBrighton.DataProvider.Grpc.DatabaseService;
 using DataException = JamesBrighton.DataProvider.Grpc.DataException;
-using JamesBrighton.Data.Common.Helpers;
 
 namespace JamesBrighton.Data.GrpcServer.Services;
 

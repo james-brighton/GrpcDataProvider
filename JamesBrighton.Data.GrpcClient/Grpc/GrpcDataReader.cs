@@ -1,9 +1,10 @@
 using System.Data;
 using JamesBrighton.DataProvider.Grpc;
-using Grpc.Core;
 using JamesBrighton.Data.Common;
+using JamesBrighton.Data.GrpcClient.Common;
+using Grpc.Core;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Grpc;
 
 /// <summary>
 /// This class represents a IDataReader implementation that communicates over gRPC.
@@ -163,9 +164,7 @@ public class GrpcDataReader : IAsyncDataReader
     public string GetString(int i)
     {
         var item = items[i];
-        if (!item.IsNull)
-            return item.GetValue<string>();
-        return string.Empty;
+        return !item.IsNull ? item.GetValue<string>() : string.Empty;
     }
 
     /// <inheritdoc />
@@ -193,7 +192,7 @@ public class GrpcDataReader : IAsyncDataReader
             return false;
 
         if (syncResponse.DataException != null)
-            GrpcDataException.ThrowDataException(syncResponse.DataException);
+            RemoteDataException.ThrowDataException(syncResponse.DataException);
 
         if (syncResponseIndex >= syncResponse.Rows.Count)
             return false;
@@ -220,7 +219,7 @@ public class GrpcDataReader : IAsyncDataReader
         if (!result) return false;
         var r = asyncResponse.ResponseStream.Current;
         if (r.DataException != null)
-            GrpcDataException.ThrowDataException(r.DataException);
+            RemoteDataException.ThrowDataException(r.DataException);
         foreach (var field in r.Fields)
         {
             var f = (DataField)field;

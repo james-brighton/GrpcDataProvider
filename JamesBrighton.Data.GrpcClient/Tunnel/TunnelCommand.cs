@@ -1,6 +1,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using JamesBrighton.Data.GrpcClient.Common;
 
 namespace JamesBrighton.Data.GrpcClient.Tunnel;
 
@@ -46,7 +47,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public IDbConnection? Connection { get; set; }
 
 	/// <inheritdoc />
-	public IDataParameterCollection Parameters { get; } = new GrpcParameterCollection();
+	public IDataParameterCollection Parameters { get; } = new ParameterCollection();
 
 	/// <inheritdoc />
 	public IDbTransaction? Transaction
@@ -69,7 +70,7 @@ public class TunnelCommand : IAsyncDbCommand
 	}
 
 	/// <inheritdoc />
-	public IDbDataParameter CreateParameter() => new GrpcParameter();
+	public IDbDataParameter CreateParameter() => new Parameter();
 
 	/// <inheritdoc />
 	public void Dispose()
@@ -101,7 +102,7 @@ public class TunnelCommand : IAsyncDbCommand
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 			return 0;
 		}
 	}
@@ -125,7 +126,7 @@ public class TunnelCommand : IAsyncDbCommand
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 			return null!;
 		}
 	}
@@ -151,7 +152,7 @@ public class TunnelCommand : IAsyncDbCommand
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 			return null!;
 		}
 	}
@@ -183,7 +184,7 @@ public class TunnelCommand : IAsyncDbCommand
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 			return null;
 		}
 	}
@@ -202,7 +203,7 @@ public class TunnelCommand : IAsyncDbCommand
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 			return null;
 		}
 	}
@@ -262,7 +263,7 @@ public class TunnelCommand : IAsyncDbCommand
 		}
 		catch (Exception e)
 		{
-			GrpcDataException.ThrowDataException(e);
+			RemoteDataException.ThrowDataException(e);
 			return 0;
 		}
 	}
@@ -281,7 +282,7 @@ public class TunnelCommand : IAsyncDbCommand
 		command.Parameters.Clear();
 		foreach (var param in Parameters)
 		{
-			if (param is not GrpcParameter p) continue;
+			if (param is not Parameter p) continue;
 			AddParameter(command, p.ParameterName, p.Value);
 		}
 	}

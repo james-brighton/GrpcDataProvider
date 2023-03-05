@@ -1,12 +1,12 @@
 using System.Data;
 
-namespace JamesBrighton.Data.GrpcClient;
+namespace JamesBrighton.Data.GrpcClient.Common;
 
 /// <summary>
 /// Represents a collection of parameters used in a database command in a gRPC implementation of an
 /// <see cref="IDbConnection" />.
 /// </summary>
-public class GrpcParameterCollection : List<GrpcParameter>, IDataParameterCollection
+public class ParameterCollection : List<Parameter>, IDataParameterCollection
 {
     /// <inheritdoc />
     public object this[string parameterName]
@@ -14,7 +14,7 @@ public class GrpcParameterCollection : List<GrpcParameter>, IDataParameterCollec
         get => this[IndexOf(parameterName)];
         set
         {
-            if (value is not GrpcParameter param) return;
+            if (value is not Parameter param) return;
             this[IndexOf(parameterName)] = param;
         }
     }

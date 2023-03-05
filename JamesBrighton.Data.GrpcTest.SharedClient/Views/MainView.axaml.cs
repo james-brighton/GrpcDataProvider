@@ -1,11 +1,11 @@
 using System.Data;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using JamesBrighton.Data.GrpcClient;
+using JamesBrighton.Data.GrpcClient.Common;
+using JamesBrighton.Data.GrpcClient.Grpc;
 
 namespace JamesBrighton.Data.GrpcTest.SharedClient.Views;
 
@@ -35,7 +35,7 @@ public partial class MainView : UserControl
             OutputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
             return;
         }
-        catch (GrpcDataException e1)
+        catch (DataException e1)
         {
             OutputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
             return;
@@ -60,7 +60,7 @@ public partial class MainView : UserControl
 
             await transaction.CommitAsync(CancellationToken.None);
         }
-        catch (GrpcDataException e1)
+        catch (RemoteDataException e1)
         {
             await ShowException(transaction, e1);
         }
@@ -138,7 +138,7 @@ public partial class MainView : UserControl
         items.Add(item);
     }
 
-    async Task ShowException(IAsyncDbTransaction transaction, GrpcDataException exception)
+    async Task ShowException(IAsyncDbTransaction transaction, RemoteDataException exception)
     {
         await transaction.RollbackAsync();
         var list = new List<string>();

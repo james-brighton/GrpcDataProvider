@@ -2,9 +2,11 @@ using System.Data;
 using JamesBrighton.DataProvider.Grpc;
 using Grpc.Net.Client;
 using JamesBrighton.Data.Common.Helpers;
-using IsolationLevel = System.Data.IsolationLevel;
 
-namespace JamesBrighton.Data.GrpcClient;
+using IsolationLevel = System.Data.IsolationLevel;
+using JamesBrighton.Data.GrpcClient.Common;
+
+namespace JamesBrighton.Data.GrpcClient.Grpc;
 
 /// <summary>
 /// Represents a gRPC implementation of an <see cref="IAsyncDbTransaction" />.
@@ -62,7 +64,7 @@ public class GrpcTransaction : IAsyncDbTransaction
         var reply = client.CommitTransaction(new CommitTransactionRequest
         { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier });
         if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+            RemoteDataException.ThrowDataException(reply.DataException);
     }
 
     /// <inheritdoc />
@@ -88,7 +90,7 @@ public class GrpcTransaction : IAsyncDbTransaction
         var reply = client.RollbackTransaction(new RollbackTransactionRequest
         { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier });
         if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+            RemoteDataException.ThrowDataException(reply.DataException);
     }
 
     /// <inheritdoc />
@@ -110,7 +112,7 @@ public class GrpcTransaction : IAsyncDbTransaction
             { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier },
             cancellationToken: cancellationToken);
         if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+            RemoteDataException.ThrowDataException(reply.DataException);
     }
 
     /// <inheritdoc />
@@ -132,7 +134,7 @@ public class GrpcTransaction : IAsyncDbTransaction
             { ConnectionIdentifier = ConnectionIdentifier, TransactionIdentifier = TransactionIdentifier },
             cancellationToken: cancellationToken);
         if (reply.DataException != null)
-            GrpcDataException.ThrowDataException(reply.DataException);
+            RemoteDataException.ThrowDataException(reply.DataException);
     }
 
     /// <summary>
