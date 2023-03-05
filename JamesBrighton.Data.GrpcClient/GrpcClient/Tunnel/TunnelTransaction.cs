@@ -31,15 +31,20 @@ public class TunnelTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public IsolationLevel IsolationLevel { get; }
 
+    /// <summary>
+    /// The transaction.
+    /// </summary>
+    public DbTransaction? Transaction { get; private set; }
+
     /// <inheritdoc />
     public void Commit()
     {
-        if (Connection == null || transaction == null)
+        if (Connection == null || Transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
         try
         {
-            transaction.Commit();
+            Transaction.Commit();
         }
 		catch (Exception e)
 		{
@@ -50,27 +55,27 @@ public class TunnelTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public void Dispose()
     {
-        transaction?.Dispose();
-        transaction = null;
+        Transaction?.Dispose();
+        Transaction = null;
         GC.SuppressFinalize(this);
     }
 
     public async ValueTask DisposeAsync()
     {
-        await transaction?.DisposeAsync().AsTask()!;
-        transaction = null;
+        await Transaction?.DisposeAsync().AsTask()!;
+        Transaction = null;
         GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc />
     public void Rollback()
     {
-        if (Connection == null || transaction == null)
+        if (Connection == null || Transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
         try
         {
-            transaction.Rollback();
+            Transaction.Rollback();
         }
 		catch (Exception e)
 		{
@@ -87,12 +92,12 @@ public class TunnelTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
-        if (Connection == null || transaction == null)
+        if (Connection == null || Transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
         try
         {
-            await transaction.CommitAsync(cancellationToken);
+            await Transaction.CommitAsync(cancellationToken);
         }
 		catch (Exception e)
 		{
@@ -109,12 +114,12 @@ public class TunnelTransaction : IAsyncDbTransaction
     /// <inheritdoc />
     public async Task RollbackAsync(CancellationToken cancellationToken)
     {
-        if (Connection == null || transaction == null)
+        if (Connection == null || Transaction == null)
             throw new InvalidOperationException("There's no connection.");
 
         try
         {
-            await transaction.RollbackAsync(cancellationToken);
+            await Transaction.RollbackAsync(cancellationToken);
         }
 		catch (Exception e)
 		{
@@ -132,7 +137,7 @@ public class TunnelTransaction : IAsyncDbTransaction
     {
         return new TunnelTransaction(connection, isolationLevel)
         {
-            transaction = connection.BeginTransaction()
+            Transaction = connection.BeginTransaction(isolationLevel)
         };
     }
 
@@ -146,12 +151,7 @@ public class TunnelTransaction : IAsyncDbTransaction
     {
         return new TunnelTransaction(connection, isolationLevel)
         {
-            transaction = await connection.BeginTransactionAsync()
+            Transaction = await connection.BeginTransactionAsync(isolationLevel)
         };
     }
-
-    /// <summary>
-    /// The transaction.
-    /// </summary>
-    DbTransaction? transaction;
 }
