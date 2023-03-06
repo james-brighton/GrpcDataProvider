@@ -50,7 +50,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 	public IDbTransaction BeginTransaction(IsolationLevel il)
     {
 		if (channelManager == null)
-			throw new InvalidOperationException("The channel manager is null.");
+			throw new RemoteDataException("The channel manager is null.");
         return GrpcTransaction.BeginTransaction(channelManager.Channel, connectionIdentifier, this, il);
     }
 
@@ -61,7 +61,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il)
     {
 		if (channelManager == null)
-			throw new InvalidOperationException("The channel manager is null.");
+			throw new RemoteDataException("The channel manager is null.");
         return await GrpcTransaction.BeginTransactionAsync(channelManager.Channel, connectionIdentifier, this, il);
     }
 
@@ -83,7 +83,7 @@ public class GrpcConnection : IAsyncRemoteConnection
 	public IDbCommand CreateCommand()
     {
 		if (channelManager == null)
-			throw new InvalidOperationException("The channel manager is null.");
+			throw new RemoteDataException("The channel manager is null.");
         return GrpcCommand.CreateCommand(channelManager.Channel, connectionIdentifier, this);
     }
 
@@ -91,7 +91,7 @@ public class GrpcConnection : IAsyncRemoteConnection
     public async Task<IAsyncDbCommand> CreateCommandAsync()
     {
 		if (channelManager == null)
-			throw new InvalidOperationException("The channel manager is null.");
+			throw new RemoteDataException("The channel manager is null.");
         return await GrpcCommand.CreateCommandAsync(channelManager.Channel, connectionIdentifier, this);
     }
 
