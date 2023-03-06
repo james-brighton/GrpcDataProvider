@@ -1,6 +1,7 @@
 using JamesBrighton.DataProvider.Grpc;
 using JamesBrighton.Data.Common;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace JamesBrighton.Data.GrpcClient.Common;
 
@@ -55,6 +56,30 @@ public sealed class RemoteDataException : Exception
             else
                 properties[index] = (name, value);
         }
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the value of a property with the specified name.
+    /// </summary>
+    /// <param name="name">The name of the property to retrieve.</param>
+    /// <param name="value">
+    /// When this method returns, contains the value of the property with the specified name, 
+    /// if the property is found; otherwise, <c>null</c>.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if a property with the specified name is found; otherwise, <c>false</c>.
+    /// </returns>
+    public bool TryGetPropertyValue(string name, [MaybeNullWhen(false)] out object value)
+    {
+        var index = properties.FindIndex(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+        if (index < 0)
+        {
+            value = null;
+            return false;
+        }
+
+        value = properties[index].Value;
+        return true;
     }
 
     /// <summary>
