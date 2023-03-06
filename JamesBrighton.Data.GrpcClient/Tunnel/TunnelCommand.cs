@@ -92,7 +92,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public int ExecuteNonQuery()
 	{
 		if (Connection == null || command == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		CopyParameters();
 
@@ -114,7 +114,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public IDataReader ExecuteReader(CommandBehavior behavior)
 	{
 		if (Connection == null || command == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		CopyParameters();
 
@@ -140,7 +140,7 @@ public class TunnelCommand : IAsyncDbCommand
 		CancellationToken cancellationToken)
 	{
 		if (Connection == null || command == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		CopyParameters();
 
@@ -174,7 +174,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public async Task<object?> ExecuteScalarAsync(CancellationToken cancellationToken)
 	{
 		if (Connection == null || command == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		CopyParameters();
 
@@ -193,7 +193,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public object? ExecuteScalar()
 	{
 		if (Connection == null || command == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		CopyParameters();
 
@@ -222,7 +222,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public static TunnelCommand CreateCommand(DbConnection connection)
 	{
 		if (connection == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		var result = new TunnelCommand(connection)
 		{
@@ -240,7 +240,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public static async Task<TunnelCommand> CreateCommandAsync(DbConnection connection)
 	{
 		if (connection == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		await Task.Delay(0);
 		return new TunnelCommand(connection)
@@ -253,7 +253,7 @@ public class TunnelCommand : IAsyncDbCommand
 	public async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
 	{
 		if (Connection == null || command == null)
-			throw new InvalidOperationException("There's no connection.");
+			throw new RemoteDataException("There's no connection.");
 
 		CopyParameters();
 

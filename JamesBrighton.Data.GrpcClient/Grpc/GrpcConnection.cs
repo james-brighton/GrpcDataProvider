@@ -114,6 +114,12 @@ public class GrpcConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public void Open()
 	{
+		if (string.IsNullOrEmpty(ConnectionString))
+			throw new RemoteDataException("The connection string is empty.");
+		if (string.IsNullOrEmpty(ServerConnectionString))
+			throw new RemoteDataException("The server connection string is empty.");
+		if (string.IsNullOrEmpty(ServerProviderInvariantName))
+			throw new RemoteDataException("The server provider invariant name is empty.");
 		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
 		channelManager = new ChannelManager(address);
@@ -131,6 +137,13 @@ public class GrpcConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public async Task OpenAsync(CancellationToken cancellationToken)
 	{
+		if (string.IsNullOrEmpty(ConnectionString))
+			throw new RemoteDataException("The connection string is empty.");
+		if (string.IsNullOrEmpty(ServerConnectionString))
+			throw new RemoteDataException("The server connection string is empty.");
+		if (string.IsNullOrEmpty(ServerProviderInvariantName))
+			throw new RemoteDataException("The server provider invariant name is empty.");
+
 		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
 		channelManager = new ChannelManager(address);

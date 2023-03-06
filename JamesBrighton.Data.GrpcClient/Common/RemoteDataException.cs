@@ -15,7 +15,7 @@ public sealed class RemoteDataException : Exception
     /// Initializes a new instance of the <see cref="DataException" /> class with the specified error message.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    RemoteDataException(string? message) : base(message)
+    public RemoteDataException(string? message) : base(message)
     {
     }
 

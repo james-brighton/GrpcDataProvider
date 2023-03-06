@@ -41,7 +41,7 @@ public class TunnelTransaction : IAsyncDbTransaction
     public void Commit()
     {
         if (Connection == null || Transaction == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
 
         try
         {
@@ -72,7 +72,7 @@ public class TunnelTransaction : IAsyncDbTransaction
     public void Rollback()
     {
         if (Connection == null || Transaction == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
 
         try
         {
@@ -94,7 +94,7 @@ public class TunnelTransaction : IAsyncDbTransaction
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
         if (Connection == null || Transaction == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
 
         try
         {
@@ -116,7 +116,7 @@ public class TunnelTransaction : IAsyncDbTransaction
     public async Task RollbackAsync(CancellationToken cancellationToken)
     {
         if (Connection == null || Transaction == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
 
         try
         {

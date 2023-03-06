@@ -44,7 +44,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 	public IDbTransaction BeginTransaction(IsolationLevel il)
     {
         if (connection == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
         return TunnelTransaction.BeginTransaction(connection, il);
     }
 
@@ -55,7 +55,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il)
     {
         if (connection == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
         return await TunnelTransaction.BeginTransactionAsync(connection, il);
     }
 
@@ -68,7 +68,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 	public void Close()
 	{
         if (connection == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
         connection.Close();
 	}
 
@@ -76,7 +76,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 	public IDbCommand CreateCommand()
     {
         if (connection == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
         return TunnelCommand.CreateCommand(connection);
     }
 
@@ -84,7 +84,7 @@ public class TunnelConnection : IAsyncRemoteConnection
     public async Task<IAsyncDbCommand> CreateCommandAsync()
     {
         if (connection == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
         return await TunnelCommand.CreateCommandAsync(connection);
     }
 
@@ -107,6 +107,13 @@ public class TunnelConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public void Open()
 	{
+		if (string.IsNullOrEmpty(ConnectionString))
+			throw new RemoteDataException("The connection string is empty.");
+		if (string.IsNullOrEmpty(ServerConnectionString))
+			throw new RemoteDataException("The server connection string is empty.");
+		if (string.IsNullOrEmpty(ServerProviderInvariantName))
+			throw new RemoteDataException("The server provider invariant name is empty.");
+
         DbProviderFactory factory;
         try
         {
@@ -139,6 +146,13 @@ public class TunnelConnection : IAsyncRemoteConnection
 	/// <inheritdoc />
 	public async Task OpenAsync(CancellationToken cancellationToken)
 	{
+		if (string.IsNullOrEmpty(ConnectionString))
+			throw new RemoteDataException("The connection string is empty.");
+		if (string.IsNullOrEmpty(ServerConnectionString))
+			throw new RemoteDataException("The server connection string is empty.");
+		if (string.IsNullOrEmpty(ServerProviderInvariantName))
+			throw new RemoteDataException("The server provider invariant name is empty.");
+
         DbProviderFactory factory;
         try
         {
@@ -172,7 +186,7 @@ public class TunnelConnection : IAsyncRemoteConnection
 	public async Task CloseAsync(CancellationToken cancellationToken)
 	{
         if (connection == null)
-            throw new InvalidOperationException("There's no connection.");
+            throw new RemoteDataException("There's no connection.");
         await connection.CloseAsync();
 	}
 
