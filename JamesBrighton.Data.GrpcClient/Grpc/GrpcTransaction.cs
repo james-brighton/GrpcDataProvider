@@ -57,7 +57,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     public void Commit()
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -83,7 +83,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     public void Rollback()
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -103,7 +103,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -125,7 +125,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     public async Task RollbackAsync(CancellationToken cancellationToken)
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -148,7 +148,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     public static GrpcTransaction BeginTransaction(GrpcChannel? channel, string connectionIdentifier, IDbConnection connection, IsolationLevel isolationLevel)
     {
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var result = new GrpcTransaction(channel, connectionIdentifier, connection, isolationLevel);
         var client = new DatabaseService.DatabaseServiceClient(channel);
@@ -170,7 +170,7 @@ public class GrpcTransaction : IAsyncDbTransaction
     public static async Task<GrpcTransaction> BeginTransactionAsync(GrpcChannel? channel, string connectionIdentifier, IDbConnection connection, IsolationLevel isolationLevel)
     {
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var result = new GrpcTransaction(channel, connectionIdentifier, connection, isolationLevel);
         var client = new DatabaseService.DatabaseServiceClient(channel);

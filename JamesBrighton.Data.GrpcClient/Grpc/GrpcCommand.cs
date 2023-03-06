@@ -87,7 +87,7 @@ public class GrpcCommand : IAsyncDbCommand
     public async ValueTask DisposeAsync()
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -101,7 +101,7 @@ public class GrpcCommand : IAsyncDbCommand
     public int ExecuteNonQuery()
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -137,7 +137,7 @@ public class GrpcCommand : IAsyncDbCommand
     public IDataReader ExecuteReader(CommandBehavior behavior)
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -224,7 +224,7 @@ public class GrpcCommand : IAsyncDbCommand
     public static GrpcCommand CreateCommand(GrpcChannel? channel, string connectionIdentifier, IDbConnection connection)
     {
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var result = new GrpcCommand(channel, connectionIdentifier) { Connection = connection };
         var client = new DatabaseService.DatabaseServiceClient(channel);
@@ -245,7 +245,7 @@ public class GrpcCommand : IAsyncDbCommand
     public static async Task<GrpcCommand> CreateCommandAsync(GrpcChannel? channel, string connectionIdentifier, IDbConnection connection)
     {
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var result = new GrpcCommand(channel, connectionIdentifier) { Connection = connection };
         var client = new DatabaseService.DatabaseServiceClient(channel);
@@ -260,7 +260,7 @@ public class GrpcCommand : IAsyncDbCommand
     public async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
@@ -302,7 +302,7 @@ public class GrpcCommand : IAsyncDbCommand
     IDataReader ExecuteReaderAsyncInternal(CommandBehavior behavior)
     {
         if (Channel == null || string.IsNullOrEmpty(ConnectionIdentifier) || string.IsNullOrEmpty(commandIdentifier))
-            throw new InvalidOperationException("There's no gRPC channel.");
+            throw new RemoteDataException("There's no gRPC channel.");
 
         var client = new DatabaseService.DatabaseServiceClient(Channel);
 
