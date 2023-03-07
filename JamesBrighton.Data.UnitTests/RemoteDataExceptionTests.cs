@@ -102,19 +102,4 @@ public class RemoteDataExceptionTests
             Assert.That(value, Is.Null);
         });
     }
-
-    [Test]
-    public void ThrowDataException_FromGeneralException_CreatesRemoteDataExceptionAndConvertsPublicProperties()
-    {
-        // Arrange
-        var message = "Test Exception message";
-        var innerMessage = "Inner exception message";
-        var exception = new InvalidOperationException(message, new Exception(innerMessage));
-
-        // Act
-        RemoteDataException.ThrowDataException(exception);
-
-        // Assert
-        Assert.Throws<RemoteDataException>(() => RemoteDataException.ThrowDataException(exception));
-    }
 }

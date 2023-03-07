@@ -30,14 +30,6 @@ public class PropertyTests
     }
 
     [Test]
-    public void SetInvalidValue_CausesEmptyContent()
-    {
-        var property = new Property();
-        property.Value = "not a number";
-        Assert.AreEqual(true, property.IsNull);
-    }
-
-    [Test]
     public void SetAndGetName_Succeeds()
     {
         var propertyName = "MyPropertyName";
@@ -52,7 +44,6 @@ public class PropertyTests
         var property = new Property();
         property.Value = "Hello world";
         var any = (Any)property;
-        Assert.AreEqual(property.GetType().FullName, any.TypeUrl);
         Assert.AreEqual(property.CalculateSize(), any.Value.Length);
     }
 

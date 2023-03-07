@@ -12,10 +12,10 @@ public class GrpcClientFactoryTests
     {
         // Arrange
         var factory = GrpcClientFactory.Instance;
-            
+
         // Act
         var command = factory.CreateCommand();
-            
+
         // Assert
         Assert.IsInstanceOf<GrpcCommand>(command);
     }

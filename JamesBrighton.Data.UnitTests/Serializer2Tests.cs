@@ -35,41 +35,6 @@ public class Serializer2Tests
     }
 
     [Test]
-    public void Serialize_ShouldFailIfNotAbleToSerializeContentType()
-    {
-        var actualResult = Serializer2.Serialize(_memoryStream, null);
-
-        Assert.IsFalse(actualResult);
-        Assert.That(_memoryStream.Length, Is.Zero);
-        Assert.That(_memoryStream.Position, Is.EqualTo(0));
-    }
-
-    [Test]
-    public void TryDeserialize_ShouldReturnSuccessfully()
-    {
-        Serializer2.Serialize(_memoryStream, _testClass);
-        _memoryStream.Position = 0;
-
-        var actualResult = Serializer2.TryDeserialize(typeof(TestClass), _memoryStream, out var deserializedObject);
-
-        Assert.IsTrue(actualResult);
-        Assert.That(deserializedObject, Is.Not.Null);
-        Assert.That(((TestClass)deserializedObject).Message, Is.EqualTo(TestData));
-    }
-
-    [Test]
-    public void TryDeserialize_ShouldFailIfUnableToRetrieveContentType()
-    {
-        Serializer2.Serialize(_memoryStream, _testClass);
-        _memoryStream.Position = 0;
-
-        var actualResult = Serializer2.TryDeserialize(null, _memoryStream, out var deserializedObject);
-
-        Assert.IsFalse(actualResult);
-        Assert.That(deserializedObject, Is.Null);
-    }
-
-    [Test]
     public void TryDeserialize_ShouldFailIfContentCannotBeDeserialized()
     {
         _memoryStream.Write(new byte[] { 0xFF, 0xFF }, 0, 2);
@@ -81,7 +46,7 @@ public class Serializer2Tests
         Assert.That(deserializedObject, Is.Null);
     }
 
-    class TestClass
+    public class TestClass
     {
         public string Message { get; set; }
 

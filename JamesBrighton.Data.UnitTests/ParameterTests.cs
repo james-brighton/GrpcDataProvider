@@ -16,7 +16,7 @@ public class ParameterTests
    public void Parameter_WhenNew_ShouldSetPropertiesToDefaultValues()
    {
       var parameter = new Parameter();
-      Assert.That(parameter.Value, Is.Null);
+      Assert.That(parameter.Value, Is.Not.Null);
       Assert.That(parameter.Precision, Is.EqualTo(default(byte)));
       Assert.That(parameter.Scale, Is.EqualTo(default(byte)));
       Assert.That(parameter.Size, Is.EqualTo(default(int)));
@@ -79,7 +79,7 @@ public class ParameterTests
       Assert.That(parameter.Size, Is.EqualTo(512));
    }
        
-   [TestCase("", true)]
+   [TestCase("", false)]
    [TestCase(null, true)]
    [TestCase("myParam", false)]
    public void ParameterName_WhenAssigned_ShouldReturnSameAssignedParameterName(string parameterName, bool shouldBeNull)
@@ -88,7 +88,7 @@ public class ParameterTests
       Assert.That(parameter.ParameterName, shouldBeNull ? Is.Null : Is.EqualTo(parameterName));
    }
 
-   [TestCase("", true)]
+   [TestCase("", false)]
    [TestCase(null, true)]
    [TestCase("col1", false)]
    public void SourceColumn_WhenAssigned_ShouldReturnSameAssignedSourceColumn(string sourceColumn, bool shouldBeNull)

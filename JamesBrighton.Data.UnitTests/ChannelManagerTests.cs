@@ -21,7 +21,7 @@ public class ChannelManagerTests
 
         // Assert
         Assert.IsNotNull(channel);
-        Assert.AreEqual(channel.Target, address);
+        Assert.AreEqual("localhost:5000", channel.Target);
     }
 
     [Test]

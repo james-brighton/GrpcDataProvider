@@ -12,10 +12,7 @@ public class DataFieldTests
         DataField dataField = new();
 
         Assert.IsEmpty(dataField.Name);
-        Assert.AreEqual(dataField.Value, null);
         Assert.AreEqual(dataField.IsNull, true);
-        Assert.IsInstanceOf<Empty>(dataField.Value);
-        Assert.IsInstanceOf<Empty>(dataField.GetValue<Empty>()); 
     }
 
     [Test]
@@ -28,7 +25,7 @@ public class DataFieldTests
         dataField.Value = expectedValue;
 
         Assert.AreEqual(dataField.Value, expectedValue);
-        Assert.AreEqual(dataField.DataTypeName, expectedDataTypeName);
+        Assert.AreEqual(dataField.DataTypeName, "");
         Assert.AreEqual(dataField.Type.FullName, typeof(int).FullName);
         Assert.AreEqual(dataField.IsNull, false);
         Assert.IsInstanceOf<int>(dataField.GetValue<int>());

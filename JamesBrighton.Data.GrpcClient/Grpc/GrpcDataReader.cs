@@ -52,7 +52,7 @@ public class GrpcDataReader : IAsyncDataReader
     }
 
     /// <inheritdoc />
-    public object this[int i] => i >= 0 && i < items.Count ? items[i].Value : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public object this[int i] => i >= 0 && i < items.Count ? items[i].Value : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
     public object this[string name] => items.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal))?.Value ?? new DataField().Value;
@@ -104,16 +104,16 @@ public class GrpcDataReader : IAsyncDataReader
     }
 
     /// <inheritdoc />
-    public bool GetBoolean(int i) => i >= 0 && i < items.Count ? items[i].GetValue<bool>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public bool GetBoolean(int i) => i >= 0 && i < items.Count ? items[i].GetValue<bool>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public byte GetByte(int i) => i >= 0 && i < items.Count ? items[i].GetValue<byte>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public byte GetByte(int i) => i >= 0 && i < items.Count ? items[i].GetValue<byte>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
     public long GetBytes(int i, long fieldOffset, byte[]? buffer, int bufferoffset, int length) => GetFieldArray(i, fieldOffset, buffer, bufferoffset, length);
 
     /// <inheritdoc />
-    public char GetChar(int i) => i >= 0 && i < items.Count ? items[i].GetValue<char>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public char GetChar(int i) => i >= 0 && i < items.Count ? items[i].GetValue<char>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
     public long GetChars(int i, long fieldoffset, char[]? buffer, int bufferoffset, int length) => GetFieldArray(i, fieldoffset, buffer, bufferoffset, length);
@@ -122,37 +122,37 @@ public class GrpcDataReader : IAsyncDataReader
     public IDataReader GetData(int i) => this;
 
     /// <inheritdoc />
-    public string GetDataTypeName(int i) => i >= 0 && i < items.Count ? items[i].DataTypeName : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public string GetDataTypeName(int i) => i >= 0 && i < items.Count ? items[i].DataTypeName : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public DateTime GetDateTime(int i) => i >= 0 && i < items.Count ? items[i].GetValue<DateTime>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public DateTime GetDateTime(int i) => i >= 0 && i < items.Count ? items[i].GetValue<DateTime>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public decimal GetDecimal(int i) => i >= 0 && i < items.Count ? items[i].GetValue<decimal>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public decimal GetDecimal(int i) => i >= 0 && i < items.Count ? items[i].GetValue<decimal>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public double GetDouble(int i) => i >= 0 && i < items.Count ? items[i].GetValue<double>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public double GetDouble(int i) => i >= 0 && i < items.Count ? items[i].GetValue<double>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public Type GetFieldType(int i) => i >= 0 && i < items.Count ? items[i].Type : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public Type GetFieldType(int i) => i >= 0 && i < items.Count ? items[i].Type : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public float GetFloat(int i) => i >= 0 && i < items.Count ? items[i].GetValue<float>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public float GetFloat(int i) => i >= 0 && i < items.Count ? items[i].GetValue<float>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public Guid GetGuid(int i) => i >= 0 && i < items.Count ? items[i].GetValue<Guid>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public Guid GetGuid(int i) => i >= 0 && i < items.Count ? items[i].GetValue<Guid>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public short GetInt16(int i) => i >= 0 && i < items.Count ? items[i].GetValue<short>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public short GetInt16(int i) => i >= 0 && i < items.Count ? items[i].GetValue<short>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public int GetInt32(int i) => i >= 0 && i < items.Count ? items[i].GetValue<int>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public int GetInt32(int i) => i >= 0 && i < items.Count ? items[i].GetValue<int>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public long GetInt64(int i) => i >= 0 && i < items.Count ? items[i].GetValue<long>() : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public long GetInt64(int i) => i >= 0 && i < items.Count ? items[i].GetValue<long>() : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
-    public string GetName(int i) => i >= 0 && i < items.Count ? items[i].Name : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public string GetName(int i) => i >= 0 && i < items.Count ? items[i].Name : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
     public int GetOrdinal(string name) => items.FindIndex(x => string.Equals(x.Name, name, StringComparison.Ordinal));
@@ -168,7 +168,7 @@ public class GrpcDataReader : IAsyncDataReader
     }
 
     /// <inheritdoc />
-    public object GetValue(int i) => i >= 0 && i < items.Count ? items[i].Value : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public object GetValue(int i) => i >= 0 && i < items.Count ? items[i].Value : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
     public int GetValues(object[] values)
@@ -179,7 +179,7 @@ public class GrpcDataReader : IAsyncDataReader
     }
 
     /// <inheritdoc />
-    public bool IsDBNull(int i) => i >= 0 && i < items.Count ? items[i].IsNull : throw new IndexOutOfRangeException("Could not find specified column in results.");
+    public bool IsDBNull(int i) => i >= 0 && i < items.Count ? items[i].IsNull : throw new IndexOutOfRangeException(indexOutOfRangeMessage);
 
     /// <inheritdoc />
     public bool NextResult() => false;
@@ -241,6 +241,9 @@ public class GrpcDataReader : IAsyncDataReader
     /// <returns>The items copied or 0 otherwise.</returns>
     long GetFieldArray<T>(int i, long fieldOffset, T[]? buffer, int bufferOffset, int length)
     {
+        if (i < 0 || i >= items.Count)
+            throw new IndexOutOfRangeException(indexOutOfRangeMessage);
+
         if (buffer == null) return 0;
         var maxBufferLength = buffer.Length - bufferOffset;
         if (maxBufferLength <= 0 || i < 0 || i >= items.Count) return 0;
@@ -251,4 +254,6 @@ public class GrpcDataReader : IAsyncDataReader
         Buffer.BlockCopy(value, (int)fieldOffset, buffer, bufferOffset, copyCount);
         return copyCount;
     }
+
+    const string indexOutOfRangeMessage = "Could not find specified column in results.";
 }
