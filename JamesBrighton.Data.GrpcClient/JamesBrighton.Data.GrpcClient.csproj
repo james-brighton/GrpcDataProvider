@@ -16,4 +16,8 @@
     <ItemGroup>
         <ProjectReference Include="./../JamesBrighton.Data.Common/JamesBrighton.Data.Common.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+        <None Remove=".gitignore" />
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>

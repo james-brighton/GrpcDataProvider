@@ -60,7 +60,7 @@ public partial class ConnectionStringBuilder : IConnectionStringBuilder
     public bool Remove(string key) => options.Remove(key);
 
     /// <inheritdoc />
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => options.TryGetValue(key, out value);
+    public bool TryGetValue(string key, out string value) => options.TryGetValue(key, out value);
 
     /// <inheritdoc />
     public void Add(KeyValuePair<string, string> item) => options.Add(item.Key, item.Value);
