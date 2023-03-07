@@ -100,7 +100,7 @@ public partial class ConnectionStringBuilder : IConnectionStringBuilder
         if (string.IsNullOrEmpty(connectionString))
             return;
 
-        foreach (var keyPair in CreateRegEx().Matches(connectionString).Cast<Match>())
+        foreach (var keyPair in new Regex("(([\\w\\s\\d]*)\\s*?=\\s*?\"([^\"]*)\"|([\\w\\s\\d]*)\\s*?=\\s*?'([^']*)'|([\\w\\s\\d]*)\\s*?=\\s*?([^\"';][^;]*))").Matches(connectionString).Cast<Match>())
         {
             if (keyPair.Groups.Count != 8)
                 continue;
@@ -163,7 +163,4 @@ public partial class ConnectionStringBuilder : IConnectionStringBuilder
     /// The options.
     /// </summary>
     readonly IDictionary<string, string> options = new Dictionary<string, string>();
-
-    [GeneratedRegex("(([\\w\\s\\d]*)\\s*?=\\s*?\"([^\"]*)\"|([\\w\\s\\d]*)\\s*?=\\s*?'([^']*)'|([\\w\\s\\d]*)\\s*?=\\s*?([^\"';][^;]*))")]
-    private static partial Regex CreateRegEx();
 }
