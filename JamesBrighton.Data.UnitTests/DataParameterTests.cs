@@ -1,4 +1,3 @@
-using Google.Protobuf;
 using JamesBrighton.Data.Common;
 using NUnit.Framework;
 
@@ -9,16 +8,20 @@ public class DataParameterTests
     [Test]
     public void Name_Get_ReturnsInnerParameterName()
     {
-        var param = new DataParameter();
-        param.Name = "param1";
+        var param = new DataParameter
+        {
+            Name = "param1"
+        };
         Assert.AreEqual("param1", param.Name);
     }
 
     [Test]
     public void Value_Set_SetsValueAndInnerParameterContent()
     {
-        var param = new DataParameter();
-        param.Value = "hello";
+        var param = new DataParameter
+        {
+            Value = "hello"
+        };
         Assert.AreEqual("hello", param.Value);
         Assert.AreEqual("System.String", param.Type.FullName);
         Assert.IsFalse(param.IsNull);
@@ -34,8 +37,10 @@ public class DataParameterTests
     [Test]
     public void Type_Get_ReturnsValueType()
     {
-        var param = new DataParameter();
-        param.Value = 3.14;
+        var param = new DataParameter
+        {
+            Value = 3.14
+        };
         Assert.AreEqual(typeof(double), param.Type);
     }
 }

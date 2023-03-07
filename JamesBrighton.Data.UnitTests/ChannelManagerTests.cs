@@ -1,6 +1,7 @@
+using JamesBrighton.Data.GrpcClient.Common;
 using NUnit.Framework;
 
-namespace JamesBrighton.Data.GrpcClient.Common.Tests;
+namespace JamesBrighton.Data.UnitTests;
 
 public class ChannelManagerTests
 {

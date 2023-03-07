@@ -5,7 +5,7 @@ namespace JamesBrighton.Data.UnitTests;
 
 public class ParameterCollectionTests
 {
-    ParameterCollection _parameterCollection;
+    ParameterCollection? _parameterCollection;
 
     [SetUp]
     public void Setup()

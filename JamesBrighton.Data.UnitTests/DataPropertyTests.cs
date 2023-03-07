@@ -22,8 +22,10 @@ public class PropertyTests
     [Test]
     public void SetAndGetValue_Succeeds()
     {
-        var property = new Property();
-        property.Value = 123;
+        var property = new Property
+        {
+            Value = 123
+        };
         Assert.AreEqual(false, property.IsNull);
         Assert.AreEqual(123, property.Value);
         Assert.AreEqual(typeof(int), property.Type);
@@ -33,16 +35,20 @@ public class PropertyTests
     public void SetAndGetName_Succeeds()
     {
         var propertyName = "MyPropertyName";
-        var property = new Property();
-        property.Name = propertyName;
+        var property = new Property
+        {
+            Name = propertyName
+        };
         Assert.AreEqual(propertyName, property.Name);
     }
 
     [Test]
     public void ImplicitConversionToAny_Succeeds()
     {
-        var property = new Property();
-        property.Value = "Hello world";
+        var property = new Property
+        {
+            Value = "Hello world"
+        };
         var any = (Any)property;
         Assert.AreEqual(property.CalculateSize(), any.Value.Length);
     }
@@ -50,8 +56,10 @@ public class PropertyTests
     [Test]
     public void ImplicitConversionFromAny_Succeeds()
     {
-        var property = new Property();
-        property.Value = "Hello world";
+        var property = new Property
+        {
+            Value = "Hello world"
+        };
         var any = (Any)property;
         var copy = any.Unpack<Property>();
         Assert.AreEqual(property.IsNull, copy.IsNull);

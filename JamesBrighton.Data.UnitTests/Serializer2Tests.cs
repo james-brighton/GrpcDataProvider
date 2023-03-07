@@ -8,8 +8,8 @@ public class Serializer2Tests
 {
     const string TestData = "This is a test string!";
 
-    MemoryStream _memoryStream;
-    TestClass _testClass;
+    MemoryStream? _memoryStream;
+    TestClass? _testClass;
 
     [SetUp]
     public void Setup()

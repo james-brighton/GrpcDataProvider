@@ -1,7 +1,8 @@
-using NUnit.Framework;
 using Google.Protobuf.WellKnownTypes;
+using JamesBrighton.Data.Common;
+using NUnit.Framework;
 
-namespace JamesBrighton.Data.Common.Tests;
+namespace JamesBrighton.Data.UnitTests;
 
 [TestFixture]
 public class DataFieldTests
@@ -20,7 +21,6 @@ public class DataFieldTests
     {
         DataField dataField = new();
         var expectedValue = 10;
-        var expectedDataTypeName = expectedValue.GetType().FullName ?? "";
 
         dataField.Value = expectedValue;
 

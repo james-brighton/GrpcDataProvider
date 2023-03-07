@@ -24,10 +24,12 @@ public class RemoteDataExceptionTests
     {
         // Arrange
         var className = "Test.Class.Name";
-        var ex = new RemoteDataException(null);
+        var ex = new RemoteDataException(null)
+        {
+            // Act
+            ClassName = className
+        };
 
-        // Act
-        ex.ClassName = className;
         var result = ex.ClassName;
 
         // Assert
@@ -40,8 +42,10 @@ public class RemoteDataExceptionTests
         // Arrange
         var propName = "TestPropertyName";
         var propValue = "TestPropertyValue";
-        var ex = new RemoteDataException(null);
-        ex[propName] = propValue;
+        var ex = new RemoteDataException(null)
+        {
+            [propName] = propValue
+        };
 
         // Act
         var result = (string)ex[0];
@@ -56,8 +60,10 @@ public class RemoteDataExceptionTests
         // Arrange
         var propName = "TestPropertyName";
         var propValue = "TestPropertyValue";
-        var ex = new RemoteDataException(null);
-        ex[propName] = propValue;
+        var ex = new RemoteDataException(null)
+        {
+            [propName] = propValue
+        };
 
         // Act
         var result = (string)ex[propName];
@@ -72,8 +78,10 @@ public class RemoteDataExceptionTests
         // Arrange
         var propName = "TestPropertyName";
         var propValue = "TestPropertyValue";
-        var ex = new RemoteDataException(null);
-        ex[propName] = propValue;
+        var ex = new RemoteDataException(null)
+        {
+            [propName] = propValue
+        };
 
         // Act
         var result = ex.TryGetPropertyValue(propName, out var value);
