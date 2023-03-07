@@ -4,6 +4,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
+        <PackageId>JamesBrighton.Data.Common</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/james-brighton/GrpcDataProvider</RepositoryUrl>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Version>1.0.1</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Google.Protobuf" Version="3.21.12"/>
@@ -17,5 +23,9 @@
     </ItemGroup>
     <ItemGroup>
         <Protobuf Include="./Protos/*.proto"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove=".gitignore" />
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
