@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcTest.SharedClient", "JamesBrighton.Data.GrpcTest.SharedClient\JamesBrighton.Data.GrpcTest.SharedClient.csproj", "{ED31399C-2F33-4F5A-A83F-4C4FD222EBB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.UnitTests", "JamesBrighton.Data.UnitTests\JamesBrighton.Data.UnitTests.csproj", "{11D03653-BED6-452A-9109-516CFCBD8635}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{ED31399C-2F33-4F5A-A83F-4C4FD222EBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED31399C-2F33-4F5A-A83F-4C4FD222EBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED31399C-2F33-4F5A-A83F-4C4FD222EBB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11D03653-BED6-452A-9109-516CFCBD8635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11D03653-BED6-452A-9109-516CFCBD8635}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11D03653-BED6-452A-9109-516CFCBD8635}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11D03653-BED6-452A-9109-516CFCBD8635}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

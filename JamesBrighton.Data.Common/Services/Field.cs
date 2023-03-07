@@ -90,7 +90,12 @@ public class DataField : IDataField, IMessage
     {
         innerField.MergeFrom(input);
         var type = Type.GetType(innerField.Type);
-        if (type == null) return;
+        if (type == null)
+        {
+            innerField = new InnerField();
+            value = emptyObject;
+            return;
+        }
         using var memoryStream = new MemoryStream();
         innerField.Content.WriteTo(memoryStream);
         memoryStream.Position = 0;

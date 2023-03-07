@@ -82,7 +82,12 @@ public class DataParameter : IDataParameter, IMessage
     {
         innerParameter.MergeFrom(input);
         var type = Type.GetType(innerParameter.Type);
-        if (type == null) return;
+        if (type == null)
+        {
+            innerParameter = new InnerParameter();
+            value = emptyObject;
+            return;
+        }
         using var memoryStream = new MemoryStream();
         innerParameter.Content.WriteTo(memoryStream);
         memoryStream.Position = 0;

@@ -7,7 +7,7 @@ namespace JamesBrighton.Data.GrpcClient.Common;
 /// <summary>
 /// Manages the creation and disposal of gRPC channels.
 /// </summary>
-internal class ChannelManager : IDisposable
+public class ChannelManager : IDisposable
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ChannelManager"/> class with the specified address.

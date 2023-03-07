@@ -43,7 +43,12 @@ public class Property : IProperty, IMessage
     {
         innerProperty.MergeFrom(input);
         var type = Type.GetType(innerProperty.Type);
-        if (type == null) return;
+        if (type == null)
+        {
+            innerProperty = new InnerProperty();
+            value = emptyObject;
+            return;
+        }
         using var memoryStream = new MemoryStream();
         innerProperty.Content.WriteTo(memoryStream);
         memoryStream.Position = 0;
