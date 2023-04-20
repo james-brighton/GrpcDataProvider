@@ -11,6 +11,7 @@ using Grpc.Core;
 
 using static JamesBrighton.DataProvider.Grpc.DatabaseService;
 using DataException = JamesBrighton.DataProvider.Grpc.DataException;
+using System.Globalization;
 
 namespace JamesBrighton.Data.GrpcServer.Services;
 
@@ -45,7 +46,7 @@ public class DatabaseService : DatabaseServiceBase
     /// <returns>The connection identifier or an exception if an error occurred.</returns>
     public override async Task<OpenConnectionResponse> OpenConnection(OpenConnectionRequest request, ServerCallContext context)
     {
-        var connectionIdentifier = Guid.NewGuid().ToString();
+        var connectionIdentifier = GenerateIdentifier();
         var connection = CreateDbConnection(request.ProviderInvariantName, request.ConnectionString);
         if (connection == null)
         {
@@ -91,7 +92,7 @@ public class DatabaseService : DatabaseServiceBase
             return new CreateCommandResponse();
 
         var command = connection.Connection.CreateCommand();
-        var commandIdentifier = Guid.NewGuid().ToString();
+        var commandIdentifier = GenerateIdentifier();
         connection.AddCommand(commandIdentifier, command);
 
         return new CreateCommandResponse { CommandIdentifier = commandIdentifier };
@@ -125,7 +126,7 @@ public class DatabaseService : DatabaseServiceBase
             return new BeginTransactionResponse();
 
         var transaction = await connection.Connection.BeginTransactionAsync(IsolationLevelConverter.Convert(request.IsolationLevel));
-        var transactionIdentifier = Guid.NewGuid().ToString();
+        var transactionIdentifier = GenerateIdentifier();
         connection.AddTransaction(transactionIdentifier, transaction);
 
         return new BeginTransactionResponse { TransactionIdentifier = transactionIdentifier };
@@ -415,5 +416,28 @@ public class DatabaseService : DatabaseServiceBase
             : new DataField { Name = reader.GetName(i), DataTypeName = reader.GetDataTypeName(i) };
     }
 
+    /// <summary>
+    /// Generates an identifier.
+    /// </summary>
+    /// <returns>The identifier.</returns>
+    static string GenerateIdentifier()
+    {
+        lock (locker)
+        {
+            unchecked
+            {
+                genId++;
+            }
+            return string.Format(CultureInfo.InvariantCulture, "{0:X16}", genId);
+        }
+    }
 
+    /// <summary>
+    /// Generator lock object.
+    /// </summary>
+    static readonly object locker = new();
+    /// <summary>
+    /// Generator Identifier.
+    /// </summary>
+    static ulong genId;
 }
