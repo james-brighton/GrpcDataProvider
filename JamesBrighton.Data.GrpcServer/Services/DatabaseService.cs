@@ -422,22 +422,6 @@ public class DatabaseService : DatabaseServiceBase
     /// <returns>The identifier.</returns>
     static string GenerateIdentifier()
     {
-        lock (locker)
-        {
-            unchecked
-            {
-                genId++;
-            }
-            return string.Format(CultureInfo.InvariantCulture, "{0:X16}", genId);
-        }
+        return Guid.NewGuid().ToString();
     }
-
-    /// <summary>
-    /// Generator lock object.
-    /// </summary>
-    static readonly object locker = new();
-    /// <summary>
-    /// Generator Identifier.
-    /// </summary>
-    static ulong genId;
 }
