@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
+using System.Globalization;
 using System.Reflection;
 using JamesBrighton.DataProvider.Grpc;
 using JamesBrighton.Data.Common;
@@ -11,7 +12,6 @@ using Grpc.Core;
 
 using static JamesBrighton.DataProvider.Grpc.DatabaseService;
 using DataException = JamesBrighton.DataProvider.Grpc.DataException;
-using System.Globalization;
 
 namespace JamesBrighton.Data.GrpcServer.Services;
 
