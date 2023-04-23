@@ -56,6 +56,27 @@ public class DatabaseService : DatabaseServiceBase
         try
         {
             await connection.OpenAsync();
+            // If there's a client identifier, insert into the (temporary) table REMOTE_ATTACHMENTS
+            if (!string.IsNullOrEmpty(request.ClientIdentifier))
+            {
+                await using var command = connection.CreateCommand();
+                await using var transaction = await connection.BeginTransactionAsync();
+                try
+                {
+                    command.Transaction = transaction;
+                    command.CommandText = "INSERT INTO REMOTE_ATTACHMENTS (REMOTE_ID) VALUES (@REMOTE_ID)";
+                    var parameter = command.CreateParameter();
+                    parameter.ParameterName = "@REMOTE_ID";
+                    parameter.Value = request.ClientIdentifier;
+                    command.Parameters.Add(parameter);
+                    await command.ExecuteNonQueryAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
         }
         catch (Exception e)
         {

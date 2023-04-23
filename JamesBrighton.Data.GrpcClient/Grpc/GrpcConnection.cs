@@ -122,9 +122,10 @@ public class GrpcConnection : IAsyncRemoteConnection
 			throw new RemoteDataException("The server provider invariant name is empty.");
 		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
+		var clientIdentifier = connectionStringBuilder["ClientIdentifier"];
 		channelManager = new ChannelManager(address);
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
-		var reply = client.OpenConnection(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString });
+		var reply = client.OpenConnection(new OpenConnectionRequest { ClientIdentifier = clientIdentifier, ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString });
 		if (reply.DataException != null)
 			RemoteDataException.ThrowDataException(reply.DataException);
 
@@ -146,9 +147,10 @@ public class GrpcConnection : IAsyncRemoteConnection
 
 		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
+		var clientIdentifier = connectionStringBuilder["ClientIdentifier"];
 		channelManager = new ChannelManager(address);
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
-		var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
+		var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ClientIdentifier = clientIdentifier, ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
 		if (reply.DataException != null)
 			RemoteDataException.ThrowDataException(reply.DataException);
 

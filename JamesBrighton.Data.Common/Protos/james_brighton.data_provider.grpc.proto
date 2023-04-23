@@ -25,8 +25,9 @@ message DataException {
 }
 
 message OpenConnectionRequest {
-  string providerInvariantName = 1;
-  string connectionString = 2;
+  string clientIdentifier = 1;
+  string providerInvariantName = 2;
+  string connectionString = 3;
 }
 
 message OpenConnectionResponse {
