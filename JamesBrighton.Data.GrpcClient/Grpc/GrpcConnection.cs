@@ -146,10 +146,9 @@ public class GrpcConnection : IAsyncRemoteConnection
 
 		var connectionStringBuilder = new ConnectionStringBuilder(ConnectionString);
 		var address = connectionStringBuilder["GrpcServer"];
-		var clientIdentifier = connectionStringBuilder["ClientIdentifier"];
 		channelManager = new ChannelManager(address);
 		var client = new DatabaseService.DatabaseServiceClient(channelManager.Channel);
-		var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ClientIdentifier = clientIdentifier, ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
+		var reply = await client.OpenConnectionAsync(new OpenConnectionRequest { ProviderInvariantName = ServerProviderInvariantName, ConnectionString = ServerConnectionString }, cancellationToken: cancellationToken);
 		if (reply.DataException != null)
 			RemoteDataException.ThrowDataException(reply.DataException);
 
