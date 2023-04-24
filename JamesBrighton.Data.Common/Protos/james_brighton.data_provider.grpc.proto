@@ -25,9 +25,8 @@ message DataException {
 }
 
 message OpenConnectionRequest {
-  string clientIdentifier = 1;
-  string providerInvariantName = 2;
-  string connectionString = 3;
+  string providerInvariantName = 1;
+  string connectionString = 2;
 }
 
 message OpenConnectionResponse {
@@ -63,8 +62,9 @@ enum IsolationLevel {
 }
 
 message BeginTransactionRequest {
-  string connectionIdentifier = 1;
-  IsolationLevel isolationLevel = 2;
+  string clientIdentifier = 1;
+  string connectionIdentifier = 2;
+  IsolationLevel isolationLevel = 3;
 }
 
 message BeginTransactionResponse {

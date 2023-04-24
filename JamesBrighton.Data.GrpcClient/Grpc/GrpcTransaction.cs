@@ -2,6 +2,7 @@ using System.Data;
 using JamesBrighton.DataProvider.Grpc;
 using Grpc.Net.Client;
 using JamesBrighton.Data.Common.Helpers;
+using UUIDNext;
 
 using IsolationLevel = System.Data.IsolationLevel;
 using JamesBrighton.Data.GrpcClient.Common;
@@ -150,11 +151,12 @@ public class GrpcTransaction : IAsyncDbTransaction
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
             throw new RemoteDataException("There's no gRPC channel.");
 
+		var clientIdentifier = sessionIdentifier;
         var result = new GrpcTransaction(channel, connectionIdentifier, connection, isolationLevel);
         var client = new DatabaseService.DatabaseServiceClient(channel);
 
         var reply = client.BeginTransaction(new BeginTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
+        { ClientIdentifier = clientIdentifier, ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
         result.TransactionIdentifier = reply.TransactionIdentifier;
         return result;
     }
@@ -172,12 +174,27 @@ public class GrpcTransaction : IAsyncDbTransaction
         if (channel == null || string.IsNullOrEmpty(connectionIdentifier))
             throw new RemoteDataException("There's no gRPC channel.");
 
+		var clientIdentifier = sessionIdentifier;
         var result = new GrpcTransaction(channel, connectionIdentifier, connection, isolationLevel);
         var client = new DatabaseService.DatabaseServiceClient(channel);
 
         var reply = await client.BeginTransactionAsync(new BeginTransactionRequest
-        { ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
+        { ClientIdentifier = clientIdentifier, ConnectionIdentifier = connectionIdentifier, IsolationLevel = IsolationLevelConverter.Convert(isolationLevel) });
         result.TransactionIdentifier = reply.TransactionIdentifier;
         return result;
     }
+
+	/// <summary>
+	/// The session identifier.
+	/// </summary>
+	static readonly string sessionIdentifier = GenerateIdentifier();
+
+	/// <summary>
+	/// Generates an identifier.
+	/// </summary>
+	/// <returns>The identifier.</returns>
+	static string GenerateIdentifier()
+	{
+		return Uuid.NewDatabaseFriendly(UUIDNext.Database.Other).ToString();
+	}
 }

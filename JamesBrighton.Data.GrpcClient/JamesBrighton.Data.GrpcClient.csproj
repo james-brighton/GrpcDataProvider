@@ -12,6 +12,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Grpc.Net.Client.Web" Version="2.51.0"/>
+		<PackageReference Include="UUIDNext" Version="2.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="./../JamesBrighton.Data.Common/JamesBrighton.Data.Common.csproj"/>
