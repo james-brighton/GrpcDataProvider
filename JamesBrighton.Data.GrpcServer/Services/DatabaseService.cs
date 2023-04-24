@@ -51,7 +51,7 @@ public class DatabaseService : DatabaseServiceBase
         if (connection == null)
         {
             var e = new InvalidOperationException($"Unable to get the connection for the provider {request.ProviderInvariantName}.");
-            return new OpenConnectionResponse { DataException = CreateException(e) };
+            return new OpenConnectionResponse { ClientIdentifier = context.Peer, DataException = CreateException(e) };
         }
         try
         {
@@ -59,11 +59,11 @@ public class DatabaseService : DatabaseServiceBase
         }
         catch (Exception e)
         {
-            return new OpenConnectionResponse { DataException = CreateException(e) };
+            return new OpenConnectionResponse { ClientIdentifier = context.Peer, DataException = CreateException(e) };
         }
 
         clients[connectionIdentifier] = new DatabaseConnection(connection);
-        return new OpenConnectionResponse { ConnectionIdentifier = connectionIdentifier };
+        return new OpenConnectionResponse { ClientIdentifier = context.Peer, ConnectionIdentifier = connectionIdentifier };
     }
 
     /// <summary>

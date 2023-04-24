@@ -31,7 +31,8 @@ message OpenConnectionRequest {
 
 message OpenConnectionResponse {
   string connectionIdentifier = 1;
-  optional DataException dataException = 2;
+  string clientIdentifier = 2; 
+  optional DataException dataException = 3;
 }
 
 message CloseConnectionRequest {

@@ -29,6 +29,9 @@ public class TunnelConnection : IAsyncRemoteConnection
 	public string ConnectionString { get; set; } = "";
 
 	/// <inheritdoc />
+	public string ClientIdentifier { get; set; } = "";
+
+	/// <inheritdoc />
 	public int ConnectionTimeout => 0;
 
 	/// <inheritdoc />

@@ -13,4 +13,8 @@ public interface IAsyncRemoteConnection : IAsyncConnection
     /// Gets or sets the string used to open a database at the server side.
     /// </summary>
     string ServerConnectionString { get; set; }
+	/// <summary>
+	/// Gets the client identifier.
+	/// </summary>
+    string ClientIdentifier { get; set; }
 }
