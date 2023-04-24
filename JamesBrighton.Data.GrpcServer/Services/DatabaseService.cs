@@ -127,12 +127,12 @@ public class DatabaseService : DatabaseServiceBase
 
         var transaction = await connection.Connection.BeginTransactionAsync(IsolationLevelConverter.Convert(request.IsolationLevel));
 
-        // If there's a client identifier, insert into the (temporary) table REMOTE_ATTACHMENTS
+        // If there's a client identifier, insert into the (temporary) table REMOTE_TRANSACTIONS
         if (!string.IsNullOrEmpty(request.ClientIdentifier))
         {
             await using var command = connection.Connection.CreateCommand();
             command.Transaction = transaction;
-            command.CommandText = "INSERT INTO REMOTE_ATTACHMENTS (REMOTE_ID) VALUES (@REMOTE_ID)";
+            command.CommandText = "INSERT INTO REMOTE_TRANSACTIONS (REMOTE_ID) VALUES (@REMOTE_ID)";
             var parameter = command.CreateParameter();
             parameter.ParameterName = "@REMOTE_ID";
             parameter.Value = request.ClientIdentifier;
