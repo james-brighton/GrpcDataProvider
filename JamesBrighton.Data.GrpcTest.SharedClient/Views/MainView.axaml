@@ -9,7 +9,7 @@
              FontFamily="{DynamicResource ContentControlThemeFontFamily}">
   <UserControl.Resources>
 		<!-- <FontFamily x:Key="ContentControlThemeFontFamily">avares://JamesBrighton.Data.GrpcTest.SharedClient/Font/#Segoe UI Variable Static Text</FontFamily> -->
-    <FontFamily x:Key="ContentControlThemeFontFamily">avares://Avalonia.Themes.Fluent/Assets#Inter</FontFamily>
+    <!-- <FontFamily x:Key="ContentControlThemeFontFamily">avares://Avalonia.Themes.Fluent/Assets#Inter</FontFamily> -->
   </UserControl.Resources>
   <Grid Margin="8,8,8,8">
     <StackPanel Spacing="8">

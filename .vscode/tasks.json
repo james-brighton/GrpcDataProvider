@@ -43,7 +43,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/JamesBrighton.Data.GrpcTest.WebClient/JamesBrighton.Data.GrpcTest.WebClient.csproj",
+                "${workspaceFolder}/JamesBrighton.Data.GrpcTest.BrowserClient/JamesBrighton.Data.GrpcTest.BrowserClient.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

@@ -49,14 +49,15 @@ public class DataField : IDataField, IMessage
         set
         {
             var memoryStream = new MemoryStream();
-            if (Serializer2.Serialize(memoryStream, value))
+            var val = Serializer2.BeforeSerialize(value);
+            if (Serializer2.Serialize(memoryStream, val))
             {
                 memoryStream.Position = 0;
                 innerField = new InnerField
                 {
                     Name = innerField.Name,
                     Content = ByteString.FromStream(memoryStream),
-                    Type = value.GetType().FullName ?? "",
+                    Type = val.GetType().FullName ?? "",
                     DataTypeName = innerField.DataTypeName
                 };
                 this.value = value;
@@ -101,7 +102,8 @@ public class DataField : IDataField, IMessage
         memoryStream.Position = 0;
         if (Serializer2.TryDeserialize(type, memoryStream, out var v))
         {
-            value = v ?? emptyObject;
+            var vv = v != null ? Serializer2.AfterDeserialize(v) : null;
+            value = vv ?? emptyObject;
         }
         else
         {

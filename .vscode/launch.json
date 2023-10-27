@@ -52,13 +52,13 @@
             "stopAtEntry": false
         },
         {
-            "name": "JamesBrighton.Data.GrpcTest.WebClient",
+            "name": "JamesBrighton.Data.GrpcTest.BrowserClient",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildTestWeb",
-            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.WebClient/bin/Debug/net7.0/browser-wasm/JamesBrighton.Data.GrpcTest.WebClient.dll",
+            "program": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.BrowserClient/bin/Debug/net7.0/browser-wasm/JamesBrighton.Data.GrpcTest.BrowserClient.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.WebClient",
+            "cwd": "${workspaceFolder}/JamesBrighton.Data.GrpcTest.BrowserClient",
             "console": "internalConsole",
             "stopAtEntry": false
         }

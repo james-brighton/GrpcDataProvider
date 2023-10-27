@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "JamesBrighton.Data.GrpcTest.WebClient": {
+    "JamesBrighton.Data.GrpcTest.BrowserClient": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

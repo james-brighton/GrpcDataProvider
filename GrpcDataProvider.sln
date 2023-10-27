@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcTest.ConsoleClient", "JamesBrighton.Data.GrpcTest.ConsoleClient\JamesBrighton.Data.GrpcTest.ConsoleClient.csproj", "{3FA4510C-56FD-4E61-8528-94358468109C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcTest.WebClient", "JamesBrighton.Data.GrpcTest.WebClient\JamesBrighton.Data.GrpcTest.WebClient.csproj", "{EA86443C-FC6B-40A6-A6FA-861F97E68A4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcTest.BrowserClient", "JamesBrighton.Data.GrpcTest.BrowserClient\JamesBrighton.Data.GrpcTest.BrowserClient.csproj", "{EA86443C-FC6B-40A6-A6FA-861F97E68A4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesBrighton.Data.GrpcTest.AppClient", "JamesBrighton.Data.GrpcTest.AppClient\JamesBrighton.Data.GrpcTest.AppClient.csproj", "{02DA97DF-9765-494A-88CC-6A89C1EB63B7}"
 EndProject

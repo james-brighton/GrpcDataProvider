@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using FirebirdSql.Data.Types;
 using ProtoBuf;
 
 namespace JamesBrighton.Data.Common;
@@ -22,6 +23,31 @@ public static class Serializer2
 	[ThreadStatic]
 	static Dictionary<Type, MemberDelegate?>? SerializeMethods;
 
+    /// <summary>
+    /// Converts between different types before serialization.
+    /// </summary>
+	/// <param name="content">The object to be processed.</param>
+    /// <returns>The processed object.</returns>
+    public static object BeforeSerialize(object content)
+    {
+        if (content is FbZonedDateTime fbZonedDateTime)
+            return new ZonedDateTimeWrapper(fbZonedDateTime.DateTime, fbZonedDateTime.TimeZone, fbZonedDateTime.Offset);
+
+        return content;
+    }
+
+    /// <summary>
+    /// Converts between different types after deserialization.
+    /// </summary>
+	/// <param name="content">The object to be processed.</param>
+    /// <returns>The processed object.</returns>
+    public static object AfterDeserialize(object content)
+    {
+        if (content is ZonedDateTimeWrapper zonedDateTimeWrapper)
+            return new FbZonedDateTime(zonedDateTimeWrapper.DateTime, zonedDateTimeWrapper.TimeZone);
+
+        return content;
+    }
 	/// <summary>
 	/// Serializes the specified object to a stream using ProtoBuf serializer.
 	/// </summary>

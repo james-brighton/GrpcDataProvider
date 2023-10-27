@@ -14,7 +14,7 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        DataGrid.Items = items;
+        DataGrid.ItemsSource = items;
     }
 
     async void ButtonClick(object? sender, RoutedEventArgs e)

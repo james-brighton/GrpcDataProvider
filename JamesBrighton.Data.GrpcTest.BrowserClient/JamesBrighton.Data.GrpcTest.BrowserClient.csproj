@@ -11,8 +11,10 @@
     <WasmExtraFilesToDeploy Include="AppBundle\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
-    <PackageReference Include="Avalonia.Web" Version="11.0.0-preview4" />
+    <PackageReference Include="Avalonia" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Browser" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="./../JamesBrighton.Data.GrpcTest.SharedClient/JamesBrighton.Data.GrpcTest.SharedClient.csproj" />

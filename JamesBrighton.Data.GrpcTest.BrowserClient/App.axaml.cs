@@ -3,7 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using JamesBrighton.Data.GrpcTest.SharedClient.Views;
 
-namespace JamesBrighton.Data.GrpcTest.WebClient;
+namespace JamesBrighton.Data.GrpcTest.BrowserClient;
 
 public partial class App : Application
 {
