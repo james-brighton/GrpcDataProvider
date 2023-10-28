@@ -54,8 +54,7 @@ public class Property : IProperty, IMessage
         memoryStream.Position = 0;
         if (Serializer2.TryDeserialize(type, memoryStream, out var v))
         {
-            var vv = v != null ? Serializer2.AfterDeserialize(v) : null;
-            value = vv ?? emptyObject;
+            value = v ?? emptyObject;
         }
         else
         {
@@ -84,8 +83,8 @@ public class Property : IProperty, IMessage
         set
         {
             var memoryStream = new MemoryStream();
-            var val = Serializer2.BeforeSerialize(value);
-            if (Serializer2.Serialize(memoryStream, val))
+            var val = Serializer2.Serialize(memoryStream, value);
+            if (val != null)
             {
                 memoryStream.Position = 0;
                 innerProperty = new InnerProperty

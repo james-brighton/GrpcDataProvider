@@ -1,73 +1,50 @@
+using FirebirdSql.Data.Types;
+using ProtoBuf.Meta;
+
 namespace JamesBrighton.Data.Common;
 
 /// <summary>
 /// Represents a specific date and time in a specific time zone.
 /// </summary>
 [Serializable]
-public struct ZonedDateTimeWrapper
+public struct ZonedDateTime
 {
-    /// <summary>
-    /// The specific date and time.
-    /// </summary>
-    DateTime dateTime;
     /// <summary>
     /// The time zone.
     /// </summary>
     string timeZone;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZonedDateTimeWrapper"/> struct. This constructor only makes sense for serialization.
+    /// Initializes a new instance of the <see cref="ZonedDateTime"/> struct. This constructor only makes sense for serialization.
     /// </summary>
-    public ZonedDateTimeWrapper()
+    public ZonedDateTime()
     {
-        dateTime = new DateTime();
+        DateTimeInTicks = 0;
         timeZone = "";
-        Offset = null;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZonedDateTimeWrapper"/> struct.
+    /// Initializes a new instance of the <see cref="ZonedDateTime"/> struct.
     /// </summary>
-    /// <param name="dateTime">The specific date and time in UTC.</param>
+    /// <param name="dateTimeInTicks">The specific date and time expressed in the number of 100-nanosecond intervals that have elapsed since January 1, 0001 at 00:00:00.000 in the Gregorian calendar.</param>
     /// <param name="timeZone">The time zone.</param>
-    /// <param name="offset">The offset from UTC (optional).</param>
 #pragma warning disable CS8618
-    public ZonedDateTimeWrapper(DateTime dateTime, string timeZone, TimeSpan? offset)
+    public ZonedDateTime(long dateTimeInTicks, string timeZone)
 #pragma warning restore CS8618
     {
-        if (dateTime.Kind != DateTimeKind.Utc)
-            throw new ArgumentException("Value must be in UTC.", nameof(dateTime));
         if (timeZone == null)
             throw new ArgumentNullException(nameof(timeZone));
         if (string.IsNullOrWhiteSpace(timeZone))
             throw new ArgumentException(nameof(timeZone));
 
-        DateTime = dateTime;
+        DateTimeInTicks = dateTimeInTicks;
         TimeZone = timeZone;
-        Offset = offset;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZonedDateTimeWrapper"/> struct with a null offset.
+    /// A date and time expressed in the number of 100-nanosecond intervals that have elapsed since January 1, 0001 at 00:00:00.000 in the Gregorian calendar.
     /// </summary>
-    /// <param name="dateTime">The specific date and time in UTC.</param>
-    /// <param name="timeZone">The time zone.</param>
-    public ZonedDateTimeWrapper(DateTime dateTime, string timeZone) : this(dateTime, timeZone, null) { }
-
-    /// </summary>
-    /// <summary>
-    /// Gets or sets the specific date and time.
-    /// </summary>
-    public DateTime DateTime
-    {
-        readonly get => dateTime;
-        set
-        {
-            if (value.Kind != DateTimeKind.Utc)
-                throw new ArgumentException("Value must be in UTC.", nameof(value));
-            dateTime = value;
-        }
-    }
+    public long DateTimeInTicks { get; set; }
 
     /// <summary>
     /// Gets or sets the time zone.
@@ -86,11 +63,6 @@ public struct ZonedDateTimeWrapper
     }
 
     /// <summary>
-    /// Gets or sets the offset from UTC.
-    /// </summary>
-    public TimeSpan? Offset { get; set; }
-
-    /// <summary>
     /// Returns a string representation of the ZonedDateTimeWrapper instance.
     /// </summary>
     /// <returns>
@@ -98,9 +70,8 @@ public struct ZonedDateTimeWrapper
     /// </returns>
     public override readonly string ToString()
     {
-        if (Offset == null)
-            return $"{DateTime} {TimeZone}";
-        return $"{DateTime} {TimeZone} ({Offset})";
+        var dt = new DateTime(DateTimeInTicks, DateTimeKind.Utc);
+        return $"{dt} {TimeZone}";
     }
 
     /// <summary>
@@ -112,7 +83,7 @@ public struct ZonedDateTimeWrapper
     /// </returns>
     public override readonly bool Equals(object obj)
     {
-        return obj is ZonedDateTimeWrapper zonedDateTimeWrapper && Equals(zonedDateTimeWrapper);
+        return obj is ZonedDateTime zonedDateTimeWrapper && Equals(zonedDateTimeWrapper);
     }
 
     /// <summary>
@@ -126,10 +97,8 @@ public struct ZonedDateTimeWrapper
         unchecked
         {
             var hash = (int)2166136261;
-            hash = (hash * 16777619) ^ DateTime.GetHashCode();
+            hash = (hash * 16777619) ^ DateTimeInTicks.GetHashCode();
             hash = (hash * 16777619) ^ TimeZone.GetHashCode();
-            if (Offset != null)
-                hash = (hash * 16777619) ^ Offset.GetHashCode();
             return hash;
         }
     }
@@ -141,10 +110,7 @@ public struct ZonedDateTimeWrapper
     /// <returns>
     /// true if the current instance is equal to the other instance; otherwise, false.
     /// </returns>
-    public readonly bool Equals(ZonedDateTimeWrapper other)
-    {
-        return DateTime.Equals(other.DateTime) && TimeZone.Equals(other.TimeZone, StringComparison.Ordinal) && ((Offset == null && other.Offset == null) || (Offset != null && other.Offset != null && Offset.Equals(other.Offset)));
-    }
+    public readonly bool Equals(ZonedDateTime other) => DateTimeInTicks.Equals(other.DateTimeInTicks) && TimeZone.Equals(other.TimeZone, StringComparison.Ordinal);
 
     /// <summary>
     /// Determines whether two ZonedDateTimeWrapper instances are equal.
@@ -154,7 +120,7 @@ public struct ZonedDateTimeWrapper
     /// <returns>
     /// true if the two instances are equal; otherwise, false.
     /// </returns>
-    public static bool operator ==(ZonedDateTimeWrapper lhs, ZonedDateTimeWrapper rhs) => lhs.Equals(rhs);
+    public static bool operator ==(ZonedDateTime lhs, ZonedDateTime rhs) => lhs.Equals(rhs);
 
     /// <summary>
     /// Determines whether two ZonedDateTimeWrapper instances are not equal.
@@ -164,5 +130,21 @@ public struct ZonedDateTimeWrapper
     /// <returns>
     /// true if the two instances are not equal; otherwise, false.
     /// </returns>
-    public static bool operator !=(ZonedDateTimeWrapper lhs, ZonedDateTimeWrapper rhs) => lhs.Equals(rhs);
+    public static bool operator !=(ZonedDateTime lhs, ZonedDateTime rhs) => lhs.Equals(rhs);
+
+    /// <summary>
+    /// Registers this class.
+    /// </summary>
+    public static void RegisterClass()
+    {
+        RuntimeTypeModel.Default.Add(typeof(ZonedDateTime), applyDefaultBehaviour: true)
+            .Add(1, nameof(DateTimeInTicks))
+            .Add(2, nameof(TimeZone));
+
+        Serializer2.AddBeforeSerializeConverter<FbZonedDateTime>((o) => 
+        {
+            var obj = (FbZonedDateTime)o;
+            return new ZonedDateTime(obj.DateTime.Ticks, obj.TimeZone);
+        });
+    }
 }

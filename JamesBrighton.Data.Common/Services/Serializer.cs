@@ -1,7 +1,5 @@
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using FirebirdSql.Data.Types;
 using ProtoBuf;
 
 namespace JamesBrighton.Data.Common;
@@ -23,58 +21,58 @@ public static class Serializer2
 	[ThreadStatic]
 	static Dictionary<Type, MemberDelegate?>? SerializeMethods;
 
-    /// <summary>
-    /// Converts between different types before serialization.
-    /// </summary>
-	/// <param name="content">The object to be processed.</param>
-    /// <returns>The processed object.</returns>
-    public static object BeforeSerialize(object content)
-    {
-        if (content is FbZonedDateTime fbZonedDateTime)
-            return new ZonedDateTimeWrapper(fbZonedDateTime.DateTime, fbZonedDateTime.TimeZone, fbZonedDateTime.Offset);
+	/// <summary>
+	/// A dictionary that contains before serialization converters.
+	/// </summary>
+	static readonly Dictionary<Type, Func<object, object>> BeforeSerializeConverters = new();
 
-        return content;
+	/// <summary>
+	/// Adds a serialize converter to the list of before serialize converters. 
+	/// </summary>
+	/// <typeparam name="T">Type of the object to convert before serialization.</typeparam>
+	/// <param name="value">Function to execute before serialization.</param>
+    public static void AddBeforeSerializeConverter<T>(Func<object, object> value)
+    {
+        BeforeSerializeConverters.Add(typeof(T), value);
     }
 
-    /// <summary>
-    /// Converts between different types after deserialization.
-    /// </summary>
-	/// <param name="content">The object to be processed.</param>
-    /// <returns>The processed object.</returns>
-    public static object AfterDeserialize(object content)
-    {
-        if (content is ZonedDateTimeWrapper zonedDateTimeWrapper)
-            return new FbZonedDateTime(zonedDateTimeWrapper.DateTime, zonedDateTimeWrapper.TimeZone);
-
-        return content;
-    }
 	/// <summary>
 	/// Serializes the specified object to a stream using ProtoBuf serializer.
 	/// </summary>
 	/// <param name="destination">The stream to write the serialized object to.</param>
 	/// <param name="content">The object to be serialized.</param>
-	/// <returns>True on success and false otherwise.</returns>
+	/// <returns>The object or null otherwise.</returns>
 	/// <remarks>
 	/// This method uses the ProtoBuf.Serializer to perform the serialization.
 	/// </remarks>
-	public static bool Serialize(Stream destination, object content)
+	public static object? Serialize(Stream destination, object content)
 	{
 		var type = content.GetType();
+		object val;
+		if (BeforeSerializeConverters.TryGetValue(type, out var converter))
+		{
+			val = converter(content);
+			type = val.GetType();
+		}
+		else
+		{
+			val = content;
+		}
 
         SerializeMethods ??= new Dictionary<Type, MemberDelegate?>();
 		if (SerializeMethods.TryGetValue(type, out var f))
 		{
 			if (f == null)
-				return false;
-			f(destination, content);
-			return true;
+				return null;
+			f(destination, val);
+			return val;
 		}
 
 		var serializeT = typeof(Serializer).GetMethods(BindingFlags.Public | BindingFlags.Static).FirstOrDefault(x =>
 			x is { Name: nameof(Serializer.Serialize), IsGenericMethodDefinition: true } &&
 			x.GetParameters().Length == 2 &&
 			x.GetParameters()[0].ParameterType == typeof(Stream));
-		if (serializeT == null) return false;
+		if (serializeT == null) return null;
 		var serialize = serializeT.MakeGenericMethod(type);
 
 		var createAction = typeof(Serializer2)
@@ -82,24 +80,24 @@ public static class Serializer2
 			?.MakeGenericMethod(typeof(Stream), type);
 
 		if (createAction == null)
-			return false;
+			return null;
 
 		var result = createAction.Invoke(null, new object[] { serialize });
 		if (result == null)
-			return false;
+			return null;
 		var del = (MemberDelegate)result;
 		try
 		{
-			del(destination, content);
+			del(destination, val);
 			SerializeMethods.Add(type, del);
-			return true;
+			return val;
 		}
 		catch (InvalidOperationException)
 		{
-			if (FallbackSerialize(destination, content))
-				return true;
+			if (FallbackSerialize(destination, val))
+				return val;
 			SerializeMethods.Add(type, null);
-			return false;
+			return null;
 		}
 	}
 
@@ -257,10 +255,10 @@ public static class Serializer2
 #nullable enable
 	}
 
-	/// <summary>
-	/// This delegate represents a member delegate.
-	/// </summary>
-	/// <param name="args">The arguments of the delegate.</param>
-	/// <returns>The method result.</returns>
-	delegate object? MemberDelegate(params object?[]? args);
+    /// <summary>
+    /// This delegate represents a member delegate.
+    /// </summary>
+    /// <param name="args">The arguments of the delegate.</param>
+    /// <returns>The method result.</returns>
+    delegate object? MemberDelegate(params object?[]? args);
 }
