@@ -83,7 +83,7 @@ public struct ZonedDateTime
     /// </returns>
     public override readonly bool Equals(object obj)
     {
-        return obj is ZonedDateTime zonedDateTimeWrapper && Equals(zonedDateTimeWrapper);
+        return obj is ZonedDateTime zonedDateTime && Equals(zonedDateTime);
     }
 
     /// <summary>

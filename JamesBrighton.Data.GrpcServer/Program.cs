@@ -7,6 +7,7 @@ const string providerInvariantName = "FirebirdSql.Data.FirebirdClient";
 DbProviderFactories.RegisterFactory(providerInvariantName, FirebirdClientFactory.Instance);
 
 ZonedDateTime.RegisterClass();
+ZonedTime.RegisterClass();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding")));
