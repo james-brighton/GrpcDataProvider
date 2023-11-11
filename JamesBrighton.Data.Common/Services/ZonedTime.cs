@@ -146,5 +146,10 @@ public struct ZonedTime
             var obj = (FbZonedTime)o;
             return new ZonedTime(obj.Time.Ticks, obj.TimeZone);
         });
+		Serializer2.AddAfterDeserializeConverter<ZonedTime>((o) =>
+		{
+			var obj = (ZonedTime)o;
+			return new FbZonedTime(new TimeSpan(obj.TimeSpanInTicks), obj.TimeZone);
+		});
     }
 }
