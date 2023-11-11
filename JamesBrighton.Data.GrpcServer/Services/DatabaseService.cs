@@ -109,7 +109,7 @@ public class DatabaseService : DatabaseServiceBase
 		if (!clients.TryGetValue(request.ConnectionIdentifier, out var connection))
 			return new Empty();
 
-		await connection.DestroyCommand(request.CommandIdentifier);
+		await connection.DestroyCommandAsync(request.CommandIdentifier);
 		return new Empty();
 	}
 
@@ -193,12 +193,12 @@ public class DatabaseService : DatabaseServiceBase
 
 		try
 		{
-			await connection.CommitAndDestroy(request.TransactionIdentifier);
+			await connection.CommitAndDestroyAsync(request.TransactionIdentifier);
 			return new CommitTransactionResponse();
 		}
 		catch (Exception e)
 		{
-			await connection.Destroy(request.TransactionIdentifier);
+			await connection.DestroyAsync(request.TransactionIdentifier);
 			return new CommitTransactionResponse { DataException = CreateException(e) };
 		}
 	}
@@ -216,12 +216,12 @@ public class DatabaseService : DatabaseServiceBase
 
 		try
 		{
-			await connection.RollbackAndDestroy(request.TransactionIdentifier);
+			await connection.RollbackAndDestroyAsync(request.TransactionIdentifier);
 			return new RollbackTransactionResponse();
 		}
 		catch (Exception e)
 		{
-			await connection.Destroy(request.TransactionIdentifier);
+			await connection.DestroyAsync(request.TransactionIdentifier);
 			return new RollbackTransactionResponse { DataException = CreateException(e) };
 		}
 	}

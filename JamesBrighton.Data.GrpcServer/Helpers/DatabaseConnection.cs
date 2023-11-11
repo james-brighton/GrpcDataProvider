@@ -67,7 +67,7 @@ public class DatabaseConnection
 	/// </summary>
 	/// <param name="commandIdentifier">The identifier of the command to destroy.</param>
 	/// <returns>A System.Threading.Tasks.Task representing the asynchronous operation.</returns>
-	public async Task DestroyCommand(string commandIdentifier)
+	public async Task DestroyCommandAsync(string commandIdentifier)
 	{
 		var i = GetCommandIndex(commandIdentifier);
 		if (i < 0)
@@ -81,7 +81,7 @@ public class DatabaseConnection
 	/// </summary>
 	/// <param name="transactionIdentifier">The identifier of the transaction to commit and destroy.</param>
 	/// <returns>A System.Threading.Tasks.Task representing the asynchronous operation.</returns>
-	public async Task CommitAndDestroy(string transactionIdentifier)
+	public async Task CommitAndDestroyAsync(string transactionIdentifier)
 	{
 		var i = GetTransactionIndex(transactionIdentifier);
 		if (i < 0)
@@ -96,7 +96,7 @@ public class DatabaseConnection
 	/// </summary>
 	/// <param name="transactionIdentifier">The identifier of the transaction to rollback and destroy.</param>
 	/// <returns>A System.Threading.Tasks.Task representing the asynchronous operation.</returns>
-	public async Task RollbackAndDestroy(string transactionIdentifier)
+	public async Task RollbackAndDestroyAsync(string transactionIdentifier)
 	{
 		var i = GetTransactionIndex(transactionIdentifier);
 		if (i < 0)
@@ -111,7 +111,7 @@ public class DatabaseConnection
 	/// </summary>
 	/// <param name="transactionIdentifier">The identifier of the transaction to destroy.</param>
 	/// <returns>A System.Threading.Tasks.Task representing the asynchronous operation.</returns>
-	public async Task Destroy(string transactionIdentifier)
+	public async Task DestroyAsync(string transactionIdentifier)
 	{
 		var i = GetTransactionIndex(transactionIdentifier);
 		if (i < 0)
