@@ -13,23 +13,23 @@ public sealed class TunnelClientFactory : IAsyncProviderFactory
 	/// </summary>
 	public static readonly TunnelClientFactory Instance = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TunnelClientFactory" /> class.
-    /// </summary>
+	/// <summary>
+	/// Initializes a new instance of the <see cref="TunnelClientFactory" /> class.
+	/// </summary>
 	TunnelClientFactory() { }
 
-    /// <inheritdoc />
-    public IAsyncDbCommand CreateCommand() => new TunnelCommand();
+	/// <inheritdoc />
+	public IAsyncDbCommand CreateCommand() => new TunnelCommand();
 
-    /// <inheritdoc />
-    public IAsyncConnection CreateConnection() => new TunnelConnection();
+	/// <inheritdoc />
+	public IAsyncConnection CreateConnection() => new TunnelConnection();
 
-    /// <inheritdoc />
+	/// <inheritdoc />
 	public IConnectionStringBuilder CreateConnectionStringBuilder() =>  new ConnectionStringBuilder();
 
-    /// <inheritdoc />
-    public IDbDataParameter CreateParameter() => new Parameter();
+	/// <inheritdoc />
+	public IDbDataParameter CreateParameter() => new Parameter();
 
-    /// <inheritdoc />
-    public IAsyncDbTransaction CreateTransaction() => new TunnelTransaction();
+	/// <inheritdoc />
+	public IAsyncDbTransaction CreateTransaction() => new TunnelTransaction();
 }

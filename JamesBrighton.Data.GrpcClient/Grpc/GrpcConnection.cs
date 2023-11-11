@@ -43,32 +43,32 @@ public class GrpcConnection : IAsyncRemoteConnection
 	public ConnectionState State => channelManager != null ? ConnectionState.Open : ConnectionState.Closed;
 
 	/// <inheritdoc />
-    public string ClientIdentifier { get; set; } = "";
+	public string ClientIdentifier { get; set; } = "";
 
-    /// <inheritdoc />
-    public IDbTransaction BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
+	/// <inheritdoc />
+	public IDbTransaction BeginTransaction() => BeginTransaction(IsolationLevel.Unspecified);
 
 	/// <inheritdoc />
 	public IDbTransaction BeginTransaction(IsolationLevel il)
-    {
+	{
 		if (channelManager == null)
 			throw new RemoteDataException("The channel manager is null.");
-        return GrpcTransaction.BeginTransaction(channelManager.Channel, connectionIdentifier, this, il);
-    }
+		return GrpcTransaction.BeginTransaction(channelManager.Channel, connectionIdentifier, this, il);
+	}
 
-    /// <inheritdoc />
-    public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
+	/// <inheritdoc />
+	public async Task<IAsyncDbTransaction> BeginTransactionAsync() => await BeginTransactionAsync(IsolationLevel.ReadCommitted);
 
 	/// <inheritdoc />
 	public async Task<IAsyncDbTransaction> BeginTransactionAsync(IsolationLevel il)
-    {
+	{
 		if (channelManager == null)
 			throw new RemoteDataException("The channel manager is null.");
-        return await GrpcTransaction.BeginTransactionAsync(channelManager.Channel, connectionIdentifier, this, il);
-    }
+		return await GrpcTransaction.BeginTransactionAsync(channelManager.Channel, connectionIdentifier, this, il);
+	}
 
-    /// <inheritdoc />
-    public void ChangeDatabase(string databaseName)
+	/// <inheritdoc />
+	public void ChangeDatabase(string databaseName)
 	{
 	}
 
@@ -83,22 +83,22 @@ public class GrpcConnection : IAsyncRemoteConnection
 
 	/// <inheritdoc />
 	public IDbCommand CreateCommand()
-    {
+	{
 		if (channelManager == null)
 			throw new RemoteDataException("The channel manager is null.");
-        return GrpcCommand.CreateCommand(channelManager.Channel, connectionIdentifier, this);
-    }
+		return GrpcCommand.CreateCommand(channelManager.Channel, connectionIdentifier, this);
+	}
 
-    /// <inheritdoc />
-    public async Task<IAsyncDbCommand> CreateCommandAsync()
-    {
+	/// <inheritdoc />
+	public async Task<IAsyncDbCommand> CreateCommandAsync()
+	{
 		if (channelManager == null)
 			throw new RemoteDataException("The channel manager is null.");
-        return await GrpcCommand.CreateCommandAsync(channelManager.Channel, connectionIdentifier, this);
-    }
+		return await GrpcCommand.CreateCommandAsync(channelManager.Channel, connectionIdentifier, this);
+	}
 
-    /// <inheritdoc />
-    public void Dispose()
+	/// <inheritdoc />
+	public void Dispose()
 	{
 		Close();
 		DisposeChannel();

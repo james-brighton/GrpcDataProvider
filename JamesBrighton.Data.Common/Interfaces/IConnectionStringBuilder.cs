@@ -5,8 +5,8 @@ namespace JamesBrighton.Data;
 /// </summary>
 public interface IConnectionStringBuilder : IDictionary<string, string>
 {
-    /// <summary>
-    /// Gets or sets the connection string.
-    /// </summary>
-    string ConnectionString { get; set; }
+	/// <summary>
+	/// Gets or sets the connection string.
+	/// </summary>
+	string ConnectionString { get; set; }
 }

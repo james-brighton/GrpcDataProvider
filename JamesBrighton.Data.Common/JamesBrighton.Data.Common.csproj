@@ -1,33 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <Description>GrpcDataProvider is a .NET Data Provider for gRPC. This package contains JamesBrighton.Data.Common.</Description>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
-        <PackageId>JamesBrighton.Data.Common</PackageId>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/james-brighton/GrpcDataProvider</RepositoryUrl>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <Version>1.0.6</Version>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="9.1.1"/>
-        <PackageReference Include="Google.Protobuf" Version="3.24.4"/>
-        <PackageReference Include="Grpc.Net.Client" Version="2.58.0"/>
-        <PackageReference Include="Grpc.Tools" Version="2.59.0">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="protobuf-net" Version="3.2.26"/>
-        <PackageReference Include="System.Text.Json" Version="7.0.3"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Protobuf Include="./Protos/*.proto"/>
-    </ItemGroup>
-    <ItemGroup>
-        <None Remove=".gitignore" />
-        <None Include="README.md" Pack="true" PackagePath="\" />
-    </ItemGroup>
+	<PropertyGroup>
+		<Description>GrpcDataProvider is a .NET Data Provider for gRPC. This package contains JamesBrighton.Data.Common.</Description>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<PackageId>JamesBrighton.Data.Common</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/james-brighton/GrpcDataProvider</RepositoryUrl>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Version>1.0.6</Version>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="9.1.1"/>
+		<PackageReference Include="Google.Protobuf" Version="3.24.4"/>
+		<PackageReference Include="Grpc.Net.Client" Version="2.58.0"/>
+		<PackageReference Include="Grpc.Tools" Version="2.59.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="protobuf-net" Version="3.2.26"/>
+		<PackageReference Include="System.Text.Json" Version="7.0.3"/>
+	</ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="./Protos/*.proto"/>
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove=".gitignore" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 </Project>

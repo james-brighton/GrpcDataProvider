@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
-    <WasmMainJSPath>AppBundle\main.js</WasmMainJSPath>
-    <OutputType>Exe</OutputType>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	<TargetFramework>net7.0</TargetFramework>
+	<RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+	<WasmMainJSPath>AppBundle\main.js</WasmMainJSPath>
+	<OutputType>Exe</OutputType>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <WasmExtraFilesToDeploy Include="AppBundle\**" />
+	<WasmExtraFilesToDeploy Include="AppBundle\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.5" />
-    <PackageReference Include="Avalonia.Browser" Version="11.0.5" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.5" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+	<PackageReference Include="Avalonia" Version="11.0.5" />
+	<PackageReference Include="Avalonia.Browser" Version="11.0.5" />
+	<PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.5" />
+	<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="./../JamesBrighton.Data.GrpcTest.SharedClient/JamesBrighton.Data.GrpcTest.SharedClient.csproj" />
+	<ProjectReference Include="./../JamesBrighton.Data.GrpcTest.SharedClient/JamesBrighton.Data.GrpcTest.SharedClient.csproj" />
   </ItemGroup>
 </Project>

@@ -10,29 +10,29 @@ namespace JamesBrighton.Data;
 /// </remarks>
 public interface IAsyncDbTransaction : IDbTransaction, IAsyncDisposable
 {
-    /// <summary>
-    /// Commits the database transaction asynchronously.
-    /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task CommitAsync();
+	/// <summary>
+	/// Commits the database transaction asynchronously.
+	/// </summary>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	Task CommitAsync();
 
-    /// <summary>
-    /// Commits the database transaction asynchronously, using the specified <paramref name="cancellationToken" />.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token to use.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task CommitAsync(CancellationToken cancellationToken);
+	/// <summary>
+	/// Commits the database transaction asynchronously, using the specified <paramref name="cancellationToken" />.
+	/// </summary>
+	/// <param name="cancellationToken">The cancellation token to use.</param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	Task CommitAsync(CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Rolls back the database transaction asynchronously.
-    /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task RollbackAsync();
+	/// <summary>
+	/// Rolls back the database transaction asynchronously.
+	/// </summary>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	Task RollbackAsync();
 
-    /// <summary>
-    /// Rolls back the database transaction asynchronously, using the specified <paramref name="cancellationToken" />.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token to use.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task RollbackAsync(CancellationToken cancellationToken);
+	/// <summary>
+	/// Rolls back the database transaction asynchronously, using the specified <paramref name="cancellationToken" />.
+	/// </summary>
+	/// <param name="cancellationToken">The cancellation token to use.</param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	Task RollbackAsync(CancellationToken cancellationToken);
 }

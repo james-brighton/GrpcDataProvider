@@ -26,19 +26,19 @@ command.Parameters.Add(parameter);
 
 try
 {
-    await using var reader = await command.ExecuteReaderAsync();
-    var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3600));
-    while (await reader.ReadAsync(cancellationTokenSource.Token))
-    {
-        // Use reader[int]/reader[string] here to access the data
-    }
+	await using var reader = await command.ExecuteReaderAsync();
+	var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3600));
+	while (await reader.ReadAsync(cancellationTokenSource.Token))
+	{
+		// Use reader[int]/reader[string] here to access the data
+	}
 
-    await transaction.CommitAsync(cancellationTokenSource.Token);
+	await transaction.CommitAsync(cancellationTokenSource.Token);
 }
 catch (DataException e)
 {
-    await transaction.RollbackAsync();
-    // Handle the exception
+	await transaction.RollbackAsync();
+	// Handle the exception
 }
 ````
 For more information, see JamesBrighton.Data.GrpcTest.AppClient, JamesBrighton.Data.GrpcTest.ConsoleClient or JamesBrighton.Data.GrpcTest.BrowserClient on how to use the project.

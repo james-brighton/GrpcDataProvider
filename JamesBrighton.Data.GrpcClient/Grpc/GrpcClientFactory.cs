@@ -13,23 +13,23 @@ public sealed class GrpcClientFactory : IAsyncProviderFactory
 	/// </summary>
 	public static readonly GrpcClientFactory Instance = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GrpcClientFactory" /> class.
-    /// </summary>
+	/// <summary>
+	/// Initializes a new instance of the <see cref="GrpcClientFactory" /> class.
+	/// </summary>
 	GrpcClientFactory() { }
 
-    /// <inheritdoc />
-    public IAsyncDbCommand CreateCommand() => new GrpcCommand();
+	/// <inheritdoc />
+	public IAsyncDbCommand CreateCommand() => new GrpcCommand();
 
-    /// <inheritdoc />
-    public IAsyncConnection CreateConnection() => new GrpcConnection();
+	/// <inheritdoc />
+	public IAsyncConnection CreateConnection() => new GrpcConnection();
 
-    /// <inheritdoc />
+	/// <inheritdoc />
 	public IConnectionStringBuilder CreateConnectionStringBuilder() =>  new ConnectionStringBuilder();
 
-    /// <inheritdoc />
-    public IDbDataParameter CreateParameter() => new Parameter();
+	/// <inheritdoc />
+	public IDbDataParameter CreateParameter() => new Parameter();
 
-    /// <inheritdoc />
-    public IAsyncDbTransaction CreateTransaction() => new GrpcTransaction();
+	/// <inheritdoc />
+	public IAsyncDbTransaction CreateTransaction() => new GrpcTransaction();
 }

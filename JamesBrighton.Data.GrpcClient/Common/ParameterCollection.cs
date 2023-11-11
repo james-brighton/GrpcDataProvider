@@ -8,30 +8,30 @@ namespace JamesBrighton.Data.GrpcClient.Common;
 /// </summary>
 public class ParameterCollection : List<Parameter>, IDataParameterCollection
 {
-    /// <inheritdoc />
-    public object this[string parameterName]
-    {
-        get => this[IndexOf(parameterName)];
-        set
-        {
-            if (value is not Parameter param) return;
-            this[IndexOf(parameterName)] = param;
-        }
-    }
+	/// <inheritdoc />
+	public object this[string parameterName]
+	{
+		get => this[IndexOf(parameterName)];
+		set
+		{
+			if (value is not Parameter param) return;
+			this[IndexOf(parameterName)] = param;
+		}
+	}
 
-    /// <inheritdoc />
-    public bool Contains(string parameterName) => IndexOf(parameterName) >= 0;
+	/// <inheritdoc />
+	public bool Contains(string parameterName) => IndexOf(parameterName) >= 0;
 
-    /// <inheritdoc />
-    public int IndexOf(string parameterName) =>
-        FindIndex(x => string.Equals(x.ParameterName, parameterName, StringComparison.Ordinal));
+	/// <inheritdoc />
+	public int IndexOf(string parameterName) =>
+		FindIndex(x => string.Equals(x.ParameterName, parameterName, StringComparison.Ordinal));
 
-    /// <inheritdoc />
-    public void RemoveAt(string parameterName)
-    {
-        var i = IndexOf(parameterName);
-        if (i < 0)
-            return;
-        RemoveAt(i);
-    }
+	/// <inheritdoc />
+	public void RemoveAt(string parameterName)
+	{
+		var i = IndexOf(parameterName);
+		if (i < 0)
+			return;
+		RemoveAt(i);
+	}
 }

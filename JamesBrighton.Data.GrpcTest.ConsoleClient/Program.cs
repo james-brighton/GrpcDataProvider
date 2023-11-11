@@ -22,34 +22,34 @@ command.Transaction = transaction;
 command.CommandText = args[6];
 if (args.Length >= 8)
 {
-    var parameter = command.CreateParameter();
-    parameter.ParameterName = args[7];
-    parameter.Value = int.Parse(args[8]);
-    command.Parameters.Add(parameter);
+	var parameter = command.CreateParameter();
+	parameter.ParameterName = args[7];
+	parameter.Value = int.Parse(args[8]);
+	command.Parameters.Add(parameter);
 }
 
 try
 {
-    await using var reader = await command.ExecuteReaderAsync();
-    var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3600));
-    while (await reader.ReadAsync(cancellationTokenSource.Token))
-    {
-        var list = new List<string>();
-        for (var i = 0; i < reader.FieldCount; i++)
-        {
-            list.Add(reader.GetName(i) + (!reader.IsDBNull(i) ? (": " + reader[i] + " (") : ": <Empty> (") + reader.GetDataTypeName(i) + ")");
-        }
-        Console.WriteLine(string.Join(", ", list));
-    }
+	await using var reader = await command.ExecuteReaderAsync();
+	var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3600));
+	while (await reader.ReadAsync(cancellationTokenSource.Token))
+	{
+		var list = new List<string>();
+		for (var i = 0; i < reader.FieldCount; i++)
+		{
+			list.Add(reader.GetName(i) + (!reader.IsDBNull(i) ? (": " + reader[i] + " (") : ": <Empty> (") + reader.GetDataTypeName(i) + ")");
+		}
+		Console.WriteLine(string.Join(", ", list));
+	}
 
-    await transaction.CommitAsync(cancellationTokenSource.Token);
+	await transaction.CommitAsync(cancellationTokenSource.Token);
 }
 catch (RemoteDataException e)
 {
-    await transaction.RollbackAsync();
-    var list = new List<string>();
-    var s = e.ClassName + ": " + e.Message;
-    for (var i = 0; i < e.GetPropertyCount(); i++)
-        list.Add(e.GetPropertyName(i) + ": " + e[i]);
-    Console.WriteLine(s + Environment.NewLine + string.Join(Environment.NewLine, list));
+	await transaction.RollbackAsync();
+	var list = new List<string>();
+	var s = e.ClassName + ": " + e.Message;
+	for (var i = 0; i < e.GetPropertyCount(); i++)
+		list.Add(e.GetPropertyName(i) + ": " + e[i]);
+	Console.WriteLine(s + Environment.NewLine + string.Join(Environment.NewLine, list));
 }

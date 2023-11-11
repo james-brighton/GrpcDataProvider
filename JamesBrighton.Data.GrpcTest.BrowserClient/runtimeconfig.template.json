@@ -1,11 +1,11 @@
 {
   "wasmHostProperties": {
-    "perHostConfig": [
-      {
-        "name": "browser",
-        "html-path": "index.html",
-        "Host": "browser"
-      }
-    ]
+	"perHostConfig": [
+	  {
+		"name": "browser",
+		"html-path": "index.html",
+		"Host": "browser"
+	  }
+	]
   }
 }
