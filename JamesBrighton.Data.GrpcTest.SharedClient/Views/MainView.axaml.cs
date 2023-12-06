@@ -40,6 +40,11 @@ public partial class MainView : UserControl
 			OutputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
 			return;
 		}
+		catch (Exception e1)
+		{
+			OutputTextBlock.Text = e1.Message + "\n" + e1.StackTrace;
+			return;
+		}
 		await using var transaction = await connection.BeginTransactionAsync();
 		await using var command = await connection.CreateCommandAsync();
 		SetupCommand(transaction, command);
