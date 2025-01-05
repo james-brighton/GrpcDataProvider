@@ -12,8 +12,8 @@ public class DataFieldTests
 	{
 		DataField dataField = new();
 
-		Assert.IsEmpty(dataField.Name);
-		Assert.AreEqual(dataField.IsNull, true);
+		Assert.That(dataField.Name, Is.Empty);
+		Assert.That(dataField.IsNull, Is.EqualTo(true));
 	}
 
 	[Test]
@@ -24,12 +24,12 @@ public class DataFieldTests
 
 		dataField.Value = expectedValue;
 
-		Assert.AreEqual(dataField.Value, expectedValue);
-		Assert.AreEqual(dataField.DataTypeName, "");
-		Assert.AreEqual(dataField.Type.FullName, typeof(int).FullName);
-		Assert.AreEqual(dataField.IsNull, false);
-		Assert.IsInstanceOf<int>(dataField.GetValue<int>());
-		Assert.AreEqual(dataField.GetValue<int>(), expectedValue);
+		Assert.That(dataField.Value, Is.EqualTo(expectedValue));
+		Assert.That(dataField.DataTypeName, Is.EqualTo(""));
+		Assert.That(dataField.Type.FullName, Is.EqualTo(typeof(int).FullName));
+		Assert.That(dataField.IsNull, Is.EqualTo(false));
+		Assert.That(dataField.GetValue<int>(), Is.InstanceOf<int>());
+		Assert.That(dataField.GetValue<int>(), Is.EqualTo(expectedValue));
 	}
 
 	[Test]
@@ -41,9 +41,9 @@ public class DataFieldTests
 		Any any = dataField;
 		var newDataField = any.Unpack<DataField>();
 
-		Assert.AreEqual(dataField.Name, newDataField.Name);
-		Assert.AreEqual(dataField.Value, newDataField.Value);
-		Assert.AreEqual(dataField.DataTypeName, newDataField.DataTypeName);
+		Assert.That(dataField.Name, Is.EqualTo(newDataField.Name));
+		Assert.That(dataField.Value, Is.EqualTo(newDataField.Value));
+		Assert.That(dataField.DataTypeName, Is.EqualTo(newDataField.DataTypeName));
 	}
 
 	[Test]
@@ -55,8 +55,8 @@ public class DataFieldTests
 		Any any = dataField;
 		var newDataField = any.Unpack<DataField>();
 
-		Assert.AreEqual(dataField.Name, newDataField.Name);
-		Assert.AreEqual(dataField.Value, newDataField.Value);
-		Assert.AreEqual(dataField.DataTypeName, newDataField.DataTypeName);
+		Assert.That(dataField.Name, Is.EqualTo(newDataField.Name));
+		Assert.That(dataField.Value, Is.EqualTo(newDataField.Value));
+		Assert.That(dataField.DataTypeName, Is.EqualTo(newDataField.DataTypeName));
 	}
 }

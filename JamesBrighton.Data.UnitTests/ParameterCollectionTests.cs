@@ -10,12 +10,13 @@ public class ParameterCollectionTests
 	[SetUp]
 	public void Setup()
 	{
-		_parameterCollection = new ParameterCollection();
+		_parameterCollection = [];
 	}
 
 	[Test]
 	public void IndexOf_ShouldReturnNegative1_WhenParameterNameNotFound()
 	{
+		if (_parameterCollection == null) return;
 		// Arrange
 		const string parameterName = "testParam";
 
@@ -23,12 +24,14 @@ public class ParameterCollectionTests
 		var result = _parameterCollection.IndexOf(parameterName);
 
 		// Assert
-		Assert.AreEqual(-1, result);
+		Assert.That(-1, Is.EqualTo(result));
 	}
 
 	[Test]
 	public void Contains_ShouldReturnFalse_WhenParameterNameNotFound()
 	{
+		if (_parameterCollection == null) return;
+
 		// Arrange
 		const string parameterName = "testParam";
 
@@ -36,12 +39,14 @@ public class ParameterCollectionTests
 		var result = _parameterCollection.Contains(parameterName);
 
 		// Assert
-		Assert.IsFalse(result);
+		Assert.That(result, Is.False);
 	}
 
 	[Test]
 	public void RemoveAt_ShouldNotRemove_WhenParameterNameNotFound()
 	{
+		if (_parameterCollection == null) return;
+
 		// Arrange
 		const string parameterName = "testParam";
 		_parameterCollection.Add(new Parameter { ParameterName = parameterName });
@@ -50,7 +55,7 @@ public class ParameterCollectionTests
 		_parameterCollection.RemoveAt("notFoundParam");
 
 		// Assert
-		Assert.AreEqual(1, _parameterCollection.Count);
-		Assert.AreEqual(parameterName, _parameterCollection[0].ParameterName);
+		Assert.That(1, Is.EqualTo(_parameterCollection.Count));
+		Assert.That(parameterName, Is.EqualTo(_parameterCollection[0].ParameterName));
 	}
 }

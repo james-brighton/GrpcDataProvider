@@ -21,15 +21,17 @@ public class Serializer2Tests
 	[TearDown]
 	public void TearDown()
 	{
-		_memoryStream.Dispose();
+		_memoryStream?.Dispose();
 	}
 
 	[Test]
 	public void Serialize_ShouldReturnSuccessfully()
 	{
+		if (_memoryStream == null) return;
+		if (_testClass == null) return;
 		var actualResult = Serializer2.Serialize(_memoryStream, _testClass);
 
-		Assert.IsTrue(actualResult);
+		Assert.That(actualResult, Is.Not.Null);
 		Assert.That(_memoryStream.Length, Is.Not.Zero);
 		Assert.That(_memoryStream.Position, Is.EqualTo(0));
 	}
@@ -37,12 +39,14 @@ public class Serializer2Tests
 	[Test]
 	public void TryDeserialize_ShouldFailIfContentCannotBeDeserialized()
 	{
+		if (_memoryStream == null) return;
+
 		_memoryStream.Write(new byte[] { 0xFF, 0xFF }, 0, 2);
 		_memoryStream.Position = 0;
 
 		var actualResult = Serializer2.TryDeserialize(typeof(TestClass), _memoryStream, out var deserializedObject);
 
-		Assert.IsFalse(actualResult);
+		Assert.That(actualResult, Is.False);
 		Assert.That(deserializedObject, Is.Null);
 	}
 

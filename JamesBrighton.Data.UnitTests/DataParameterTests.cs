@@ -12,7 +12,7 @@ public class DataParameterTests
 		{
 			Name = "param1"
 		};
-		Assert.AreEqual("param1", param.Name);
+		Assert.That("param1", Is.EqualTo(param.Name));
 	}
 
 	[Test]
@@ -22,16 +22,16 @@ public class DataParameterTests
 		{
 			Value = "hello"
 		};
-		Assert.AreEqual("hello", param.Value);
-		Assert.AreEqual("System.String", param.Type.FullName);
-		Assert.IsFalse(param.IsNull);
+		Assert.That("hello", Is.EqualTo(param.Value));
+		Assert.That("System.String", Is.EqualTo(param.Type.FullName));
+		Assert.That(param.IsNull, Is.False);
 	}
 
 	[Test]
 	public void IsNull_True_ByDefault()
 	{
 		var param = new DataParameter();
-		Assert.IsTrue(param.IsNull);
+		Assert.That(param.IsNull, Is.True);
 	}
 
 	[Test]
@@ -41,6 +41,6 @@ public class DataParameterTests
 		{
 			Value = 3.14
 		};
-		Assert.AreEqual(typeof(double), param.Type);
+		Assert.That(typeof(double), Is.EqualTo(param.Type));
 	}
 }

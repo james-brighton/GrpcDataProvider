@@ -10,18 +10,18 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/james-brighton/GrpcDataProvider</RepositoryUrl>
 		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>1.0.7</Version>
+		<Version>1.0.8</Version>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.0.0"/>
-		<PackageReference Include="Google.Protobuf" Version="3.25.1"/>
-		<PackageReference Include="Grpc.Net.Client" Version="2.59.0"/>
-		<PackageReference Include="Grpc.Tools" Version="2.59.0">
+		<PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.2"/>
+		<PackageReference Include="Google.Protobuf" Version="3.29.2"/>
+		<PackageReference Include="Grpc.Net.Client" Version="2.67.0"/>
+		<PackageReference Include="Grpc.Tools" Version="2.68.1">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="protobuf-net" Version="3.2.30"/>
-		<PackageReference Include="System.Text.Json" Version="8.0.0"/>
+		<PackageReference Include="protobuf-net" Version="3.2.45"/>
+		<PackageReference Include="System.Text.Json" Version="9.0.0"/>
 	</ItemGroup>
 	<ItemGroup>
 		<Protobuf Include="./Protos/*.proto"/>

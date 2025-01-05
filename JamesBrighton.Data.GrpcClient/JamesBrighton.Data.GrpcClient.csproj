@@ -9,11 +9,11 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/james-brighton/GrpcDataProvider</RepositoryUrl>
 		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>1.0.7</Version>
+		<Version>1.0.8</Version>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Grpc.Net.Client.Web" Version="2.59.0"/>
-		<PackageReference Include="UUIDNext" Version="2.0.2" />
+		<PackageReference Include="Grpc.Net.Client.Web" Version="2.67.0"/>
+		<PackageReference Include="UUIDNext" Version="4.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="./../JamesBrighton.Data.Common/JamesBrighton.Data.Common.csproj"/>

@@ -15,8 +15,8 @@ public class PropertyTests
 	public void Constructor_InitializesEmptyContent()
 	{
 		var property = new Property();
-		Assert.AreEqual(true, property.IsNull);
-		Assert.AreEqual(typeof(object), property.Type);
+		Assert.That(true, Is.EqualTo(property.IsNull));
+		Assert.That(typeof(object), Is.EqualTo(property.Type));
 	}
 
 	[Test]
@@ -26,9 +26,9 @@ public class PropertyTests
 		{
 			Value = 123
 		};
-		Assert.AreEqual(false, property.IsNull);
-		Assert.AreEqual(123, property.Value);
-		Assert.AreEqual(typeof(int), property.Type);
+		Assert.That(false, Is.EqualTo(property.IsNull));
+		Assert.That(123, Is.EqualTo(property.Value));
+		Assert.That(typeof(int), Is.EqualTo(property.Type));
 	}
 
 	[Test]
@@ -39,7 +39,7 @@ public class PropertyTests
 		{
 			Name = propertyName
 		};
-		Assert.AreEqual(propertyName, property.Name);
+		Assert.That(propertyName, Is.EqualTo(property.Name));
 	}
 
 	[Test]
@@ -50,7 +50,7 @@ public class PropertyTests
 			Value = "Hello world"
 		};
 		var any = (Any)property;
-		Assert.AreEqual(property.CalculateSize(), any.Value.Length);
+		Assert.That(property.CalculateSize(), Is.EqualTo(any.Value.Length));
 	}
 
 	[Test]
@@ -62,9 +62,9 @@ public class PropertyTests
 		};
 		var any = (Any)property;
 		var copy = any.Unpack<Property>();
-		Assert.AreEqual(property.IsNull, copy.IsNull);
-		Assert.AreEqual(property.Name, copy.Name);
-		Assert.AreEqual(property.Type, copy.Type);
-		Assert.AreEqual(property.Value, copy.Value);
+		Assert.That(property.IsNull, Is.EqualTo(copy.IsNull));
+		Assert.That(property.Name, Is.EqualTo(copy.Name));
+		Assert.That(property.Type, Is.EqualTo(copy.Type));
+		Assert.That(property.Value, Is.EqualTo(copy.Value));
 	}
 }

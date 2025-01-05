@@ -16,7 +16,7 @@ public class IsolationLevelConverterTests
 		var result = IsolationLevelConverter.Convert(System.Data.IsolationLevel.Unspecified);
 
 		// Assert
-		Assert.AreEqual(expected, result);
+		Assert.That(expected, Is.EqualTo(result));
 	}
 
 	[Test]
@@ -29,6 +29,6 @@ public class IsolationLevelConverterTests
 		var result = IsolationLevelConverter.Convert(DataProvider.Grpc.IsolationLevel.Unspecified);
 
 		// Assert
-		Assert.AreEqual(expected, result);
+		Assert.That(expected, Is.EqualTo(result));
 	}
 }

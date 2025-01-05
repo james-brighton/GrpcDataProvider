@@ -21,8 +21,8 @@ public class ChannelManagerTests
 		var channel = channelMgr.Channel;
 
 		// Assert
-		Assert.IsNotNull(channel);
-		Assert.AreEqual("localhost:5000", channel.Target);
+		Assert.That(channel, Is.Not.Null);
+		Assert.That("localhost:5000", Is.EqualTo(channel.Target));
 	}
 
 	[Test]
@@ -38,8 +38,8 @@ public class ChannelManagerTests
 		var channel2 = channelMgr2.Channel;
 
 		// Assert
-		Assert.IsNotNull(channel1);
-		Assert.IsNotNull(channel2);
-		Assert.AreEqual(channel1, channel2);
+		Assert.That(channel1, Is.Not.Null);
+		Assert.That(channel2, Is.Not.Null);
+		Assert.That(channel1, Is.EqualTo(channel2));
 	}
 }

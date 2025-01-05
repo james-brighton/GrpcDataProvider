@@ -47,13 +47,11 @@ public class ChannelManager : IDisposable
 				return v.Item1;
 			}
 
-			var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
-			{
-				HttpVersion = HttpVersion.Version11
-			});
+			var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
 			var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
 			{
-				HttpClient = httpClient
+				HttpClient = httpClient,
+				HttpVersion = HttpVersion.Version11
 			});
 			dictionary[address] = (channel, 1);
 			return channel;
@@ -109,7 +107,7 @@ public class ChannelManager : IDisposable
 	/// <summary>
 	/// The dictionary with the channels and references.
 	/// </summary>
-	static readonly Dictionary<string, (GrpcChannel, int)> dictionary = new();
+	static readonly Dictionary<string, (GrpcChannel, int)> dictionary = [];
 	/// <summary>
 	/// The lock object.
 	/// </summary>

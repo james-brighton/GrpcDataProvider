@@ -17,7 +17,7 @@ public class GrpcClientFactoryTests
 		var command = factory.CreateCommand();
 
 		// Assert
-		Assert.IsInstanceOf<GrpcCommand>(command);
+		Assert.That(command, Is.InstanceOf<GrpcCommand>());
 	}
 
 	[Test]
@@ -30,7 +30,7 @@ public class GrpcClientFactoryTests
 		var connection = factory.CreateConnection();
 
 		// Assert
-		Assert.IsInstanceOf<GrpcConnection>(connection);
+		Assert.That(connection, Is.InstanceOf<GrpcConnection>());
 	}
 
 	[Test]
@@ -43,7 +43,7 @@ public class GrpcClientFactoryTests
 		var csBuilder = factory.CreateConnectionStringBuilder();
 
 		// Assert
-		Assert.IsInstanceOf<ConnectionStringBuilder>(csBuilder);
+		Assert.That(csBuilder, Is.InstanceOf<ConnectionStringBuilder>());
 	}
 
 	[Test]
@@ -56,7 +56,7 @@ public class GrpcClientFactoryTests
 		var parameter = factory.CreateParameter();
 
 		// Assert
-		Assert.IsInstanceOf<Parameter>(parameter);
+		Assert.That(parameter, Is.InstanceOf<Parameter>());
 	}
 
 	[Test]
@@ -69,6 +69,6 @@ public class GrpcClientFactoryTests
 		var transaction = factory.CreateTransaction();
 
 		// Assert
-		Assert.IsInstanceOf<GrpcTransaction>(transaction);
+		Assert.That(transaction, Is.InstanceOf<GrpcTransaction>());
 	}
 }
