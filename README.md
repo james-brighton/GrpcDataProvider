@@ -1,6 +1,6 @@
 # Introduction
 
-GrpcDataProvider is an experimental library that allows applications to access remote databases using ADO.NET. It works by converting ADO.NET calls into gRPC requests, sending them to a server, and translating the responses back into ADO.NET structures. This approach enables seamless communication with remote databases while maintaining the simplicity of traditional ADO.NET.
+GrpcDataProvider is a library that allows applications to access remote databases using ADO.NET. It works by converting ADO.NET calls into gRPC requests, sending them to a server, and translating the responses back into ADO.NET structures. This approach enables seamless communication with remote databases while maintaining the simplicity of traditional ADO.NET.
 
 ## Usage
 
